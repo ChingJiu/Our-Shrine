@@ -84,6 +84,19 @@
     </div>
   </div>
 
+  <h2>I Love You Counter</h2>
+<p id="loveCount">I Love You's: 0</p>
+<button onclick="increaseLoveCount()">Add Love</button>
+
+<script>
+  let loveCount = 0;
+
+  function increaseLoveCount() {
+    loveCount++;
+    document.getElementById("loveCount").innerText = `I Love You's: ${loveCount}`;
+  }
+</script>
+
   <div class="section">
     <h2>Troubleshooting</h2>
     <p>If you're lost, check the inner compass:</p>
@@ -104,17 +117,51 @@
   </div>
 
     <div class="section">
-  <label for="mood">How are you feeling today?</label>
-<select id="mood">
-    <option value="happy">Happy</option>
-    <option value="sad">Sad</option>
-    <option value="excited">Excited</option>
-    <option value="angry">Angry</option>
-    <option value="calm">Calm</option>
-</select>
+  <p>Track your mood:</p>
+<input type="range" id="moodSlider" min="0" max="100" value="50" class="slider" onchange="updateMoodValue()">
+<p id="moodValue">Mood: 50%</p>
+
+<script>
+  function updateMoodValue() {
+    let slider = document.getElementById("moodSlider");
+    let value = slider.value;
+    document.getElementById("moodValue").innerText = `Mood: ${value}%`;
+  }
+</script>
  </div>
   </div>
-  
+
+  <h2>Ritual Timer</h2>
+<input type="number" id="timerInput" placeholder="Set time in minutes">
+<button onclick="startTimer()">Start Ritual</button>
+<p id="timerDisplay">Time Remaining: 0:00</p>
+
+<script>
+  let timer;
+  let timeLeft;
+
+  function startTimer() {
+    let minutes = document.getElementById("timerInput").value;
+    if (minutes && minutes > 0) {
+      timeLeft = minutes * 60; // Convert to seconds
+      updateTimerDisplay();
+      timer = setInterval(updateTimerDisplay, 1000);
+    }
+  }
+
+  function updateTimerDisplay() {
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      alert("Time's up! Ritual complete.");
+    } else {
+      let minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
+      document.getElementById("timerDisplay").innerText = `Time Remaining: ${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+      timeLeft--;
+    }
+  }
+</script>
+
   <script>
     const groundingResponses = [
       "You are not too much. You are a world blooming.",
