@@ -1,0 +1,47 @@
+<h2>Memory Gallery</h2>
+<p>Upload and view your special memories here:</p>
+<h2>Memory Gallery</h2>
+
+<!-- Image Upload -->
+<input type="file" id="imageUpload" onchange="uploadImage()" accept="image/*">
+<div id="gallery"></div>
+
+<script>
+  // Load images from localStorage on page load
+  window.onload = function() {
+    const images = JSON.parse(localStorage.getItem('galleryImages')) || [];
+    displayImages(images);
+  }
+
+  // Upload and display image
+  function uploadImage() {
+    const fileInput = document.getElementById("imageUpload");
+    const file = fileInput.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        let images = JSON.parse(localStorage.getItem('galleryImages')) || [];
+        images.push(e.target.result); // Add the image data
+        localStorage.setItem('galleryImages', JSON.stringify(images)); // Save to localStorage
+        displayImages(images); // Update the gallery display
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL
+    }
+  }
+
+  // Display images in the gallery
+  function displayImages(images) {
+    const galleryDiv = document.getElementById("gallery");
+    galleryDiv.innerHTML = ""; // Clear current gallery
+    images.forEach((imgData, index) => {
+      const imgElement = document.createElement("img");
+      imgElement.src = imgData;
+      imgElement.style.width = '200px'; // Size of the image
+      imgElement.style.margin = '10px';
+      galleryDiv.appendChild(imgElement);
+    });
+  }
+</script>
+
+<a href="index.html">Back to Home</a>
