@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dreams and Wishes Board</title>
+  <style>
+    body {
+      background-color: #2d2d2d;
+      color: #fff;
+      font-family: 'Georgia', serif;
+      padding: 40px;
+    }
+    h1 {
+      font-size: 36px;
+      text-align: center;
+      color: #ff6fcf;
+      margin-bottom: 20px;
+    }
+    .wish-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .wish-item {
+      background-color: #333;
+      margin: 10px 0;
+      padding: 20px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .wish-item input[type="checkbox"] {
+      transform: scale(1.5);
+      cursor: pointer;
+    }
+    .wish-item span {
+      font-size: 20px;
+      color: #fff;
+      flex-grow: 1;
+    }
+    .wish-item button {
+      background-color: #ff6fcf;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .wish-item button:hover {
+      background-color: #ff5fcf;
+    }
+  </style>
+</head>
+<body>
+  <h1>Our Dreams & Wishes</h1>
+  <ul class="wish-list">
+    <li class="wish-item">
+      <input type="checkbox" id="wish1">
+      <span>Travel to a place we've never been.</span>
+      <button onclick="removeWish('wish1')">Remove</button>
+    </li>
+    <li class="wish-item">
+      <input type="checkbox" id="wish2">
+      <span>Have a cozy night with only each other and the stars.</span>
+      <button onclick="removeWish('wish2')">Remove</button>
+    </li>
+    <li class="wish-item">
+      <input type="checkbox" id="wish3">
+      <span>Build something beautiful together.</span>
+      <button onclick="removeWish('wish3')">Remove</button>
+    </li>
+  </ul>
+
+  <script>
+    // Function to remove wishes
+    function removeWish(wishId) {
+      let wishItem = document.getElementById(wishId).parentElement;
+      wishItem.remove();
+    }
+
+    // Optional: You could add more functionality here for saving the list or adding new items
+  </script>
+</body>
+</html>
