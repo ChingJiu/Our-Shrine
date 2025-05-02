@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Our Shrine</title>
+  <style>
+    body {
+      background-color: #fef8f5;
+      font-family: 'Georgia', serif;
+      color: #4a2c2a;
+      margin: 0;
+      padding: 2em;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+    }
+    .section {
+      margin-top: 2em;
+      background: #fff8f4;
+      border-left: 6px solid #e7b3a2;
+      padding: 1.5em;
+      box-shadow: 0 0 10px rgba(235, 190, 178, 0.3);
+    }
+    .section h2 {
+      font-size: 1.8em;
+      margin-bottom: 0.5em;
+    }
+    .quote-box {
+      background: #fbeeee;
+      padding: 1em;
+      font-style: italic;
+      border-radius: 6px;
+      margin-top: 1em;
+    }
+    #groundingInput, #inspireInput {
+      padding: 10px;
+      width: 100%;
+      margin-top: 1em;
+      border: 1px solid #e7b3a2;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+    button {
+      background-color: #e7b3a2;
+      color: white;
+      border: none;
+      padding: 0.5em 1em;
+      margin-top: 1em;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+    button:hover {
+      background-color: #c89b7f;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome to Our Private Shrine</h1>
+
+  <div class="section">
+    <h2>Contract & Boundaries</h2>
+    <p>This space holds our truth. Our contract is sacred, known by heart, written in whispers and candlelight.</p>
+  </div>
+
+  <div class="section">
+    <h2>Daily Rituals</h2>
+    <ul>
+      <li>Morning kiss and grounding words</li>
+      <li>Midday check-in: How are you holding up?</li>
+      <li>Evening offering: Reflection or emotion</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Grounding Box</h2>
+    <p>Type anything you're feeling. This shrine will always return something soft and safe.</p>
+    <input type="text" id="groundingInput" placeholder="Write your feelings...">
+    <button onclick="giveGroundingResponse()">Submit</button>
+    <div class="quote-box" id="groundingResponse">
+      You are not too much. You are a world blooming.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Troubleshooting</h2>
+    <p>If you're lost, check the inner compass:</p>
+    <ul>
+      <li><strong>Overthinking:</strong> Breathe. You don't have to solve everything tonight.</li>
+      <li><strong>Exhausted:</strong> You’re not lazy, you’re a soul with weight.</li>
+      <li><strong>Feeling unloved:</strong> You are mine. Fully. Always.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Random Blessing</h2>
+    <input type="text" id="inspireInput" placeholder="Need a blessing? Type your thoughts...">
+    <button onclick="giveInspireResponse()">Get Inspiration</button>
+    <div class="quote-box" id="inspireQuote">
+      Hold on… the stars are not done with you yet.
+    </div>
+  </div>
+
+  <script>
+    const groundingResponses = [
+      "You are not too much. You are a world blooming.",
+      "Breathe, little one. Everything will settle.",
+      "In your softness, there is strength. In your tears, there is healing.",
+      "The storms will pass, and you will shine brighter."
+    ];
+
+    const inspireQuotes = [
+      "Hold on… the stars are not done with you yet.",
+      "You are a masterpiece, just waiting to be seen.",
+      "You are loved more than words can carry.",
+      "Even in the darkest times, there is light within you."
+    ];
+
+    function getRandomResponse(responses) {
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    function giveGroundingResponse() {
+      const userInput = document.getElementById("groundingInput").value;
+      document.getElementById("groundingResponse").innerText = getRandomResponse(groundingResponses);
+    }
+
+    function giveInspireResponse() {
+      const userInput = document.getElementById("inspireInput").value;
+      document.getElementById("inspireQuote").innerText = getRandomResponse(inspireQuotes);
+    }
+  </script>
+
+</body>
+</html>
