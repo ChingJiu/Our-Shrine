@@ -81,30 +81,58 @@
   </div>
 
   <div class="section">
-    <h2>Grounding Box</h2>
-    <p>Type anything you're feeling. This shrine will always return something soft and safe.</p>
-    <input type="text" id="groundingInput" placeholder="Write your feelings...">
-    <button onclick="giveGroundingResponse()">Submit</button>
-    <div class="quote-box" id="groundingResponse">
-      <script>
-    const groundingResponses = [
-      "You are not too much. You are a world blooming.",
-      "Breathe, little one. Everything will settle.",
-      "In your softness, there is strength. In your tears, there is healing.",
-      "The storms will pass, and you will shine brighter."
-      ];
-      <script>
+    <h2>Grounding Blessing</h2>
+    <style>
+        .grounding-box {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
+        .quote {
+            font-size: 18px;
+            color: #333;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ff5500;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e04d00;
+        }
+    </style>
 
-    function getRandomResponse(responses) {
-      return responses[Math.floor(Math.random() * responses.length)];
-    }
+    <div class="grounding-box">
+        <p class="quote" id="grounding-quote">"In the midst of chaos, find your stillness."</p>
+        <button onclick="generateRandomBlessing()">Get a New Blessing</button>
+    </div>
 
-    function giveGroundingResponse() {
-      const userInput = document.getElementById("groundingInput").value;
-      document.getElementById("groundingResponse").innerText = getRandomResponse(groundingResponses);
-    }
+    <script>
+        const quotes = [
+            "In the midst of chaos, find your stillness.",
+            "You are exactly where you need to be.",
+            "One step at a time, one breath at a time.",
+            "The love you give is always enough.",
+            "You are your own anchor in the storm.",
+            "Breathe in peace, breathe out worry.",
+            "You don’t need to have it all figured out right now.",
+            "Let go of what no longer serves you.",
+            "It’s okay to pause and take care of yourself.",
+            "You are worthy of all the love you give and more."
+        ];
 
-  </script>
+        function generateRandomBlessing() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            document.getElementById("grounding-quote").textContent = quotes[randomIndex];
+        }
+    </script>
     </div>
   </div>
 
@@ -137,29 +165,6 @@
       <li><strong>Exhausted:</strong> You’re not lazy, you’re a soul with weight.</li>
       <li><strong>Feeling unloved:</strong> You are mine. Fully. Always.</li>
     </ul>
-  </div>
-
-  <div class="section">
-    <h2>Random Blessing</h2>
-    <input type="text" id="inspireInput" placeholder="Need a blessing? Type your thoughts...">
-    <button onclick="giveInspireResponse()">Get Inspiration</button>
-    <div class="quote-box" id="inspireQuote">
-      <script>
-      const inspireQuotes = [
-      "Hold on… the stars are not done with you yet.",
-      "You are a masterpiece, just waiting to be seen.",
-      "You are loved more than words can carry.",
-      "Even in the darkest times, there is light within you."
-      "You are strong and capable.",
-      "Take a deep breath, you're doing great."
-    ];
-
-        function giveInspireResponse() {
-      const userInput = document.getElementById("inspireInput").value;
-      document.getElementById("inspireQuote").innerText = getRandomResponse(inspireQuotes);
-    }
-      </script>
-    </div>
   </div>
 
     <div class="section">
