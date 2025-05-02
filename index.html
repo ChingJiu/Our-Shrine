@@ -84,19 +84,27 @@
     </div>
   </div>
 
+  <div class="section">
   <h2>I Love You Counter</h2>
 <p id="loveCount">I Love You's: 0</p>
 <button onclick="increaseLoveCount()">Add Love</button>
 
 <script>
-  let loveCount = 0;
+  let loveCount = localStorage.getItem('loveCount') ? parseInt(localStorage.getItem('loveCount')) : 0;
+
+  // Update the love count on page load
+  document.getElementById("loveCount").innerText = `I Love You's: ${loveCount}`;
 
   function increaseLoveCount() {
     loveCount++;
     document.getElementById("loveCount").innerText = `I Love You's: ${loveCount}`;
+    // Save the updated count to localStorage
+    localStorage.setItem('loveCount', loveCount);
   }
 </script>
-
+  </div>
+</div>
+  
   <div class="section">
     <h2>Troubleshooting</h2>
     <p>If you're lost, check the inner compass:</p>
