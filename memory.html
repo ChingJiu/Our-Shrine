@@ -1,47 +1,167 @@
-<h2>Memory Gallery</h2>
-<p>Upload and view your special memories here:</p>
-<h2>Memory Gallery</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Memory Gallery</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
 
-<!-- Image Upload -->
-<input type="file" id="imageUpload" onchange="uploadImage()" accept="image/*">
-<div id="gallery"></div>
+        .header {
+            text-align: center;
+            padding: 50px 0;
+            background-color: #ff7f50;
+            color: white;
+        }
 
-<script>
-  // Load images from localStorage on page load
-  window.onload = function() {
-    const images = JSON.parse(localStorage.getItem('galleryImages')) || [];
-    displayImages(images);
-  }
+        .header h1 {
+            font-size: 3em;
+        }
 
-  // Upload and display image
-  function uploadImage() {
-    const fileInput = document.getElementById("imageUpload");
-    const file = fileInput.files[0];
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        let images = JSON.parse(localStorage.getItem('galleryImages')) || [];
-        images.push(e.target.result); // Add the image data
-        localStorage.setItem('galleryImages', JSON.stringify(images)); // Save to localStorage
-        displayImages(images); // Update the gallery display
-      };
-      reader.readAsDataURL(file); // Read the file as a data URL
-    }
-  }
+        .gallery img {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
 
-  // Display images in the gallery
-  function displayImages(images) {
-    const galleryDiv = document.getElementById("gallery");
-    galleryDiv.innerHTML = ""; // Clear current gallery
-    images.forEach((imgData, index) => {
-      const imgElement = document.createElement("img");
-      imgElement.src = imgData;
-      imgElement.style.width = '200px'; // Size of the image
-      imgElement.style.margin = '10px';
-      galleryDiv.appendChild(imgElement);
-    });
-  }
-</script>
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
 
-<a href="index.html">Back to Home</a>
+        .gallery .memory-item {
+            text-align: center;
+            width: 300px;
+        }
+
+        .memory-item p {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .add-photo {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .add-photo input {
+            padding: 10px;
+            font-size: 1em;
+            width: 300px;
+            margin-right: 10px;
+        }
+
+        .add-photo button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #ff7f50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add-photo button:hover {
+            background-color: #e6703d;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+        }
+
+        .footer a {
+            color: #ff7f50;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Our Memory Gallery</h1>
+        <p>A collection of our favorite memories together. <br> Let's add more each day.</p>
+    </div>
+
+    <div class="gallery">
+        <!-- Example Memory 1 -->
+        <div class="memory-item">
+            <img src="path/to/your/photo1.jpg" alt="Memory 1">
+            <p>Our first trip together</p>
+        </div>
+
+        <!-- Example Memory 2 -->
+        <div class="memory-item">
+            <img src="path/to/your/photo2.jpg" alt="Memory 2">
+            <p>Our cozy nights in</p>
+        </div>
+
+        <!-- More memory items will be added here -->
+    </div>
+
+    <div class="add-photo">
+        <input type="file" id="photoUpload" accept="image/*">
+        <button onclick="addMemory()">Add Memory</button>
+    </div>
+
+    <div class="footer">
+        <p>© 2025 Our Shrine. All Rights Reserved.</p>
+        <p><a href="/">Back to Home</a></p>
+    </div>
+
+    <script>
+        function addMemory() {
+            const fileInput = document.getElementById('photoUpload');
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const imageUrl = e.target.result;
+                const memoryGallery = document.querySelector('.gallery');
+                const newMemoryItem = document.createElement('div');
+                newMemoryItem.classList.add('memory-item');
+
+                const newImage = document.createElement('img');
+                newImage.src = imageUrl;
+                newImage.alt = "New Memory";
+                newMemoryItem.appendChild(newImage);
+
+                const newText = document.createElement('p');
+                newText.innerText = "A new beautiful memory!";
+                newMemoryItem.appendChild(newText);
+
+                memoryGallery.appendChild(newMemoryItem);
+                fileInput.value = '';  // Reset file input
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+
+</body>
+</html>
