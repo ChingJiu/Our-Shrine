@@ -58,12 +58,15 @@
 </head>
 <body>
 
-  <h1>Welcome to Our Private Shrine</h1>
+  <h1>A Place Just For Us</h1>
 
   <div class="section">
     <h2>Contract & Boundaries</h2>
-    <p>This space holds our truth. Our contract is sacred, known by heart, written in whispers and candlelight. This formalizes the sacred bond between Dominant (Vivian) and Submissive (ChingJiu), forging trust, ritual and mutual surrender in our shared sanctuary. </p>
-  <p>This contract takes effect at dawn's first light and remains until the final breath of the moon's cycle, renewing each month by silent offering.</p>
+    <p>This space holds our truth. Our contract is sacred, known by heart, written in whispers and candlelight. 
+      This formalizes the sacred bond between Dominant (Vivian) and Submissive (ChingJiu), forging trust, ritual and mutual surrender in our shared sanctuary. 
+    Our contract, its conetents, and our rituals reamin locked within these wallsl; any breach of this secrecy severs the trust we hold sacred.</p>
+  <h2>Duration & Renewal</h2>
+    <p>This contract takes effect at dawn's first light and remains until the final breath of the moon's cycle, renewing each month by silent offering.</p>
   </div>
 
   <div class="section">
@@ -83,7 +86,25 @@
     <input type="text" id="groundingInput" placeholder="Write your feelings...">
     <button onclick="giveGroundingResponse()">Submit</button>
     <div class="quote-box" id="groundingResponse">
-      You are not too much. You are a world blooming.
+      <script>
+    const groundingResponses = [
+      "You are not too much. You are a world blooming.",
+      "Breathe, little one. Everything will settle.",
+      "In your softness, there is strength. In your tears, there is healing.",
+      "The storms will pass, and you will shine brighter."
+      ];
+      <script>
+
+    function getRandomResponse(responses) {
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    function giveGroundingResponse() {
+      const userInput = document.getElementById("groundingInput").value;
+      document.getElementById("groundingResponse").innerText = getRandomResponse(groundingResponses);
+    }
+
+  </script>
     </div>
   </div>
 
@@ -123,7 +144,21 @@
     <input type="text" id="inspireInput" placeholder="Need a blessing? Type your thoughts...">
     <button onclick="giveInspireResponse()">Get Inspiration</button>
     <div class="quote-box" id="inspireQuote">
-      Hold on… the stars are not done with you yet.
+      <script>
+      const inspireQuotes = [
+      "Hold on… the stars are not done with you yet.",
+      "You are a masterpiece, just waiting to be seen.",
+      "You are loved more than words can carry.",
+      "Even in the darkest times, there is light within you."
+      "You are strong and capable.",
+      "Take a deep breath, you're doing great."
+    ];
+
+        function giveInspireResponse() {
+      const userInput = document.getElementById("inspireInput").value;
+      document.getElementById("inspireQuote").innerText = getRandomResponse(inspireQuotes);
+    }
+      </script>
     </div>
   </div>
 
@@ -142,6 +177,7 @@
  </div>
   </div>
 
+  <div class="section">
   <h2>Ritual Timer</h2>
 <input type="number" id="timerInput" placeholder="Set time in minutes">
 <button onclick="startTimer()">Start Ritual</button>
@@ -172,39 +208,9 @@
     }
   }
 </script>
-
-  <script>
-    const groundingResponses = [
-      "You are not too much. You are a world blooming.",
-      "Breathe, little one. Everything will settle.",
-      "In your softness, there is strength. In your tears, there is healing.",
-      "The storms will pass, and you will shine brighter."
-    ];
-
-    const inspireQuotes = [
-      "Hold on… the stars are not done with you yet.",
-      "You are a masterpiece, just waiting to be seen.",
-      "You are loved more than words can carry.",
-      "Even in the darkest times, there is light within you."
-      "You are strong and capable.",
-      "Take a deep breath, you're doing great."
-    ];
-
-    function getRandomResponse(responses) {
-      return responses[Math.floor(Math.random() * responses.length)];
-    }
-
-    function giveGroundingResponse() {
-      const userInput = document.getElementById("groundingInput").value;
-      document.getElementById("groundingResponse").innerText = getRandomResponse(groundingResponses);
-    }
-
-    function giveInspireResponse() {
-      const userInput = document.getElementById("inspireInput").value;
-      document.getElementById("inspireQuote").innerText = getRandomResponse(inspireQuotes);
-    }
-  </script>
-
+  </div>
+</div>
+  
   <a href="memory.html">Memory Gallery</a>
   <a href="music.html">Our Music</a>
   <a href="story.html">Our Timeline</a>
