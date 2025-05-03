@@ -307,16 +307,78 @@ footer.dark-theme {
   </div>
 
     <div class="section">
-  <p>Track your mood:</p>
-<input type="range" id="moodSlider" min="0" max="100" value="50" class="slider" onchange="updateMoodValue()">
-<p id="moodValue">Mood: 50%</p>
+  <section class="mood-tracker">
+    <h2>Our Mood Tracker</h2>
+    <p>Record your mood each day and see how we’ve felt over time. Each mood is represented by a different color.</p>
+    <form id="mood-form">
+        <label for="mood-select">Choose your mood today:</label>
+        <select id="mood-select" name="mood">
+            <option value="happy">Happy</option>
+            <option value="sad">Sad</option>
+            <option value="neutral">Neutral</option>
+            <option value="excited">Excited</option>
+            <option value="anxious">Anxious</option>
+        </select>
+        <button type="submit">Submit Mood</button>
+    </form>
+    
+    <div id="mood-history">
+        <h3>Monthly Mood Color Chart</h3>
+        <div id="mood-grid">
+            <!-- Mood colors will be added here -->
+        </div>
+    </div>
+</section>
 
 <script>
-  function updateMoodValue() {
-    let slider = document.getElementById("moodSlider");
-    let value = slider.value;
-    document.getElementById("moodValue").innerText = `Mood: ${value}%`;
-  }
+    // Mood tracker functionality
+    let moods = [];
+    const moodColors = {
+        happy: '#FFEB3B', // yellow
+        sad: '#2196F3', // blue
+        neutral: '#9E9E9E', // gray
+        excited: '#FF5722', // orange
+        anxious: '#FFC107' // amber
+    };
+    
+    const moodForm = document.getElementById('mood-form');
+    const moodSelect = document.getElementById('mood-select');
+    const moodGrid = document.getElementById('mood-grid');
+
+    moodForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const selectedMood = moodSelect.value;
+        moods.push(selectedMood);
+
+        // Add mood to the grid
+        const moodBlock = document.createElement('div');
+        moodBlock.classList.add('mood-block');
+        moodBlock.style.backgroundColor = moodColors[selectedMood];
+        moodGrid.appendChild(moodBlock);
+    });
+</script>
+
+<style>
+    .mood-tracker {
+        margin: 20px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+    }
+
+    #mood-grid {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .mood-block {
+        width: 30px;
+        height: 30px;
+        margin: 2px;
+        border-radius: 50%;
+    }
+</style>
 </script>
  </div>
   </div>
