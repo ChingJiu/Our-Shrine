@@ -18,17 +18,19 @@
       margin: 0;
       padding: 0;
       font-family: "Georgia", serif;
-      background-color: var(--background-dark);
-      color: var(--text-dark);
+      background-color: var(--background-light);
+      color: var(--text-light);
       transition: background 0.3s, color 0.3s;
     }
 
     body.light {
-      --bg: #f8f7f4;
-      --text: #1c1c1c;
-      --border: #dcdcdc;
-      --soft-border: #eaeaea;
-      --accent: #b075c9;
+      background-color: var(--background-light);
+      color: var(--text-light);
+    }
+
+    body.dark {
+      background-color: var(--background-dark);
+      color: var(--text-dark);
     }
 
     .top-nav {
@@ -257,20 +259,24 @@ input:checked + .slider:before {
   </main>
 
   <script>
-    function toggleTheme() {
-  document.body.classList.toggle('light');
-  const switchInput = document.getElementById("themeSwitch");
-  switchInput.checked = document.body.classList.contains("light");
-}
-
-// Optional: Set initial state if user has preferred light theme
-window.onload = function() {
-  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-  if (prefersLight) {
+  // Default is light theme
+  window.onload = function () {
+    const switchInput = document.getElementById("themeSwitch");
+    document.body.classList.remove("dark");
     document.body.classList.add("light");
-    document.getElementById("themeSwitch").checked = true;
+    switchInput.checked = false; // light is off
+  };
+
+  function toggleTheme() {
+    const switchInput = document.getElementById("themeSwitch");
+    if (switchInput.checked) {
+      document.body.classList.remove("light");
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+      document.body.classList.add("light");
     }
-};
+  }
 
     let timer;
     let timeLeft;
