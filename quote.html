@@ -21,6 +21,7 @@
     </nav>
 </header>
 
+    <main>
 <section class="quotes-wall">
     <h2>Our Quotes Wall</h2>
     <p>Share, reflect, and find inspiration in both general and personal quotes.</p>
@@ -30,7 +31,63 @@
         <button id="toggle-general">General Quotes</button>
         <button id="toggle-personal">Our Personal Quotes</button>
     </div>
+    
+<div class="section">
+    <h2>Grounding Blessing</h2>
+    <style>
+        .grounding-box {
+            background-color: transparent;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
+        .quote {
+            font-size: 18px;
+            color: #333;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ff5500;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e04d00;
+        }
+    </style>
 
+    <div class="grounding-box">
+        <p class="quote" id="grounding-quote">"In the midst of chaos, find your stillness."</p>
+        <button onclick="generateRandomBlessing()">Get a New Blessing</button>
+    </div>
+
+    <script>
+        const quotes = [
+            "In the midst of chaos, find your stillness.",
+            "You are exactly where you need to be.",
+            "One step at a time, one breath at a time.",
+            "The love you give is always enough.",
+            "You are your own anchor in the storm.",
+            "Breathe in peace, breathe out worry.",
+            "You don’t need to have it all figured out right now.",
+            "Let go of what no longer serves you.",
+            "It’s okay to pause and take care of yourself.",
+            "You are worthy of all the love you give and more."
+        ];
+
+        function generateRandomBlessing() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            document.getElementById("grounding-quote").textContent = quotes[randomIndex];
+        }
+    </script>
+    </div>
+  </div>
+    
     <!-- Quote Input Form -->
     <form id="quote-form">
         <label for="quote-input">Enter your quote:</label>
@@ -235,5 +292,6 @@
     }
 </style>
 
+    </main>
 </body>
 </html>
