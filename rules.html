@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Our Rules & Boundaries</title>
   <link rel="stylesheet" href="style.css" />
+  
 </head>
   
 <body>
@@ -16,10 +17,36 @@
       <a href="music.html" >Playlist</a>
       <a href="memory.html">Memories</a>
       <a href="dream.html">Dreams</a>
+      <a href="quote.html">Quotes</a>
+      <a href="story.html">Timeline</a>
     </nav>
   </header>
   
 <style>
+  .top-nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 15px 0;
+  background-color: var(--background);
+}
+
+.top-nav a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.top-nav a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+  .rules-section h1{
+    text-align: center;
+  }
   .rules-section {
   padding: 30px;
   background-color: var(--box-bg);
