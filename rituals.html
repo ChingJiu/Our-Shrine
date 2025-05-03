@@ -24,8 +24,11 @@
     }
 
     body.light {
-      background-color: var(--background-light);
-      color: var(--text-light);
+      --bg: #f8f7f4;
+      --text: #1c1c1c;
+      --border: #dcdcdc;
+      --soft-border: #eaeaea;
+      --accent: #b075c9;
     }
 
     .top-nav {
@@ -179,6 +182,12 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(24px);
 }
+    .timer, .ritual-box {
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
   </style>
 </head>
 <body>
