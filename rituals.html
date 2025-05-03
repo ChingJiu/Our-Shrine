@@ -5,6 +5,26 @@
   <title>Our Rituals</title>
   <link rel="stylesheet" href="styles.css">
   <style>
+    .top-nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 15px 0;
+  background-color: var(--background);
+}
+
+.top-nav a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.top-nav a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
     .rituals {
       max-width: 800px;
       margin: auto;
@@ -42,29 +62,28 @@
 <body>
   <header>
     <h1>Our Shrine</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="story.html">Story Timeline</a></li>
-        <li><a href="dream.html">Dreams & Wishes</a></li>
-        <li><a href="memory.html">Memory Gallery</a></li>
-        <li><a href="music.html">Playlist</a></li>
-        <li><a href="rituals.html" class="active">Rituals</a></li>
-      </ul>
-    </nav>
-  </header>
+    <nav class="top-nav">
+  <a href="index.html">Home</a>
+  <a href="story.html">Story Timeline</a>
+  <a href="dream.html">Dreams & Wishes</a>
+  <a href="memory.html">Memory Gallery</a>
+  <a href="music.html">Playlist</a>
+  <a href="rituals.html">Rituals</a>
+</nav>
+</header>
 
   <main class="rituals">
     <h2>Our Rituals</h2>
 
     <div class="ritual">
       <h3>Daily Blessing</h3>
-      <p>Each morning, we speak a grounding word to each other. Mine for you today: *You are my gravity, my girl.*</p>
+      <p>Upon waking, you present one whispered intention to me, fingers entwined, breath shared.
+        Mine for you today: *You are my gravity, my girl.*</p>
     </div>
 
     <div class="ritual">
-      <h3>Nightly Check-in</h3>
-      <p>Before sleep, we exchange a voice or text check-in: "What did you feel today? What did you carry?"</p>
+      <h3>Evening Offering</h3>
+      <p>Before rest, you gift me one truth from your day—joy, doubt, or flame—sealed with your pulse against my palm.</p>
     </div>
 
     <div class="ritual">
@@ -73,6 +92,11 @@
     </div>
 
     <div class="ritual">
+      <h3>Weekly Eve Ritual</h3>
+      <p>Each Sunday eve, you kneel before me; I anoint your brow with scented oil, chanting your strengths to the night.</p>
+    </div>
+    
+      <div class="ritual">
       <h3>Monthly Dream Exchange</h3>
       <p>Once a month, we both write down one dream or desire, and we let each other read it in silence before responding.</p>
     </div>
