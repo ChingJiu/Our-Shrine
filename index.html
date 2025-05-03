@@ -345,40 +345,6 @@ footer.dark-theme {
         border-radius: 50%;
     }
 </style>
-
-  <div class="section">
-  <h2>Ritual Timer</h2>
-<input type="number" id="timerInput" placeholder="Set time in minutes">
-<button onclick="startTimer()">Start Ritual</button>
-<p id="timerDisplay">Time Remaining: 0:00</p>
-
-<script>
-  let timer;
-  let timeLeft;
-
-  function startTimer() {
-    let minutes = document.getElementById("timerInput").value;
-    if (minutes && minutes > 0) {
-      timeLeft = minutes * 60; // Convert to seconds
-      updateTimerDisplay();
-      timer = setInterval(updateTimerDisplay, 1000);
-    }
-  }
-
-  function updateTimerDisplay() {
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      alert("Time's up! Ritual complete.");
-    } else {
-      let minutes = Math.floor(timeLeft / 60);
-      let seconds = timeLeft % 60;
-      document.getElementById("timerDisplay").innerText = `Time Remaining: ${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
-      timeLeft--;
-    }
-  }
-</script>
-  </div>
-</div>
     </main>
 
   <footer>
