@@ -6,13 +6,13 @@
   <title>Our Rituals</title>
   <style>
     :root {
-      --background-light: #fdfdfd;
-      --text-light: #333;
-      --background-dark: #1c1c1c;
-      --text-dark: #eaeaea;
-      --accent: #c275c2;
-      --soft-border: rgba(194, 117, 194, 0.3);
-    }
+  --bg: #1c1c1c;
+  --text: #eaeaea;
+  --border: #3e3e3e;
+  --soft-border: rgba(194, 117, 194, 0.3);
+  --accent: #c275c2;
+}
+
 
     body {
       margin: 0;
@@ -187,6 +187,10 @@ input:checked + .slider:before {
   border: 1px solid var(--border);
   color: var(--text);
 }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+    }
 
   </style>
 </head>
@@ -265,10 +269,8 @@ window.onload = function() {
   if (prefersLight) {
     document.body.classList.add("light");
     document.getElementById("themeSwitch").checked = true;
-  }
-};
-
     }
+};
 
     let timer;
     let timeLeft;
