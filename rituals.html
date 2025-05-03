@@ -1,52 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Our Rituals</title>
-    <link rel="stylesheet" href="styles.css">
   <style>
-    .top-nav {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 15px 0;
-  background-color: var(--background);
-}
-
-.top-nav a {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: bold;
-  padding: 10px;
-  border-radius: 8px;
-  transition: background 0.3s ease;
-}
-
-.top-nav a:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-    .rituals {
-      max-width: 800px;
-      margin: auto;
-      padding: 40px;
-      background: var(--background);
-      color: var(--text);
-      border-radius: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    :root {
+      --background-light: #ffffff;
+      --text-light: #222222;
+      --background-dark: #1e1e1e;
+      --text-dark: #f0f0f0;
+      --accent: #ff5fcf;
     }
 
-    .rituals h2 {
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--background-dark);
+      color: var(--text-dark);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.light {
+      background-color: var(--background-light);
+      color: var(--text-light);
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      padding: 15px;
+      border-bottom: 1px solid var(--accent);
+      font-size: 14px;
+    }
+
+    .top-nav a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: bold;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+
+    .top-nav a:hover {
+      background-color: rgba(255, 95, 207, 0.1);
+    }
+
+    header h1 {
       text-align: center;
-      margin-bottom: 20px;
-      font-size: 2em;
+      font-size: 2.5em;
+      margin-top: 20px;
+      color: var(--accent);
+      text-shadow: 0 0 5px rgba(255, 95, 207, 0.4);
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      z-index: 10;
+    }
+
+    .rituals {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      border-radius: 20px;
     }
 
     .ritual {
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 5px solid var(--accent);
       padding: 20px;
       border-radius: 12px;
       margin-bottom: 20px;
-      border-left: 5px solid var(--accent);
     }
 
     .ritual h3 {
@@ -54,89 +91,80 @@
       color: var(--accent);
     }
 
-    .ritual p {
-      margin: 5px 0;
+    .ritual-timer {
+      margin-top: 40px;
+      padding: 25px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      text-align: center;
     }
-    header h1 {
-  text-align: center;
-  margin: 20px 0;
-  font-size: 2.5em;
-  color: var(--accent);
-  text-shadow: 0 0 5px rgba(255, 85, 0, 0.5);
-}
 
-a {
-  color: #ff5500; /* Set the color for links in both themes */
-  text-decoration: none;
-}
+    #timerInput {
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      width: 200px;
+      margin-bottom: 10px;
+      background: transparent;
+      color: inherit;
+    }
 
-a:visited {
-  color: #ff5500; /* Keep the same color for visited links */
-}
-    /* Make the site responsive on small screens like iPhones */
-@media screen and (max-width: 600px) {
-  .top-nav {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 0;
-  }
+    .ritual-timer button {
+      background-color: var(--accent);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
 
-  .rituals {
-    padding: 20px;
-    margin: 10px;
-  }
+    .ritual-timer button:hover {
+      background-color: #ff85da;
+    }
 
-  .ritual {
-    padding: 15px;
-    font-size: 15px;
-  }
+    #timerDisplay {
+      margin-top: 15px;
+      font-size: 18px;
+      color: var(--accent);
+    }
 
-  .ritual-timer {
-    padding: 20px;
-    margin: 20px 0;
-    align-items: center;
-  }
+    @media screen and (max-width: 600px) {
+      .top-nav {
+        flex-direction: column;
+        font-size: 13px;
+        gap: 8px;
+      }
 
-  #timerInput {
-    width: 100%;
-    max-width: 200px;
-  }
-
-  .ritual-timer button {
-    width: 100%;
-    max-width: 200px;
-    margin-top: 10px;
-    align-items: center;
-  }
-
-  #timerDisplay {
-    font-size: 16px;
-  }
-}
-
+      .rituals {
+        padding: 15px;
+      }
+    }
   </style>
 </head>
 <body>
+  <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+
   <header>
     <h1>Our Shrine</h1>
     <nav class="top-nav">
-  <a href="index.html">Home</a>
-  <a href="story.html">Timeline</a>
-  <a href="dream.html">Dreams</a>
-  <a href="memory.html">Memory Gallery</a>
-  <a href="music.html">Playlist</a>
-  <a href="rules.html">Rules</a>
-</nav>
-</header>
+      <a href="index.html">Home</a>
+      <a href="story.html">Timeline</a>
+      <a href="dream.html">Dreams</a>
+      <a href="memory.html">Memory Gallery</a>
+      <a href="music.html">Playlist</a>
+      <a href="rules.html">Rules</a>
+    </nav>
+  </header>
 
   <main class="rituals">
-    <h2>Our Rituals</h2>
+    <h2 style="text-align:center; color: var(--accent);">Our Rituals</h2>
 
     <div class="ritual">
       <h3>Daily Blessing</h3>
-      <p>Upon waking, you present one whispered intention to me, fingers entwined, breath shared.
-        Mine for you today: *You are my gravity, my girl.*</p>
+      <p>Upon waking, you present one whispered intention to me, fingers entwined, breath shared. Mine for you today: *You are my gravity, my girl.*</p>
     </div>
 
     <div class="ritual">
@@ -153,8 +181,8 @@ a:visited {
       <h3>Weekly Eve Ritual</h3>
       <p>Each Sunday eve, you kneel before me; I anoint your brow with scented oil, chanting your strengths to the night.</p>
     </div>
-    
-      <div class="ritual">
+
+    <div class="ritual">
       <h3>Monthly Dream Exchange</h3>
       <p>Once a month, we both write down one dream or desire, and we let each other read it in silence before responding.</p>
     </div>
@@ -164,119 +192,42 @@ a:visited {
       <p>Whenever we feel lost or overwhelmed, we type or whisper this code. It means: “Hold me. I remember us.”</p>
     </div>
 
-    <div class="section">
-  <h2>Ritual Timer</h2>
-<input type="number" id="timerInput" placeholder="Set time in minutes">
-<button onclick="startTimer()">Start Ritual</button>
-<p id="timerDisplay">Time Remaining: 0:00</p>
-
-      <style>
-        .ritual-timer {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          margin-top: 40px;
-          padding: 30px;
-          background-color: rgba(255, 255, 255, 0.05);
-          border-radius: 15px;
-          box-shadow: 0 0 10px rgba(225, 111, 207, 0.2);
-          text-align: center;
-        }
-        <div class="ritual-timer">
-  <h2>Ritual Timer</h2>
-  <input type="number" id="timerInput" placeholder="Set time in minutes">
-  <button onclick="startTimer()">Start Ritual</button>
-  <p id="timerDisplay">Time Remaining: 0:00</p>
-</div>
-
-<style>
-  .ritual-timer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 40px;
-    padding: 30px;
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
-    box-shadow: 0 0 10px rgba(255, 111, 207, 0.2);
-    text-align: center;
-  }
-
-  .ritual-timer h2 {
-    color: var(--accent);
-    margin-bottom: 15px;
-    align-items: center;
-  }
-
-  #timerInput {
-    padding: 10px;
-    font-size: 16px;
-    border: 2px solid var(--accent);
-    border-radius: 8px;
-    width: 200px;
-    background: #2d2d2d;
-    color: #fff;
-    margin-bottom: 10px;
-    align-items: center;
-  }
-
-  .ritual-timer button {
-    background-color: var(--accent);
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    align-items: center;
-  }
-
-  .ritual-timer button:hover {
-    background-color: #ff5fcf;
-    align-items: center;
-  }
-
-  #timerDisplay {
-    margin-top: 15px;
-    font-size: 18px;
-    color: #ffccff;
-    align-items: center;
-  }
-      </style>
-<script>
-  let timer;
-  let timeLeft;
-
-  function startTimer() {
-    let minutes = document.getElementById("timerInput").value;
-    if (minutes && minutes > 0) {
-      timeLeft = minutes * 60; // Convert to seconds
-      updateTimerDisplay();
-      timer = setInterval(updateTimerDisplay, 1000);
-    }
-  }
-
-  function updateTimerDisplay() {
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      alert("Time's up! Ritual complete.");
-    } else {
-      let minutes = Math.floor(timeLeft / 60);
-      let seconds = timeLeft % 60;
-      document.getElementById("timerDisplay").innerText = `Time Remaining: ${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
-      timeLeft--;
-    }
-  }
-</script>
-  </div>
-</div>
+    <div class="ritual-timer">
+      <h3>Ritual Timer</h3>
+      <input type="number" id="timerInput" placeholder="Set time in minutes">
+      <button onclick="startTimer()">Start Ritual</button>
+      <p id="timerDisplay">Time Remaining: 0:00</p>
+    </div>
   </main>
 
   <script>
-    // For future interactive rituals if needed
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+    }
+
+    let timer;
+    let timeLeft;
+
+    function startTimer() {
+      let minutes = document.getElementById("timerInput").value;
+      if (minutes && minutes > 0) {
+        timeLeft = minutes * 60;
+        updateTimerDisplay();
+        timer = setInterval(updateTimerDisplay, 1000);
+      }
+    }
+
+    function updateTimerDisplay() {
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        alert("Time's up! Ritual complete.");
+      } else {
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        document.getElementById("timerDisplay").innerText = `Time Remaining: ${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+        timeLeft--;
+      }
+    }
   </script>
 </body>
 </html>
