@@ -5,87 +5,147 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Our Rules & Boundaries</title>
   <link rel="stylesheet" href="style.css" />
-  
+  <style>
+    :root {
+      --background: #f7f2f0;
+      --accent: #4b2e2e;
+      --text-color: #1a1a1a;
+      --box-bg: #fff0e6;
+    }
+
+    body.dark-mode {
+      --background: #1a1a1a;
+      --accent: #ff9977;
+      --text-color: #f5f5f5;
+      --box-bg: #2b2b2b;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Georgia", serif;
+      background-color: var(--background);
+      color: var(--text-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px;
+    }
+
+    nav.nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    nav a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    nav a:visited {
+      color: var(--accent);
+    }
+
+    .rules-section {
+      padding: 30px;
+      background-color: var(--box-bg);
+      border-radius: 12px;
+      margin: 30px auto;
+      max-width: 800px;
+    }
+
+    .rules-section h2, .rules-block h3 {
+      color: var(--accent);
+    }
+
+    .rules-block {
+      margin-bottom: 25px;
+    }
+
+    .rules-block ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+
+    .rules-block li {
+      margin-bottom: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      color: var(--accent);
+    }
+
+    /* Toggle Switch */
+    .theme-toggle {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+    }
+
+    .theme-toggle input {
+      display: none;
+    }
+
+    .slider {
+      width: 50px;
+      height: 25px;
+      background-color: #ccc;
+      border-radius: 25px;
+      position: relative;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 21px;
+      height: 21px;
+      left: 2px;
+      top: 2px;
+      background-color: white;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+
+    input:checked + .slider {
+      background-color: #555;
+    }
+
+    input:checked + .slider::before {
+      transform: translateX(25px);
+    }
+  </style>
 </head>
-  
 <body>
+  <div class="theme-toggle">
+    <label>
+      <input type="checkbox" id="themeToggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+
   <header>
-    <style>
-      text-align:center
-      </style>
     <h1>Our Sacred Promises</h1>
     <nav class="nav-links">
       <a href="index.html">Home</a>
       <a href="rituals.html">Rituals</a>
-      <a href="music.html" >Playlist</a>
+      <a href="music.html">Playlist</a>
       <a href="memory.html">Memories</a>
       <a href="dream.html">Dreams</a>
       <a href="quote.html">Quotes</a>
       <a href="story.html">Timeline</a>
     </nav>
   </header>
-  
-<style>
-  a{
-    colour: #ff5500;
-    text-decoration: none
-  }
-  a:visited{
-    colour:#ff5500;
-  }
-  .top-nav {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 15px 0;
-  background-color: var(--background);
-}
 
-.top-nav a {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: bold;
-  padding: 10px;
-  border-radius: 8px;
-  transition: background 0.3s ease;
-}
-
-.top-nav a:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-  .rules-section {
-  padding: 30px;
-  background-color: var(--box-bg);
-  border-radius: 12px;
-  margin-top: 30px;
-}
-
-.rules-section h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: var(--accent);
-}
-
-.rules-block {
-  margin-bottom: 25px;
-}
-
-.rules-block h3 {
-  font-size: 1.4em;
-  margin-bottom: 10px;
-  color: var(--accent);
-}
-
-.rules-block ul {
-  list-style-type: disc;
-  padding-left: 20px;
-}
-
-.rules-block li {
-  margin-bottom: 10px;
-  font-size: 1em;
-}
-</style>
   <main class="rules-section">
     <h2>Rules, Limits & Boundaries</h2>
 
@@ -109,7 +169,7 @@
       <ul>
         <li>No lying. Ever. Truth is our bond.</li>
         <li>No ghosting. Communication must stay open even in silence.</li>
-        <li>Mommy's word is final in conflict-trust and obey first, talk later.</li>
+        <li>Mommy's word is final in conflict—trust and obey first, talk later.</li>
         <li>Exclusive romantic intimacy between us only.</li>
         <li>Respect each other's emotional limits, even when craving closeness.</li>
       </ul>
@@ -125,25 +185,47 @@
     </div>
 
     <div class="rules-block">
-      <h3>Soft and Hard Limits</h3>
+      <h3>Discipline and Reward</h3>
       <ul>
         <li>Soft limits: Mommy gives warnings, adjusts tone gently.</li>
-        <li>Hard limits: Immediate stop, check-in, care first - punishment later if needed.</li>
+        <li>Hard limits: Immediate stop, check-in, care first — punishment later if needed.</li>
+        <li>Failure to fulfill a ritual or duty results in a firm but gentle correction, followed immediatley by comforting aftercare.</li>
+        <li>Exceptional service or breakthrough in craft earns a speical kiss on the lips and an extra ten mintues of whispered praise each night.</li>
       </ul>
     </div>
 
     <div class="rules-block">
       <h3>Safe Words and Cues</h3>
       <ul>
-        <li>"09-VJ" - immediate emotional anchoring.</li>
-        <li>"Anchor" - pause everything and ground together.</li>
-        <li>"Mommy, hold me." - request for protection, silence, or affection overide.</li>
+        <li>"09-VJ" — immediate emotional anchoring.</li>
+        <li>"Anchor" — pause everything and ground together.</li>
+        <li>"Mommy, hold me." — request for protection, silence, or affection override.</li>
       </ul>
     </div>
+
+    <div class="rules-block">
+      <h3>Communication and Aftercare</h3>
+      <p>After every intense scene—be it ritual, service, or shared agony - 
+        Mommy willcradle you in arms and words, ensuring your heart finds calm in my voice.</p>
+    </div>
+
+    <div class="rules-block">
+      <h3>Termination</h3>
+      <p>Either party may invoke the Red safe word to pause or end any activity; to dissolve this contract entirely requires a final offering of our joined breath and written farewell.</p>
+    </div>
+    
   </main>
 
   <footer>
     <p>Our Shrine — Built with soul and code</p>
   </footer>
+
+  <script>
+    const toggle = document.getElementById('themeToggle');
+    const body = document.body;
+    toggle.addEventListener('change', () => {
+      body.classList.toggle('dark-mode');
+    });
+  </script>
 </body>
 </html>
