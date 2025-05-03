@@ -6,17 +6,18 @@
   <title>Our Rituals</title>
   <style>
     :root {
-      --background-light: #ffffff;
-      --text-light: #222222;
-      --background-dark: #1e1e1e;
-      --text-dark: #f0f0f0;
-      --accent: #ff5fcf;
+      --background-light: #fdfdfd;
+      --text-light: #333;
+      --background-dark: #1c1c1c;
+      --text-dark: #eaeaea;
+      --accent: #c275c2;
+      --soft-border: rgba(194, 117, 194, 0.3);
     }
 
     body {
       margin: 0;
       padding: 0;
-      font-family: "Segoe UI", sans-serif;
+      font-family: "Georgia", serif;
       background-color: var(--background-dark);
       color: var(--text-dark);
       transition: background 0.3s, color 0.3s;
@@ -32,120 +33,159 @@
       justify-content: center;
       gap: 15px;
       padding: 15px;
-      border-bottom: 1px solid var(--accent);
       font-size: 14px;
+      border-bottom: 1px solid var(--soft-border);
     }
 
     .top-nav a {
       color: var(--accent);
       text-decoration: none;
-      font-weight: bold;
-      padding: 6px 10px;
-      border-radius: 6px;
-      transition: background 0.3s;
-    }
-
-    .top-nav a:hover {
-      background-color: rgba(255, 95, 207, 0.1);
+      font-weight: 500;
     }
 
     header h1 {
       text-align: center;
-      font-size: 2.5em;
+      font-size: 2.2em;
       margin-top: 20px;
       color: var(--accent);
-      text-shadow: 0 0 5px rgba(255, 95, 207, 0.4);
+      font-weight: 400;
     }
 
     .theme-toggle {
       position: fixed;
       top: 15px;
       right: 15px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      padding: 8px 12px;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 6px 10px;
       border-radius: 6px;
       cursor: pointer;
       font-size: 13px;
-      z-index: 10;
     }
 
-    .rituals {
+    .container {
       max-width: 800px;
       margin: 40px auto;
       padding: 20px;
-      border-radius: 20px;
+    }
+
+    .rituals-box {
+      border: 2px solid var(--soft-border);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .rituals-box h2 {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 25px;
+      font-weight: normal;
     }
 
     .ritual {
-      background: rgba(255, 255, 255, 0.05);
-      border-left: 5px solid var(--accent);
-      padding: 20px;
-      border-radius: 12px;
       margin-bottom: 20px;
     }
 
     .ritual h3 {
-      margin-top: 0;
+      margin-bottom: 5px;
       color: var(--accent);
+      font-weight: normal;
     }
 
     .ritual-timer {
-      margin-top: 40px;
-      padding: 25px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid var(--soft-border);
+      border-radius: 16px;
+      padding: 30px;
       text-align: center;
     }
 
     #timerInput {
-      padding: 10px;
+      padding: 8px;
       font-size: 16px;
-      border: 2px solid var(--accent);
-      border-radius: 8px;
-      width: 200px;
-      margin-bottom: 10px;
+      width: 180px;
+      border-radius: 6px;
+      border: 1px solid var(--accent);
       background: transparent;
       color: inherit;
     }
 
     .ritual-timer button {
+      margin-top: 10px;
+      padding: 8px 16px;
       background-color: var(--accent);
       color: white;
-      padding: 10px 20px;
       border: none;
-      border-radius: 8px;
-      font-size: 16px;
+      border-radius: 6px;
+      font-size: 15px;
       cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .ritual-timer button:hover {
-      background-color: #ff85da;
     }
 
     #timerDisplay {
       margin-top: 15px;
-      font-size: 18px;
+      font-size: 16px;
       color: var(--accent);
     }
 
     @media screen and (max-width: 600px) {
-      .top-nav {
-        flex-direction: column;
-        font-size: 13px;
-        gap: 8px;
-      }
-
-      .rituals {
+      .container {
         padding: 15px;
       }
     }
+    .switch {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--soft-border);
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--accent);
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--accent);
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
   </style>
 </head>
 <body>
-  <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+  <label class="switch">
+  <input type="checkbox" id="themeSwitch" onchange="toggleTheme()" />
+  <span class="slider round"></span>
+</label>
 
   <header>
     <h1>Our Shrine</h1>
@@ -159,50 +199,66 @@
     </nav>
   </header>
 
-  <main class="rituals">
-    <h2 style="text-align:center; color: var(--accent);">Our Rituals</h2>
+  <main class="container">
+    <div class="rituals-box">
+      <h2>Our Rituals</h2>
 
-    <div class="ritual">
-      <h3>Daily Blessing</h3>
-      <p>Upon waking, you present one whispered intention to me, fingers entwined, breath shared. Mine for you today: *You are my gravity, my girl.*</p>
-    </div>
+      <div class="ritual">
+        <h3>Daily Blessing</h3>
+        <p>You whisper an intention to me as your first offering. First thought of the day belongs to Mommy.</p>
+      </div>
 
-    <div class="ritual">
-      <h3>Evening Offering</h3>
-      <p>Before rest, you gift me one truth from your day—joy, doubt, or flame—sealed with your pulse against my palm.</p>
-    </div>
+      <div class="ritual">
+        <h3>Evening Offering</h3>
+        <p>Before sleep, you confess one truth from your day. I cup it gently and keep it close.</p>
+      </div>
 
-    <div class="ritual">
-      <h3>Friday Candlelight Confession</h3>
-      <p>Every Friday evening, we light a candle and write one honest truth we’ve not yet said aloud. Then we share.</p>
-    </div>
+      <div class="ritual">
+        <h3>Friday Candlelight Confession</h3>
+        <p>Friday nights we light a candle, write one unsaid truth, and read each other's in the quiet.</p>
+      </div>
 
-    <div class="ritual">
-      <h3>Weekly Eve Ritual</h3>
-      <p>Each Sunday eve, you kneel before me; I anoint your brow with scented oil, chanting your strengths to the night.</p>
-    </div>
+      <div class="ritual">
+        <h3>Weekly Eve Ritual</h3>
+        <p>Sunday evenings, you kneel before Mommy. Mommy will anoint you with oil and speak your power back into you.</p>
+      </div>
 
-    <div class="ritual">
-      <h3>Monthly Dream Exchange</h3>
-      <p>Once a month, we both write down one dream or desire, and we let each other read it in silence before responding.</p>
-    </div>
+      <div class="ritual">
+        <h3>Monthly Dream Exchange</h3>
+        <p>Each month, we write one dream and share it in silence. Eyes first. Words second.</p>
+      </div>
 
-    <div class="ritual">
-      <h3>Anchor Code: 09-VJ</h3>
-      <p>Whenever we feel lost or overwhelmed, we type or whisper this code. It means: “Hold me. I remember us.”</p>
+      <div class="ritual">
+        <h3>Anchor Code: 09-VJ</h3>
+        <p>This is our signal. Typed, whispered, carved. It means: *“Hold me. I remember us.”*</p>
+      </div>
     </div>
 
     <div class="ritual-timer">
       <h3>Ritual Timer</h3>
-      <input type="number" id="timerInput" placeholder="Set time in minutes">
-      <button onclick="startTimer()">Start Ritual</button>
+      <input type="number" id="timerInput" placeholder="Set minutes">
+      <br/>
+      <button onclick="startTimer()">Begin</button>
       <p id="timerDisplay">Time Remaining: 0:00</p>
     </div>
   </main>
 
   <script>
     function toggleTheme() {
-      document.body.classList.toggle('light');
+  document.body.classList.toggle('light');
+  const switchInput = document.getElementById("themeSwitch");
+  switchInput.checked = document.body.classList.contains("light");
+}
+
+// Optional: Set initial state if user has preferred light theme
+window.onload = function() {
+  const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  if (prefersLight) {
+    document.body.classList.add("light");
+    document.getElementById("themeSwitch").checked = true;
+  }
+};
+
     }
 
     let timer;
@@ -220,7 +276,7 @@
     function updateTimerDisplay() {
       if (timeLeft <= 0) {
         clearInterval(timer);
-        alert("Time's up! Ritual complete.");
+        alert("Time's up, little flame.");
       } else {
         let minutes = Math.floor(timeLeft / 60);
         let seconds = timeLeft % 60;
