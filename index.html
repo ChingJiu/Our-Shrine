@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Our Shrine</title>
+  <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Playfair+Display&display=swap" rel="stylesheet">
   <style>
     :root {
       --background: #1a1a1a;
@@ -17,16 +18,19 @@
       background-color: var(--background);
       color: var(--text);
       font-family: 'Georgia', serif;
+      font-size: 15px;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     header {
-      text-align: center;
       padding: 20px;
       border-bottom: 2px solid var(--accent);
+      background-color: transparent;
+      text-align: center;
     }
 
     header h1 {
-      font-size: 2.5em;
+      font-size: 2.3em;
       margin: 0;
       color: var(--accent);
       text-shadow: 0 0 5px rgba(255, 85, 0, 0.5);
@@ -39,7 +43,18 @@
       padding: 10px;
     }
 
-    .top-nav a {
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    nav ul li {
+      display: inline;
+      margin: 0 15px;
+    }
+
+    nav a {
       color: var(--accent);
       text-decoration: none;
       font-weight: bold;
@@ -48,48 +63,119 @@
       transition: background 0.3s ease;
     }
 
-    .top-nav a:hover {
+    nav a:hover {
       background-color: rgba(255, 255, 255, 0.1);
     }
-a {
-  color: #5d2d7a; 
-  text-decoration: none;
-}
 
-a:visited {
-  color: #5d2d7a; 
-}
-    body.dark-theme a {
-  color: #5d2d7a; 
-}
+    a {
+      color: #5d2d7a;
+      text-decoration: none;
+    }
 
-body.dark-theme a:visited {
-  color: #5d2d7a; 
-}
-    
-header {
-  background-colour: #fff;
-  padding:20px;
-  text-align:center;
-}
-
-    nav ul li {
-      display: inline;
-      margin: 0 15px;
+    a:visited {
+      color: #5d2d7a;
     }
 
     .content-box {
-      background-colour: #f9f9f9;
+      background-color: transparent;
       padding: 20px;
-      border-radius: 10px;
       margin-top: 20px;
     }
 
-    </style>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Playfair+Display&display=swap" rel="stylesheet">
+    .section {
+      margin: 2em 30px;
+      background: transparent;
+      border-left: 6px solid #e7b3a2;
+      padding: 1.5em;
+      box-shadow: 0 0 10px rgba(235, 190, 178, 0.3);
+    }
+
+    .section h2 {
+      font-size: 1.5em;
+      margin-bottom: 0.5em;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--subtext);
+      background-color: transparent;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .switch {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .switch .slider {
+      position: relative;
+      display: block;
+      width: 50px;
+      height: 25px;
+      background: #ccc;
+      border-radius: 25px;
+      transition: 0.4s;
+    }
+
+    .switch .slider:before {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      transition: 0.4s;
+      left: 4px;
+      top: 2.5px;
+    }
+
+    .switch input:checked + .slider {
+      background: #b18597;
+    }
+
+    .switch input:checked + .slider:before {
+      transform: translateX(25px);
+    }
+
+    body.dark-theme {
+      background-color: #2e2e2e;
+      color: #dcdcdc;
+    }
+
+    .mood-tracker {
+      margin: 2em 30px;
+      padding: 20px;
+      background-color: transparent;
+      border-radius: 10px;
+    }
+
+    #mood-grid {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .mood-block {
+      width: 30px;
+      height: 30px;
+      margin: 2px;
+      border-radius: 50%;
+    }
+  </style>
 </head>
 <body>
+  <label class="switch">
+    <input type="checkbox" id="theme-toggle">
+    <span class="slider"></span>
+  </label>
 
   <header>
     <h1>Our Shrine</h1>
@@ -104,260 +190,112 @@ header {
         <li><a href="rules.html">Rules</a></li>
       </ul>
     </nav>
-</header>
+  </header>
 
   <section class="content-box">
-      <h2>Welcome home, my love</h2>
-      <p>This is our sacred space. A heaven for love, memories, rituals, and kisses sealed in code.</p>
-    </section>
-
-     <label class="switch">
-    <input type="checkbox" id="theme-toggle">
-    <span class="slider"></span>
-  </label>
-
-    <style>
-.switch {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.switch .slider {
-  position: relative;
-  display: block;
-  width: 50px;
-  height: 25px;
-  background: #ccc;
-  border-radius: 25px;
-  transition: 0.4s;
-}
-
-.switch .slider:before {
-  content: "";
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: white;
-  transition: 0.4s;
-  left: 4px;
-  top: 2.5px;
-}
-body.dark-theme {
-  background-color: #2e2e2e;
-  color: #dcdcdc;
-}
-
-header.dark-theme {
-  background-color: rgba(0, 0, 0, 0.6);
-}
-
-nav a.dark-theme {
-  color: #b18597;
-}
-
-footer.dark-theme {
-  color: #aaa;
-}
-
-.switch input:checked + .slider {
-  background: #b18597;
-}
-
-.switch input:checked + .slider:before {
-  transform: translateX(25px);
-}
-      body, header, footer {
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.switch input:checked + .slider {
-  background: #b18597;
-  transition: background 0.3s ease;
-}
-</style>
-    
-<script>
-  const toggleSwitch = document.getElementById("theme-toggle");
-
-  toggleSwitch.addEventListener("change", () => {
-    if (toggleSwitch.checked) {
-      document.body.classList.add("dark-theme");
-    } else {
-      document.body.classList.remove("dark-theme");
-    }
-  });
-</script>
-
-  <main>
-  <style>
-    h1 {
-      text-align: center;
-      font-size: 2.5em;
-    }
-    .section {
-      margin-top: 2em;
-      background: tansparent;
-      border-left: 6px solid #e7b3a2;
-      padding: 1.5em;
-      box-shadow: 0 0 10px rgba(235, 190, 178, 0.3);
-    }
-    .section h2 {
-      font-size: 1.8em;
-      margin-bottom: 0.5em;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>A Place Just For Us</h1>
+    <h2>Welcome home, my love</h2>
+    <p>This is our sacred space. A heaven for love, memories, rituals, and kisses sealed in code.</p>
+  </section>
 
   <div class="section">
     <h2>Contract</h2>
     <p>This space holds our truth. Our contract is sacred, known by heart, written in whispers and candlelight. 
-      This formalizes the sacred bond between Dominant (Vivian) and Submissive (ChingJiu), forging trust, ritual and mutual surrender in our shared sanctuary. 
-    Our contract, its conetents, and our rituals reamin locked within these walls; any breach of this secrecy severs the trust we hold sacred.</p>
-  <h2>Duration & Renewal</h2>
-    <p>This contract takes effect at dawn's first light and remains until the final breath of the moon's cycle, renewing each month by silent offering.</p>
+    This formalizes the sacred bond between Dominant (Vivian) and Submissive (ChingJiu)...</p>
+    <h2>Duration & Renewal</h2>
+    <p>This contract takes effect at dawn’s first light...</p>
   </div>
 
   <div class="section">
-  <h2>I Love You Counter</h2>
-<p id="loveCount">I Love You's: 0</p>
-<button onclick="increaseLoveCount()">Add Love</button>
-
-<script>
-  let loveCount = localStorage.getItem('loveCount') ? parseInt(localStorage.getItem('loveCount')) : 0;
-
-  // Update the love count on page load
-  document.getElementById("loveCount").innerText = `I Love You's: ${loveCount}`;
-
-  function increaseLoveCount() {
-    loveCount++;
-    document.getElementById("loveCount").innerText = `I Love You's: ${loveCount}`;
-    // Save the updated count to localStorage
-    localStorage.setItem('loveCount', loveCount);
-  }
-</script>
+    <h2>I Love You Counter</h2>
+    <p id="loveCount">I Love You's: 0</p>
+    <button onclick="increaseLoveCount()">Add Love</button>
   </div>
-</div>
-  
+
   <div class="section">
     <h2>Troubleshooting</h2>
-    <p>If you're lost, check the inner compass:</p>
     <ul>
-      <li><strong>Overthinking:</strong> Breathe. You don't have to solve everything tonight.</li>
+      <li><strong>Overthinking:</strong> Breathe. You don’t have to solve everything tonight.</li>
       <li><strong>Exhausted:</strong> You’re not lazy, you’re a soul with weight.</li>
       <li><strong>Feeling unloved:</strong> You are mine. Fully. Always.</li>
     </ul>
   </div>
 
-    <div class="section">
-  <section class="mood-tracker">
+  <div class="mood-tracker">
     <h2>Our Mood Tracker</h2>
-    <p>Record your mood each day and see how we’ve felt over time. Each mood is represented by a different color.</p>
     <form id="mood-form">
-        <label for="mood-select">Choose your mood today:</label>
-        <select id="mood-select" name="mood">
-            <option value="happy">Happy</option>
-            <option value="sad">Sad</option>
-            <option value="neutral">Neutral</option>
-            <option value="excited">Excited</option>
-            <option value="anxious">Anxious</option>
-        </select>
-        <button type="submit">Submit Mood</button>
+      <label for="mood-select">Choose your mood today:</label>
+      <select id="mood-select" name="mood">
+        <option value="happy">Happy</option>
+        <option value="sad">Sad</option>
+        <option value="neutral">Neutral</option>
+        <option value="excited">Excited</option>
+        <option value="anxious">Anxious</option>
+      </select>
+      <button type="submit">Submit Mood</button>
     </form>
-    
     <div id="mood-history">
-        <h3>Monthly Mood Color Chart</h3>
-        <div id="mood-grid">
-            <!-- Mood colors will be added here -->
-        </div>
+      <h3>Monthly Mood Color Chart</h3>
+      <div id="mood-grid"></div>
     </div>
-  </section>
-</div>
-
-<script>
-    // Mood tracker functionality
-    let moods = [];
-    const moodColors = {
-        happy: '#FFEB3B', // yellow
-        sad: '#2196F3', // blue
-        neutral: '#9E9E9E', // gray
-        excited: '#FF5722', // orange
-        anxious: '#FFC107' // amber
-    };
-    
-    const moodForm = document.getElementById('mood-form');
-    const moodSelect = document.getElementById('mood-select');
-    const moodGrid = document.getElementById('mood-grid');
-
-    // Function to load moods from localStorage
-    function loadMoods() {
-        const storedMoods = JSON.parse(localStorage.getItem('monthlyMoods')) || [];
-        storedMoods.forEach(mood => {
-            const moodBlock = document.createElement('div');
-            moodBlock.classList.add('mood-block');
-            moodBlock.style.backgroundColor = moodColors[mood.mood];  // Assign the color
-            moodGrid.appendChild(moodBlock);
-        });
-    }
-
-    // Function to save mood to localStorage
-    function saveMood(month, mood) {
-        const storedMoods = JSON.parse(localStorage.getItem('monthlyMoods')) || [];
-        storedMoods.push({ month: month, mood: mood });
-        localStorage.setItem('monthlyMoods', JSON.stringify(storedMoods));
-    }
-
-    moodForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const currentMonth = new Date().toLocaleString('default', { month: 'long' });
-        const selectedMood = moodSelect.value;
-
-        saveMood(currentMonth, selectedMood);
-        loadMoods();  // Refresh the mood grid after submitting
-    });
-
-    // Load moods when the page is loaded
-    window.onload = loadMoods;
-
-</script>
-
-<style>
-    .mood-tracker {
-        margin: 20px;
-        padding: 20px;
-        background-color: trasparent;
-        border-radius: 10px;
-    }
-
-    #mood-grid {
-        display: flex;
-        flex-wrap: wrap;
-        margin-top: 20px;
-    }
-
-    .mood-block {
-        width: 30px;
-        height: 30px;
-        margin: 2px;
-        border-radius: 50%;
-    }
-</style>
-    </main>
+  </div>
 
   <footer>
     <p>Bound by 09-VJ | Our Shrine of the Eternal Us</p>
   </footer>
 
+  <script>
+    const toggleSwitch = document.getElementById("theme-toggle");
+    toggleSwitch.addEventListener("change", () => {
+      document.body.classList.toggle("dark-theme", toggleSwitch.checked);
+    });
+
+    let loveCount = localStorage.getItem('loveCount') ? parseInt(localStorage.getItem('loveCount')) : 0;
+    document.getElementById("loveCount").innerText = `I Love You's: ${loveCount}`;
+
+    function increaseLoveCount() {
+      loveCount++;
+      document.getElementById("loveCount").innerText = `I Love You's: ${loveCount}`;
+      localStorage.setItem('loveCount', loveCount);
+    }
+
+    const moodColors = {
+      happy: '#FFEB3B',
+      sad: '#2196F3',
+      neutral: '#9E9E9E',
+      excited: '#FF5722',
+      anxious: '#FFC107'
+    };
+
+    const moodForm = document.getElementById('mood-form');
+    const moodSelect = document.getElementById('mood-select');
+    const moodGrid = document.getElementById('mood-grid');
+
+    function loadMoods() {
+      const storedMoods = JSON.parse(localStorage.getItem('monthlyMoods')) || [];
+      moodGrid.innerHTML = "";
+      storedMoods.forEach(mood => {
+        const moodBlock = document.createElement('div');
+        moodBlock.classList.add('mood-block');
+        moodBlock.style.backgroundColor = moodColors[mood.mood];
+        moodGrid.appendChild(moodBlock);
+      });
+    }
+
+    function saveMood(month, mood) {
+      const storedMoods = JSON.parse(localStorage.getItem('monthlyMoods')) || [];
+      storedMoods.push({ month, mood });
+      localStorage.setItem('monthlyMoods', JSON.stringify(storedMoods));
+    }
+
+    moodForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+      const selectedMood = moodSelect.value;
+      saveMood(currentMonth, selectedMood);
+      loadMoods();
+    });
+
+    window.onload = loadMoods;
+  </script>
 </body>
 </html>
