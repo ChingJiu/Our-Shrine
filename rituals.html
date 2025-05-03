@@ -65,6 +65,46 @@ a {
 a:visited {
   color: #ff5500; /* Keep the same color for visited links */
 }
+    /* Make the site responsive on small screens like iPhones */
+@media screen and (max-width: 600px) {
+  .top-nav {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+  }
+
+  .rituals {
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .ritual {
+    padding: 15px;
+    font-size: 15px;
+  }
+
+  .ritual-timer {
+    padding: 20px;
+    margin: 20px 0;
+  }
+
+  #timerInput {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .ritual-timer button {
+    width: 100%;
+    max-width: 200px;
+    margin-top: 10px;
+  }
+
+  #timerDisplay {
+    font-size: 16px;
+  }
+}
+
   </style>
 </head>
 <body>
