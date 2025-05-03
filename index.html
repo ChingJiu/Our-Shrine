@@ -301,7 +301,77 @@ footer.dark-theme {
         moodBlock.style.backgroundColor = moodColors[selectedMood];
         moodGrid.appendChild(moodBlock);
     });
-</script>
+
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Mood Tracker</title>
+</head>
+<body>
+
+<header>
+    <h1>Our Mood Tracker</h1>
+</header>
+
+<section class="mood-tracker">
+    <h2>Select Your Mood for the Month</h2>
+
+    <form id="mood-form">
+        <label for="mood-select">Choose your mood:</label>
+        <select id="mood-select" required>
+            <option value="Happy">Happy</option>
+            <option value="Sad">Sad</option>
+            <option value="Excited">Excited</option>
+            <option value="Calm">Calm</option>
+            <option value="Angry">Angry</option>
+        </select>
+        <button type="submit">Save Mood</button>
+    </form>
+
+    <h3>Saved Moods</h3>
+    <ul id="mood-list">
+        <!-- Moods will appear here -->
+    </ul>
+</section>
+
+<script>
+    function loadMoods() {
+        const storedMoods = JSON.parse(localStorage.getItem('monthlyMoods')) || [];
+        const moodList = document.getElementById('mood-list');
+        moodList.innerHTML = '';  // Clear the list before adding new moods
+
+        storedMoods.forEach(mood => {
+            const moodItem = document.createElement('li');
+            moodItem.textContent = `${mood.month}: ${mood.mood}`;
+            moodList.appendChild(moodItem);
+        });
+    }
+
+    // Save mood to localStorage
+    function saveMood(month, mood) {
+        const storedMoods = JSON.parse(localStorage.getItem('monthlyMoods')) || [];
+        storedMoods.push({ month: month, mood: mood });
+        localStorage.setItem('monthlyMoods', JSON.stringify(storedMoods));
+    }
+
+    // Handle form submission
+    const moodForm = document.getElementById('mood-form');
+    const moodSelect = document.getElementById('mood-select');
+
+    moodForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+        const selectedMood = moodSelect.value;
+
+        saveMood(currentMonth, selectedMood);
+
+        loadMoods();
+    });
+
+    window.onload = loadMoods;
 
 <style>
     .mood-tracker {
