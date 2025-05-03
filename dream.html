@@ -6,19 +6,20 @@
   <title>Dreams and Wishes Board</title>
   <style>
     :root {
-  --background-light: #f9f9f9;  /* Set a light background */
-  --text-light: #333;           /* Light text */
-  --background-dark: #1c1c1c;   /* Dark background */
-  --text-dark: #eaeaea;         /* Dark text */
-  --border: #3e3e3e;
-  --soft-border: rgba(194, 117, 194, 0.3);
-  --accent: #c275c2;
-}
+      --background-light: #f9f9f9;  /* Set a light background */
+      --text-light: #333;           /* Light text */
+      --background-dark: #1c1c1c;   /* Dark background */
+      --text-dark: #eaeaea;         /* Dark text */
+      --border: #3e3e3e;
+      --soft-border: rgba(194, 117, 194, 0.3);
+      --accent: #c275c2;
+    }
+
     body {
-      margin:0;
+      margin: 0;
       background-color: var(--background-light);
       color: var(--text-light);
-      transitionL background 0.3s, color 0.3s;
+      transition: background 0.3s, color 0.3s;
       font-family: 'Georgia', serif;
       padding: 40px;
     }
@@ -32,7 +33,7 @@
       background-color: var(--background-dark);
       color: var(--text-dark);
     }
-    
+
     h1 {
       font-size: 2.2em;
       text-align: center;
@@ -42,7 +43,7 @@
       font-weight: 400;
     }
 
-     .theme-toggle {
+    .theme-toggle {
       position: fixed;
       top: 15px;
       right: 15px;
@@ -55,39 +56,38 @@
       font-size: 13px;
     }
 
-      @media screen and (max-width: 600px) 
-
+    /* Theme slider styling */
     .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--soft-border);
-  transition: 0.4s;
-  border-radius: 34px;
-}
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--soft-border);
+      transition: 0.4s;
+      border-radius: 34px;
+    }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 4px;
-  bottom: 4px;
-  background-color: var(--accent);
-  transition: 0.4s;
-  border-radius: 50%;
-}
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: var(--accent);
+      transition: 0.4s;
+      border-radius: 50%;
+    }
 
-input:checked + .slider {
-  background-color: var(--accent);
-}
+    input:checked + .slider {
+      background-color: var(--accent);
+    }
 
-input:checked + .slider:before {
-  transform: translateX(24px);
-}
+    input:checked + .slider:before {
+      transform: translateX(24px);
+    }
 
     .wish-list {
       list-style: none;
@@ -97,7 +97,6 @@ input:checked + .slider:before {
     }
 
     .wish-item {
-      background-color: #333;
       margin: 10px 0;
       padding: 15px;
       border-radius: 8px;
@@ -105,6 +104,7 @@ input:checked + .slider:before {
       justify-content: space-between;
       align-items: center;
       font-size: 16px;
+      border: 1px solid var(--border);
     }
 
     .wish-item input[type="checkbox"] {
@@ -135,19 +135,34 @@ input:checked + .slider:before {
       display: flex;
       justify-content: center;
       gap: 15px;
-      padding: 15px ;
+      padding: 15px;
       font-size: 14px;
       border-bottom: 1px solid var(--soft-border);
     }
 
     .top-nav a {
-      color: var(--accent)
+      color: var(--accent);
       text-decoration: none;
       font-weight: 500;
-      
+    }
+
     .top-nav a:hover {
       background-color: rgba(255, 255, 255, 0.1);
     }
+
+    /* Slider toggle position */
+    #themeSwitch {
+      display: none;
+    }
+
+    #themeSwitch + .slider {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 20px;
+    }
+
   </style>
 </head>
 
@@ -163,30 +178,37 @@ input:checked + .slider:before {
 
   <h1>Our Dreams & Wishes</h1>
 
+  <!-- Theme toggle -->
+  <label class="theme-toggle">
+    <input type="checkbox" id="themeSwitch" onchange="toggleTheme()">
+    <span class="slider"></span>
+  </label>
+
   <ul class="wish-list" id="wishList">
   </ul>
 
   <script>
-  window.onload = function () {
-  const switchInput = document.getElementById("themeSwitch");
-  // Set default theme to light
-  document.body.classList.add("light");
-  document.body.classList.remove("dark");
-
-  // Ensure the toggle starts in the off position (light theme)
-  switchInput.checked = false;
-};
-
-  function toggleTheme() {
-    const switchInput = document.getElementById("themeSwitch");
-    if (switchInput.checked) {
-      document.body.classList.remove("light");
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
+    window.onload = function () {
+      const switchInput = document.getElementById("themeSwitch");
+      // Set default theme to light
       document.body.classList.add("light");
+      document.body.classList.remove("dark");
+
+      // Ensure the toggle starts in the off position (light theme)
+      switchInput.checked = false;
+    };
+
+    function toggleTheme() {
+      const switchInput = document.getElementById("themeSwitch");
+      if (switchInput.checked) {
+        document.body.classList.remove("light");
+        document.body.classList.add("dark");
+      } else {
+        document.body.classList.remove("dark");
+        document.body.classList.add("light");
+      }
     }
-  }
+
     const wishes = [
       { id: 'wish1', text: "Travel to a place we've never been." },
       { id: 'wish2', text: "Have a cozy night with only each other and the stars." },
