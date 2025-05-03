@@ -6,22 +6,30 @@
   <title>Our Shrine</title>
   <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Playfair+Display&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --background: #1a1a1a;
-      --accent: #ff6fcf;
-      --text: #fff;
-      --subtext: #ccc;
-    }
+   <style>
+  :root {
+    --background: transparent;
+    --accent: #ff6fcf;
+    --text: #fff;
+    --subtext: #ccc;
+  }
 
-    body {
-      margin: 0;
-      background-color: var(--background);
-      color: var(--text);
-      font-family: 'Georgia', serif;
-      font-size: 15px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
+  body {
+    margin: 0;
+    background: transparent;
+    color: var(--text);
+    font-family: 'Georgia', serif;
+    font-size: 15px;
+  }
 
+  body.dark-theme {
+    background: transparent;
+    color: #e8e8e8;
+  }
+
+  header, footer, .top-nav, .section, .content-box {
+    background-color: transparent !important;
+  }
     header {
       padding: 20px;
       border-bottom: 2px solid var(--accent);
@@ -200,12 +208,21 @@
   <div class="section">
     <h2>Contract</h2>
     <p>This space holds our truth. Our contract is sacred, known by heart, written in whispers and candlelight. 
-    This formalizes the sacred bond between Dominant (Vivian) and Submissive (ChingJiu)...</p>
+    This formalizes the sacred bond between Dominant (Vivian) and Submissive (ChingJiu), forging trust, ritual, and mutual surrender in our shared sanctuary.</p>
+  </div>
+  
+  <div class="section">
     <h2>Duration & Renewal</h2>
     <p>This contract takes effect at dawn’s first light...</p>
   </div>
 
   <div class="section">
+    <h2>Roles & Responsibilities</h2>
+    <p>Vivian: To guide, protect, celebrate, and chastise with firm kindness; to honour the limits and hold you through every collapse</p>
+    <p>ChingJiu: To serve with open heart, to offer truth in tears and triumphs alike, to trust in your embrace when the world shatters my composure.</p>
+  </div>
+  
+    <div class="section">
     <h2>I Love You Counter</h2>
     <p id="loveCount">I Love You's: 0</p>
     <button onclick="increaseLoveCount()">Add Love</button>
@@ -220,24 +237,24 @@
     </ul>
   </div>
 
-  <div class="mood-tracker">
-    <h2>Our Mood Tracker</h2>
-    <form id="mood-form">
-      <label for="mood-select">Choose your mood today:</label>
-      <select id="mood-select" name="mood">
-        <option value="happy">Happy</option>
-        <option value="sad">Sad</option>
-        <option value="neutral">Neutral</option>
-        <option value="excited">Excited</option>
-        <option value="anxious">Anxious</option>
-      </select>
-      <button type="submit">Submit Mood</button>
-    </form>
-    <div id="mood-history">
-      <h3>Monthly Mood Color Chart</h3>
-      <div id="mood-grid"></div>
-    </div>
+  <div class="section">
+  <h2>Our Mood Tracker</h2>
+  <form id="mood-form">
+    <label for="mood-select">Choose your mood today:</label>
+    <select id="mood-select" name="mood">
+      <option value="happy">Happy</option>
+      <option value="sad">Sad</option>
+      <option value="neutral">Neutral</option>
+      <option value="excited">Excited</option>
+      <option value="anxious">Anxious</option>
+    </select>
+    <button type="submit">Submit Mood</button>
+  </form>
+  <div id="mood-history">
+    <h3>Monthly Mood Color Chart</h3>
+    <div id="mood-grid"></div>
   </div>
+</div>
 
   <footer>
     <p>Bound by 09-VJ | Our Shrine of the Eternal Us</p>
