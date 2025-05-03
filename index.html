@@ -9,21 +9,22 @@
     :root {
       --background: transparent;
       --accent: #ff6fcf;
-      --text: #fff;
+      --text-light: #333;
+      --text-dark: #fff;
       --subtext: #ccc;
     }
 
     body {
       margin: 0;
       background: transparent;
-      color: var(--text);
-      font-family: 'Georgia', serif;
+      color: var(--text-light); /* Default to light text color */
+      font-family: 'Geogria', serif;
       font-size: 15px;
     }
 
     body.dark-theme {
       background: #2e2e2e;
-      color: #dcdcdc;
+      color: var(--text-dark); /* Dark theme text color */
     }
 
     header, footer, .top-nav, .section, .content-box {
@@ -38,7 +39,7 @@
     }
 
     header h1 {
-      font-size: 2.2em;
+      font-size: 2.3em;
       margin: 0;
       color: var(--accent);
       text-shadow: 0 0 5px rgba(255, 85, 0, 0.5);
@@ -49,15 +50,15 @@
       justify-content: center;
       background-color: #111;
       padding: 10px;
-      font-size: 14px;
       border-bottom: 1 px solid rgba(255, 255, 255, 0.2);
     }
 
     .top-nav a {
+      font-size: 0.85rem;
       letter-spacing: 0.5px;
       font-weight: 500;
       text-decoration: none;
-      color: var(--text);
+      color: var(--text-light);
       padding: 4px 8px;
     }
 
@@ -151,11 +152,6 @@
 
     .switch input:checked + .slider:before {
       transform: translateX(25px);
-    }
-
-    body.dark-theme {
-      background-color: #2e2e2e;
-      color: #dcdcdc;
     }
 
     .mood-tracker {
