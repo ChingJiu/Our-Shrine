@@ -5,19 +5,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dreams and Wishes Board</title>
   <style>
+    :root {
+  --background-light: #f9f9f9;  /* Set a light background */
+  --text-light: #333;           /* Light text */
+  --background-dark: #1c1c1c;   /* Dark background */
+  --text-dark: #eaeaea;         /* Dark text */
+  --border: #3e3e3e;
+  --soft-border: rgba(194, 117, 194, 0.3);
+  --accent: #c275c2;
+}
     body {
-      background-color: #2d2d2d;
-      color: #fff;
+      margin:0;
+      background-color: var(--background-light);
+      color: var(--text-light);
+      transitionL background 0.3s, color 0.3s;
       font-family: 'Georgia', serif;
       padding: 40px;
     }
 
-    h1 {
-      font-size: 32px;
-      text-align: center;
-      color: #ff6fcf;
-      margin-bottom: 20px;
+    body.light {
+      background-color: var(--background-light);
+      color: var(--text-light);
     }
+
+    body.dark {
+      background-color: var(--background-dark);
+      color: var(--text-dark);
+    }
+    
+    h1 {
+      font-size: 2.2em;
+      text-align: center;
+      color: var(--accent);
+      margin-top: 20px;
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+
+     .theme-toggle {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+      @media screen and (max-width: 600px) 
+
+    .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--soft-border);
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--accent);
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--accent);
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
 
     .wish-list {
       list-style: none;
@@ -71,7 +141,7 @@
     }
 
     .top-nav a {
-      color: #ff5500;
+      color: var(--accent)
       text-decoration: none;
       font-weight: 500;
       
