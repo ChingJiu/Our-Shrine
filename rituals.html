@@ -6,13 +6,14 @@
   <title>Our Rituals</title>
   <style>
     :root {
-  --bg: #1c1c1c;
-  --text: #eaeaea;
+  --background-light: #f9f9f9;  /* Set a light background */
+  --text-light: #333;           /* Light text */
+  --background-dark: #1c1c1c;   /* Dark background */
+  --text-dark: #eaeaea;         /* Dark text */
   --border: #3e3e3e;
   --soft-border: rgba(194, 117, 194, 0.3);
   --accent: #c275c2;
 }
-
 
     body {
       margin: 0;
@@ -259,13 +260,15 @@ input:checked + .slider:before {
   </main>
 
   <script>
-  // Default is light theme
   window.onload = function () {
-    const switchInput = document.getElementById("themeSwitch");
-    document.body.classList.remove("dark");
-    document.body.classList.add("light");
-    switchInput.checked = false; // light is off
-  };
+  const switchInput = document.getElementById("themeSwitch");
+  // Set default theme to light
+  document.body.classList.add("light");
+  document.body.classList.remove("dark");
+
+  // Ensure the toggle starts in the off position (light theme)
+  switchInput.checked = false;
+};
 
   function toggleTheme() {
     const switchInput = document.getElementById("themeSwitch");
