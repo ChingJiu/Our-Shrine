@@ -58,6 +58,46 @@
     }
   </style>
 </head>
+  
+  <nav class="top-nav">
+  <a href="index.html">Home</a>
+  <a href="story.html">Story Timeline</a>
+  <a href="dream.html">Dreams & Wishes</a>
+  <a href="memory.html">Memory Gallery</a>
+  <a href="music.html">Playlist</a>
+  <a href="rituals.html">Rituals</a>
+</nav>
+<style>
+  a {
+  color: #ff5500; /* Set the color for links in both themes */
+  text-decoration: none;
+}
+
+a:visited {
+  color: #ff5500; /* Keep the same color for visited links */
+}
+  .top-nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 15px 0;
+  background-color: var(--background);
+}
+
+.top-nav a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.top-nav a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+</style>
 <body>
   <h1>Our Dreams & Wishes</h1>
   <ul class="wish-list">
