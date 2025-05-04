@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Our Story Timeline</title>
   <style>
+   
     :root {
       --background-light: #f9f9f9;
       --text-light: #333;
@@ -12,8 +13,8 @@
       --text-dark: #f0f0f0;
       --border: #3e3e3e;
       --accent: #c275c2;
-      --text: #fff;
-      --subtext: #949494;
+      --subtext-light: #949494;
+      --subtext-dark: #ccc;
       --soft-border: rgba(194, 117, 194, 0.3);
     }
 
@@ -28,11 +29,15 @@
     }
 
     body.light {
+      --text: var(--text-light);
+      --subtext: var(--subtext-light);
       background-color: var(--background-light);
-      color: var(--text-light);
+      color: var(--text);
     }
 
     body.dark {
+      --text: var(--text-dark);
+      --subtext: var(--subtext-dark);
       background-color: var(--background-dark);
       color: var(--text-dark);
     }
