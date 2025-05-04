@@ -6,28 +6,52 @@
   <title>Our Story Timeline</title>
   <style>
     :root {
-      --background: #1a1a1a;
-      --accent: #ff6fcf;
+      --background-light: #f9f9f9;
+      --text-light: #333;
+      --background-dark: #1c1c1c;
+      --border: #3e3e3e;
+      --accent: #c275c2;
       --text: #fff;
       --subtext: #ccc;
+      --soft-border: rgba(194, 117, 194, 0.3);
     }
 
     body {
       margin: 0;
-      background-color: var(--background);
-      color: var(--text);
+      padding: 0;
+      background: transparent;
+      color: var(--text-light);
       font-family: 'Georgia', serif;
+      font-size: 15px;
+      transition: background 0.3s, color 0.3s;
     }
 
+    body.light {
+      background-color: var(--background-light);
+      color: var(--text-light);
+    }
+
+    body.dark {
+      background-color: var(--background-dark);
+      color: var(--text-dark);
+    }
+
+    header, footer, .top-nav, .content-box {
+      background-color: transparent !important;
+    }
+    
     header {
       text-align: center;
       padding: 20px;
       border-bottom: 2px solid var(--accent);
+      background-color: transparent;
     }
 
     header h1 {
+      text-align: center;
       font-size: 2.5em;
       margin: 0;
+      font-weight: 400
       color: var(--accent);
       text-shadow: 0 0 5px rgba(255, 85, 0, 0.5);
     }
@@ -35,11 +59,38 @@
     .top-nav {
       display: flex;
       justify-content: center;
-      background-color: #111;
+      gap: 15px;
       padding: 10px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--soft-border);
     }
 
     .top-nav a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.3s ease;
+    }
+
+      .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    @media screen and (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+    }
+
+    .top-nav a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    nav a {
       color: var(--accent);
       text-decoration: none;
       font-weight: bold;
@@ -48,10 +99,15 @@
       transition: background 0.3s ease;
     }
 
-    .top-nav a:hover {
+    nav a:hover {
       background-color: rgba(255, 255, 255, 0.1);
     }
 
+    .content-box {
+      background-color: transparent;
+      padding: 20px;
+      margin-top: 20px;
+    }
     .timeline {
       max-width: 900px;
       margin: 40px auto;
@@ -104,10 +160,58 @@
       margin: 30px 0;
     }
 
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 2em;
-      }
+        .switch {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--soft-border);
+      border-radius: 34px;
+      transition: 0.4s;
+    }
+
+    .slider:before {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent)
+      transition: 0.4s;
+      left: 4px;
+      bottom: 4px;
+    }
+
+    input:checked + .slider {
+      background-color: var(--accent);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(25px);
+    }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--subtext);
+      background-color: transparent;
+    }
 
       .year-block {
         font-size: 24px;
@@ -161,9 +265,39 @@
       </div>
     </div>
 
-    <!-- Add more entries as needed -->
+    <script>
+  window.onload = function () {
+    const switchInput = document.getElementById("theme-toggle");
 
+    // Apply saved theme
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark");
+      document.body.classList.remove("light");
+      switchInput.checked = true;
+    } else {
+      document.body.classList.add("light");
+      document.body.classList.remove("dark");
+      switchInput.checked = false;
+    }
+
+    // Listen for checkbox changes
+    switchInput.addEventListener("change", function () {
+      if (switchInput.checked) {
+        document.body.classList.remove("light");
+        document.body.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.body.classList.remove("dark");
+        document.body.classList.add("light");
+        localStorage.setItem("theme", "light");
+      }
+    });
+  };
+</script>
+    
   </main>
+
+  <footer>Bound by 09-VJ | Our Shrine of the Eternal Us</footer>
 
 </body>
 </html>
