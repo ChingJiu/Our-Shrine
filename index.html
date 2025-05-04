@@ -7,25 +7,35 @@
   <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Playfair+Display&display=swap" rel="stylesheet">
   <style>
     :root {
-      --background: transparent;
-      --accent: #ff6fcf;
+      --background-light: #f9f9f9;
       --text-light: #333;
-      --text-dark: #fff;
+      --background-dark: #1c1c1c;
+      --text-dark: #eaeaea;
+      --border: #3e3e3e
       --subtext: #ccc;
+      --accent: #c275c2
+      --soft-border: rgba(194, 117, 194, 0.3);
     }
 
     body {
       margin: 0;
+      padding: 0;
       background: transparent;
       color: var(--text-light); /* Default to light text color */
       font-family: 'Geogria', serif;
       font-size: 15px;
+      transition: background 0.3s, color 0.3s;
     }
 
-    body.dark-theme {
-      background: #2e2e2e;
-      color: var(--text-dark); /* Dark theme text color */
+    body.light { 
+  background-color: var(--background-light); 
+      color: var(--text-light); 
     }
+    
+body.dark { 
+  background-color: var(--background-dark); 
+  color: var(--text-dark); 
+}
 
     header, footer, .top-nav, .section, .content-box {
       background-color: transparent !important;
@@ -39,27 +49,39 @@
     }
 
     header h1 {
+      text-align: center;
       font-size: 2.3em;
-      margin: 0;
+      margin-top: 20px;
+      font-weight: 400;
       color: var(--accent);
-      text-shadow: 0 0 5px rgba(255, 85, 0, 0.5);
     }
 
     .top-nav {
       display: flex;
       justify-content: center;
-      background-color: #111;
       gap: 15px;
       padding: 15px;
       font-size: 14px;
-      border-bottom: 1 px solid rgba(255, 255, 255, 0.2);
+      border-bottom: 1 px solid var(--soft border);
     }
 
     .top-nav a {
       font-weight: 500;
       text-decoration: none;
-      color: var(--text-light);
+      color: var(--accent);
       padding: 4px 8px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    @media screen and (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
     }
 
     nav ul {
@@ -113,9 +135,12 @@
     }
 
     .switch {
-      position: absolute;
-      top: 20px;
-      right: 30px;
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
     }
 
     .switch input {
@@ -124,33 +149,35 @@
       height: 0;
     }
 
-    .switch .slider {
-      position: relative;
-      display: block;
-      width: 50px;
-      height: 25px;
-      background: #ccc;
-      border-radius: 25px;
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--soft-border);
+      border-radius: 34px;
       transition: 0.4s;
     }
 
-    .switch .slider:before {
+    .slider:before {
       content: "";
       position: absolute;
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      background: white;
+      background: var(--accent)
       transition: 0.4s;
       left: 4px;
-      top: 2.5px;
+      bottom: 4px;
     }
 
-    .switch input:checked + .slider {
-      background: #b18597;
+    input:checked + .slider {
+      background-color: var(--accent);
     }
 
-    .switch input:checked + .slider:before {
+    input:checked + .slider:before {
       transform: translateX(25px);
     }
 
