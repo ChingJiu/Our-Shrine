@@ -1,0 +1,139 @@
+:root {
+  --bg: #101423;
+  --card: #1d2440;
+  --accent: #c275c2;
+  --text: #f2f2f7;
+  --muted: #b5b8c9;
+  --line: #353c5f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Futura, "Futura", sans-serif;
+  background: radial-gradient(circle at top, #1d2850 0%, var(--bg) 50%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+header {
+  border: 1px solid var(--line);
+  background: linear-gradient(140deg, #2d3a73, #232c53);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+h1 {
+  margin: 0 0 8px 0;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+nav {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid var(--line);
+  background: #20294d;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.grid {
+  display: grid;
+  gap: 14px;
+}
+
+.card {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.todo-form {
+  display: grid;
+  gap: 10px;
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+}
+
+input[type="text"] {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #151d38;
+  color: var(--text);
+  padding: 10px;
+  font-family: inherit;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background: var(--accent);
+  color: white;
+  font-family: inherit;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: grid;
+  gap: 8px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--line);
+  background: #182042;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.todo-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.todo-text.done {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.delete-btn {
+  background: #55305f;
+}
