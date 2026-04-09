@@ -1,1 +1,85 @@
-hi
+    :root {
+      --bg: #101423;
+      --card: #1d2440;
+      --accent: #c275c2;
+      --text: #f2f2f7;
+      --muted: #b5b8c9;
+      --line: #353c5f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Futura, "Futura", san serif;
+      background: radial-gradient(circle at top, #1d2850 0%, var(--bg) 50%);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    header {
+      border: 1px solid var(--line);
+      background: linear-gradient(140deg, #2d3a73, #232c53);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 8px 0;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    nav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--line);
+      background: #20294d;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .muted { color: var(--muted); }
+
+    .clock {
+      font-size: 1.4rem;
+      margin: 8px 0;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 8px 10px;
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+      font-family: inherit;
+    }
+  </style>
