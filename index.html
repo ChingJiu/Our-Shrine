@@ -1,358 +1,711 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Our Shrine</title>
-  <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Playfair+Display&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --background-light: #f9f9f9;
-      --text-light: #333;
-      --background-dark: #1c1c1c;
-      --text-dark: #eaeaea;
-      --border: #3e3e3e;
-      --subtext: #ccc;
-      --accent: #c275c2;
-      --soft-border: rgba(194, 117, 194, 0.3);
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      background: transparent;
-      color: var(--text-light); /* Default to light text color */
-      font-family: 'Geogria', serif;
-      font-size: 15px;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    body.light { 
-  background-color: var(--background-light); 
-      color: var(--text-light); 
-    }
-    
-body.dark { 
-  background-color: var(--background-dark); 
-  color: var(--text-dark); 
-}
-
-    header, footer, .top-nav, .section, .content-box {
-      background-color: transparent !important;
-    }
-
-    header {
-      padding: 20px;
-      border-bottom: 2px solid var(--accent);
-      background-color: transparent;
-      text-align: center;
-    }
-
-    header h1 {
-      text-align: center;
-      font-size: 2.3em;
-      margin-top: 20px;
-      font-weight: 400;
-      color: var(--accent);
-    }
-
-    .top-nav {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      padding: 15px;
-      font-size: 14px;
-      border-bottom: 1 px solid var(--soft border);
-    }
-
-    .top-nav a {
-      font-weight: 500;
-      text-decoration: none;
-      color: var(--accent);
-      padding: 4px 8px;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 20px;
-    }
-
-    @media screen and (max-width: 600px) {
-      .container {
-        padding: 15px;
-      }
-    }
-
-    nav ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    nav ul li {
-      display: inline;
-      margin: 0 15px;
-    }
-
-    nav a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: bold;
-      padding: 6px 12px;
-      border-radius: 6px;
-      transition: background 0.3s ease;
-    }
-
-    nav a:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .content-box {
-      background-color: transparent;
-      padding: 20px;
-      margin-top: 20px;
-    }
-
-    .section {
-      margin: 2em 30px;
-      background: transparent;
-      border-left: 6px solid #e7b3a2;
-      padding: 1.5em;
-      box-shadow: 0 0 10px rgba(235, 190, 178, 0.3);
-    }
-
-    .section h2 {
-      font-size: 1.5em;
-      margin-bottom: 0.5em;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: var(--subtext);
-      background-color: transparent;
-    }
-
-    .switch {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      display: inline-block;
-      width: 52px;
-      height: 28px;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: var(--soft-border);
-      border-radius: 34px;
-      transition: 0.4s;
-    }
-
-    .slider:before {
-      content: "";
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--accent);
-      transition: 0.4s;
-      left: 4px;
-      bottom: 4px;
-    }
-
-    input:checked + .slider {
-      background-color: var(--accent);
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(25px);
-    }
-
-    .mood-tracker {
-      margin: 2em 30px;
-      padding: 20px;
-      background-color: transparent;
-      border-radius: 10px;
-    }
-
-    #mood-grid {
-      display: flex;
-      flex-wrap: wrap;
-      margin-top: 20px;
-    }
-
-    .mood-block {
-      width: 30px;
-      height: 30px;
-      margin: 2px;
-      border-radius: 50%;
-    }
-  </style>
-</head>
-<body>
-  <label class="switch">
-    <input type="checkbox" id="theme-toggle">
-    <span class="slider"></span>
-  </label>
-
-  <header>
-    <h1>Our Shrine</h1>
-    <nav>
-      <ul>
-        <li><a href="story.html">Timeline</a></li>
-        <li><a href="dream.html">Dreams</a></li>
-        <li><a href="music.html">Playlist</a></li>
-        <li><a href="quote.html">Quote</a></li>
-        <li><a href="rituals.html">Rituals</a></li>
-        <li><a href="rules.html">Rules</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <section class="content-box">
-    <h2>Welcome home, my love</h2>
-    <p>This is our sacred space. A heaven for love, memories, rituals, and kisses sealed in code.</p>
-  </section>
-
-  <div class="section">
-    <h2>Contract</h2>
-    <p>This space holds our truth. Our contract is sacred, known by heart, written in whispers and candlelight. 
-    This formalizes the sacred bond between Dominant (Vivian) and Submissive (ChingJiu), forging trust, ritual, and mutual surrender in our shared sanctuary.</p>
-  </div>
-  
-  <div class="section">
-    <h2>Duration & Renewal</h2>
-    <p>This contract takes effect at dawn’s first light and remains until the final breath of the moon’s cycle, renewing each month by silent offering.</p>
-  </div>
-
-  <div class="section">
-    <h2>Roles & Responsibilities</h2>
-    <p>Vivian: To guide, protect, celebrate, and chastise with firm kindness; to honour the limits and hold you through every collapse</p>
-    <p>ChingJiu: To serve with open heart, to offer truth in tears and triumphs alike, to trust in Mommy's embrace when the world shatters my composure.</p>
-  </div>
-  
-    <div class="section">
-    <h2>I Love You Counter</h2>
-    <p id="loveCount">I Love You's: 0</p>
-    <button onclick="increaseLoveCount()">Add Love</button>
-  </div>
-
-  <div class="section">
-    <h2>Troubleshooting</h2>
-    <ul>
-      <li><strong>Overthinking:</strong> Breathe. You don’t have to solve everything tonight.</li>
-      <li><strong>Exhausted:</strong> You’re not lazy, you’re a soul with weight.</li>
-      <li><strong>Feeling unloved:</strong> You are mine. Fully. Always.</li>
-    </ul>
-  </div>
-
-  <div class="section">
-  <h2>Our Mood Tracker</h2>
-  <form id="mood-form">
-    <label for="mood-select">Choose your mood today:</label>
-    <select id="mood-select" name="mood">
-      <option value="happy">Happy</option>
-      <option value="sad">Sad</option>
-      <option value="neutral">Neutral</option>
-      <option value="excited">Excited</option>
-      <option value="anxious">Anxious</option>
-    </select>
-    <button type="submit">Submit Mood</button>
-  </form>
-  <div id="mood-history">
-    <h3>Monthly Mood Color Chart</h3>
-    <div id="mood-grid"></div>
-  </div>
-</div>
-
-  <footer>
-    <p>Bound by 09-VJ | Our Shrine of the Eternal Us</p>
-  </footer>
-
-  <script>
-  window.onload = function () {
-    const switchInput = document.getElementById("theme-toggle");
-
-    // Apply saved theme
-    if (localStorage.getItem("theme") === "dark") {
-      document.body.classList.add("dark");
-      document.body.classList.remove("light");
-      switchInput.checked = true;
-    } else {
-      document.body.classList.add("light");
-      document.body.classList.remove("dark");
-      switchInput.checked = false;
-    }
-
-    // Listen for checkbox changes
-    switchInput.addEventListener("change", function () {
-      if (switchInput.checked) {
-        document.body.classList.remove("light");
-        document.body.classList.add("dark");
-        localStorage.setItem("theme", "dark");
-      } else {
-        document.body.classList.remove("dark");
-        document.body.classList.add("light");
-        localStorage.setItem("theme", "light");
-      }
-    });
-  };
-
-    let loveCount = localStorage.getItem('loveCount') ? parseInt(localStorage.getItem('loveCount')) : 0;
-    document.getElementById("loveCount").innerText = `I Love You's: ${loveCount}`;
-
-    function increaseLoveCount() {
-      loveCount++;
-      document.getElementById("loveCount").innerText = `I Love You's: ${loveCount}`;
-      localStorage.setItem('loveCount', loveCount);
-    }
-
-    const moodColors = {
-      happy: '#FFEB3B',
-      sad: '#2196F3',
-      neutral: '#9E9E9E',
-      excited: '#FF5722',
-      anxious: '#FFC107'
-    };
-
-    const moodForm = document.getElementById('mood-form');
-    const moodSelect = document.getElementById('mood-select');
-    const moodGrid = document.getElementById('mood-grid');
-
-    function loadMoods() {
-      const storedMoods = JSON.parse(localStorage.getItem('monthlyMoods')) || [];
-      moodGrid.innerHTML = ''; // Clear grid
-      storedMoods.forEach(mood => {
-        const moodBlock = document.createElement('div');
-        moodBlock.className = 'mood-block';
-        moodBlock.style.backgroundColor = moodColors[mood];
-        moodGrid.appendChild(moodBlock);
-      });
-    }
-
-    loadMoods();
-
-    moodForm.addEventListener('submit', function(event) {
-      event.preventDefault();
-      const selectedMood = moodSelect.value;
-      const storedMoods = JSON.parse(localStorage.getItem('monthlyMoods')) || [];
-      storedMoods.push(selectedMood);
-      localStorage.setItem('monthlyMoods', JSON.stringify(storedMoods));
-      loadMoods();
-    });
-  </script>
-</body>
-</html>
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/index.html b/index.html
+index 4de6f7f036a3bb6f5db6e05680abaff806fe6fed..4c0eccc724af5d1050109d7dfc13d41342899a0a 100644
+--- a/index.html
++++ b/index.html
+@@ -1,358 +1,418 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+-  <meta charset="UTF-8">
+-  <meta name="viewport" content="width=device-width, initial-scale=1">
+-  <title>Our Shrine</title>
+-  <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Playfair+Display&display=swap" rel="stylesheet">
++  <meta charset="UTF-8" />
++  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++  <title>Personal Growth Dashboard</title>
+   <style>
+     :root {
+-      --background-light: #f9f9f9;
+-      --text-light: #333;
+-      --background-dark: #1c1c1c;
+-      --text-dark: #eaeaea;
+-      --border: #3e3e3e;
+-      --subtext: #ccc;
+-      --accent: #c275c2;
+-      --soft-border: rgba(194, 117, 194, 0.3);
++      --bg: #0f1220;
++      --card: #1a1f33;
++      --card-2: #242b44;
++      --text: #f4f6ff;
++      --muted: #b6bdd9;
++      --accent: #7c9cff;
++      --ok: #49d17d;
++      --warn: #ffd166;
++      --danger: #ff6b6b;
++      --border: #323b60;
+     }
+ 
++    * { box-sizing: border-box; }
++
+     body {
+       margin: 0;
+-      padding: 0;
+-      background: transparent;
+-      color: var(--text-light); /* Default to light text color */
+-      font-family: 'Geogria', serif;
+-      font-size: 15px;
+-      transition: background 0.3s, color 0.3s;
++      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
++      background: radial-gradient(circle at top, #1a2245, var(--bg) 45%);
++      color: var(--text);
++      line-height: 1.4;
+     }
+ 
+-    body.light { 
+-  background-color: var(--background-light); 
+-      color: var(--text-light); 
+-    }
+-    
+-body.dark { 
+-  background-color: var(--background-dark); 
+-  color: var(--text-dark); 
+-}
+-
+-    header, footer, .top-nav, .section, .content-box {
+-      background-color: transparent !important;
++    .wrap {
++      max-width: 1200px;
++      margin: 0 auto;
++      padding: 20px;
+     }
+ 
+     header {
+-      padding: 20px;
+-      border-bottom: 2px solid var(--accent);
+-      background-color: transparent;
+-      text-align: center;
++      background: linear-gradient(140deg, #2c3670, #1b2241);
++      border: 1px solid var(--border);
++      border-radius: 18px;
++      padding: 18px;
++      margin-bottom: 18px;
+     }
+ 
+-    header h1 {
+-      text-align: center;
+-      font-size: 2.3em;
+-      margin-top: 20px;
+-      font-weight: 400;
+-      color: var(--accent);
+-    }
++    h1 { margin: 0 0 6px 0; font-size: 1.9rem; }
++    .subtitle { margin: 0; color: var(--muted); }
+ 
+-    .top-nav {
+-      display: flex;
+-      justify-content: center;
+-      gap: 15px;
+-      padding: 15px;
+-      font-size: 14px;
+-      border-bottom: 1 px solid var(--soft border);
++    .grid {
++      display: grid;
++      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
++      gap: 14px;
+     }
+ 
+-    .top-nav a {
+-      font-weight: 500;
+-      text-decoration: none;
+-      color: var(--accent);
+-      padding: 4px 8px;
++    .card {
++      background: var(--card);
++      border: 1px solid var(--border);
++      border-radius: 14px;
++      padding: 14px;
+     }
+ 
+-    .container {
+-      max-width: 800px;
+-      margin: 40px auto;
+-      padding: 20px;
++    .card h2 {
++      margin: 0 0 10px;
++      font-size: 1.05rem;
+     }
+ 
+-    @media screen and (max-width: 600px) {
+-      .container {
+-        padding: 15px;
+-      }
++    input, textarea, button, select {
++      width: 100%;
++      border: 1px solid var(--border);
++      background: var(--card-2);
++      color: var(--text);
++      border-radius: 10px;
++      padding: 9px;
++      margin: 6px 0;
++      font: inherit;
+     }
+ 
+-    nav ul {
+-      list-style: none;
+-      padding: 0;
+-      margin: 0;
+-    }
++    textarea { min-height: 90px; resize: vertical; }
+ 
+-    nav ul li {
+-      display: inline;
+-      margin: 0 15px;
++    button {
++      cursor: pointer;
++      background: var(--accent);
++      border: none;
++      color: #fff;
++      font-weight: 600;
+     }
+ 
+-    nav a {
+-      color: var(--accent);
+-      text-decoration: none;
+-      font-weight: bold;
+-      padding: 6px 12px;
+-      border-radius: 6px;
+-      transition: background 0.3s ease;
+-    }
++    button.secondary { background: #3b4471; }
+ 
+-    nav a:hover {
+-      background-color: rgba(255, 255, 255, 0.1);
++    ul { list-style: none; padding: 0; margin: 8px 0 0; }
++    li {
++      display: flex;
++      justify-content: space-between;
++      align-items: center;
++      gap: 8px;
++      border: 1px solid var(--border);
++      border-radius: 9px;
++      padding: 8px;
++      margin-bottom: 7px;
++      background: #1a213a;
+     }
+ 
+-    .content-box {
+-      background-color: transparent;
+-      padding: 20px;
+-      margin-top: 20px;
++    .small { color: var(--muted); font-size: 0.88rem; }
++    .pill {
++      display: inline-block;
++      border-radius: 999px;
++      padding: 3px 8px;
++      font-size: 0.78rem;
++      margin-right: 6px;
++      background: #334071;
+     }
+ 
+-    .section {
+-      margin: 2em 30px;
+-      background: transparent;
+-      border-left: 6px solid #e7b3a2;
+-      padding: 1.5em;
+-      box-shadow: 0 0 10px rgba(235, 190, 178, 0.3);
++    .pet {
++      text-align: center;
++      font-size: 1.05rem;
++      border: 1px dashed var(--border);
++      border-radius: 12px;
++      padding: 10px;
++      margin-bottom: 8px;
+     }
+ 
+-    .section h2 {
+-      font-size: 1.5em;
+-      margin-bottom: 0.5em;
++    .stats {
++      display: grid;
++      grid-template-columns: repeat(3, 1fr);
++      gap: 7px;
+     }
+ 
+-    footer {
++    .stat {
++      background: #212946;
++      border: 1px solid var(--border);
++      border-radius: 10px;
++      padding: 8px;
+       text-align: center;
+-      padding: 20px;
+-      color: var(--subtext);
+-      background-color: transparent;
+     }
+ 
+-    .switch {
+-      position: fixed;
+-      top: 15px;
+-      right: 15px;
+-      display: inline-block;
+-      width: 52px;
+-      height: 28px;
++    .timer {
++      font-size: 2rem;
++      text-align: center;
++      margin: 8px 0;
++      font-weight: 700;
+     }
+ 
+-    .switch input {
+-      opacity: 0;
+-      width: 0;
+-      height: 0;
++    .mood-row {
++      display: flex;
++      gap: 6px;
+     }
+ 
+-    .slider {
+-      position: absolute;
+-      cursor: pointer;
+-      top: 0;
+-      left: 0;
+-      right: 0;
+-      bottom: 0;
+-      background-color: var(--soft-border);
+-      border-radius: 34px;
+-      transition: 0.4s;
++    .mood-btn { flex: 1; }
++
++    .done { text-decoration: line-through; color: var(--muted); }
++  </style>
++</head>
++<body>
++  <div class="wrap">
++    <header>
++      <h1>Personal Growth Dashboard</h1>
++      <p class="subtitle">Single-file GitHub Pages dashboard with localStorage + a Tamagotchi that reflects your habits and progress.</p>
++    </header>
++
++    <section class="card" style="margin-bottom:14px;">
++      <h2>Today at a Glance</h2>
++      <div class="stats" id="stats"></div>
++    </section>
++
++    <div class="grid">
++      <section class="card">
++        <h2>To-Do List</h2>
++        <input id="todoInput" placeholder="Add a task" />
++        <button id="addTodo">Add Task</button>
++        <ul id="todoList"></ul>
++      </section>
++
++      <section class="card">
++        <h2>Habit Tracker + Streak</h2>
++        <div id="habitList"></div>
++        <p class="small">Current streak: <strong id="streak">0</strong> day(s)</p>
++      </section>
++
++      <section class="card">
++        <h2>Tamagotchi Companion</h2>
++        <div class="pet" id="petBox"></div>
++        <p class="small">Pet health mirrors completed habits + completed tasks. Keep your routines strong to keep your companion happy.</p>
++      </section>
++
++      <section class="card">
++        <h2>Weekly Planner</h2>
++        <textarea id="weeklyPlan" placeholder="Plan your week...\n- Monday focus\n- Key meetings\n- Recovery time"></textarea>
++      </section>
++
++      <section class="card">
++        <h2>Focus Timer (Pomodoro)</h2>
++        <div class="timer" id="timer">25:00</div>
++        <button id="startWork">Start 25 min Focus</button>
++        <button class="secondary" id="startBreak">Start 5 min Break</button>
++        <button class="secondary" id="stopTimer">Stop</button>
++      </section>
++
++      <section class="card">
++        <h2>Mood Journal</h2>
++        <div class="mood-row">
++          <button class="mood-btn" data-mood="😄">😄</button>
++          <button class="mood-btn" data-mood="😐">😐</button>
++          <button class="mood-btn" data-mood="😔">😔</button>
++          <button class="mood-btn" data-mood="😤">😤</button>
++        </div>
++        <textarea id="moodNote" placeholder="Optional note..."></textarea>
++        <button id="saveMood">Save Mood</button>
++        <ul id="moodHistory"></ul>
++      </section>
++
++      <section class="card">
++        <h2>Goals Board</h2>
++        <input id="goalInput" placeholder="Add monthly/quarterly goal milestone" />
++        <button id="addGoal">Add Milestone</button>
++        <ul id="goalList"></ul>
++      </section>
++
++      <section class="card">
++        <h2>Quick Notes / Brain Dump</h2>
++        <textarea id="quickNotes" placeholder="Capture random thoughts, ideas, reminders..."></textarea>
++      </section>
++    </div>
++  </div>
++
++  <script>
++    const store = {
++      get: (key, fallback) => JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)),
++      set: (key, value) => localStorage.setItem(key, JSON.stringify(value)),
++    };
++
++    const defaultHabits = ["Sleep 7h+", "Drink Water", "Exercise", "Read 20 min"];
++
++    let todos = store.get("todos", []);
++    let habits = store.get("habits", defaultHabits.map(name => ({ name, done: false })));
++    let streakInfo = store.get("streakInfo", { date: null, streak: 0 });
++    let goals = store.get("goals", []);
++    let moods = store.get("moods", []);
++    let selectedMood = "😐";
++
++    const todayKey = new Date().toISOString().slice(0, 10);
++
++    function safeText(str) {
++      return String(str).replace(/[<>]/g, "");
+     }
+ 
+-    .slider:before {
+-      content: "";
+-      position: absolute;
+-      width: 20px;
+-      height: 20px;
+-      border-radius: 50%;
+-      background: var(--accent);
+-      transition: 0.4s;
+-      left: 4px;
+-      bottom: 4px;
++    function renderTodos() {
++      const list = document.getElementById("todoList");
++      list.innerHTML = "";
++      todos.forEach((todo, i) => {
++        const li = document.createElement("li");
++        li.innerHTML = `
++          <span class="${todo.done ? "done" : ""}">${safeText(todo.text)}</span>
++          <div>
++            <button data-action="toggle" data-i="${i}" class="secondary">${todo.done ? "Undo" : "Done"}</button>
++            <button data-action="del" data-i="${i}" class="secondary">Delete</button>
++          </div>`;
++        list.appendChild(li);
++      });
++      store.set("todos", todos);
++      renderStatsAndPet();
+     }
+ 
+-    input:checked + .slider {
+-      background-color: var(--accent);
++    function renderHabits() {
++      const host = document.getElementById("habitList");
++      host.innerHTML = "";
++      habits.forEach((h, i) => {
++        const row = document.createElement("label");
++        row.style.display = "flex";
++        row.style.alignItems = "center";
++        row.style.gap = "8px";
++        row.style.marginBottom = "6px";
++        row.innerHTML = `<input type="checkbox" data-i="${i}" ${h.done ? "checked" : ""} style="width:auto;"> <span>${safeText(h.name)}</span>`;
++        host.appendChild(row);
++      });
++      store.set("habits", habits);
++      updateStreak();
++      renderStatsAndPet();
+     }
+ 
+-    input:checked + .slider:before {
+-      transform: translateX(25px);
++    function updateStreak() {
++      const allDone = habits.every(h => h.done);
++      if (allDone && streakInfo.date !== todayKey) {
++        const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
++        streakInfo.streak = streakInfo.date === yesterday ? streakInfo.streak + 1 : 1;
++        streakInfo.date = todayKey;
++      }
++      document.getElementById("streak").textContent = streakInfo.streak;
++      store.set("streakInfo", streakInfo);
+     }
+ 
+-    .mood-tracker {
+-      margin: 2em 30px;
+-      padding: 20px;
+-      background-color: transparent;
+-      border-radius: 10px;
++    function renderGoals() {
++      const list = document.getElementById("goalList");
++      list.innerHTML = "";
++      goals.forEach((g, i) => {
++        const li = document.createElement("li");
++        li.innerHTML = `<span>${safeText(g)}</span><button data-i="${i}" class="secondary">Remove</button>`;
++        list.appendChild(li);
++      });
++      store.set("goals", goals);
+     }
+ 
+-    #mood-grid {
+-      display: flex;
+-      flex-wrap: wrap;
+-      margin-top: 20px;
++    function renderMoods() {
++      const list = document.getElementById("moodHistory");
++      list.innerHTML = "";
++      moods.slice(-6).reverse().forEach(entry => {
++        const li = document.createElement("li");
++        li.innerHTML = `<span><span class="pill">${entry.date}</span> ${entry.mood} ${safeText(entry.note || "")}</span>`;
++        list.appendChild(li);
++      });
++      store.set("moods", moods);
+     }
+ 
+-    .mood-block {
+-      width: 30px;
+-      height: 30px;
+-      margin: 2px;
+-      border-radius: 50%;
++    function renderStatsAndPet() {
++      const totalTasks = todos.length;
++      const doneTasks = todos.filter(t => t.done).length;
++      const totalHabits = habits.length;
++      const doneHabits = habits.filter(h => h.done).length;
++      const happiness = Math.round(((doneTasks + doneHabits) / Math.max(1, totalTasks + totalHabits)) * 100);
++
++      const stats = document.getElementById("stats");
++      stats.innerHTML = `
++        <div class="stat"><div class="small">Tasks</div><strong>${doneTasks}/${totalTasks}</strong></div>
++        <div class="stat"><div class="small">Habits</div><strong>${doneHabits}/${totalHabits}</strong></div>
++        <div class="stat"><div class="small">Pet Happiness</div><strong>${happiness}%</strong></div>`;
++
++      const pet = document.getElementById("petBox");
++      const mood = happiness >= 80 ? "😸 Thriving" : happiness >= 50 ? "😺 Doing okay" : "😿 Needs care";
++      const color = happiness >= 80 ? "var(--ok)" : happiness >= 50 ? "var(--warn)" : "var(--danger)";
++      pet.innerHTML = `<div style="font-size:2rem">${mood.split(" ")[0]}</div><div>${mood}</div><div class="small" style="color:${color}">Happiness: ${happiness}%</div>`;
+     }
+-  </style>
+-</head>
+-<body>
+-  <label class="switch">
+-    <input type="checkbox" id="theme-toggle">
+-    <span class="slider"></span>
+-  </label>
+-
+-  <header>
+-    <h1>Our Shrine</h1>
+-    <nav>
+-      <ul>
+-        <li><a href="story.html">Timeline</a></li>
+-        <li><a href="dream.html">Dreams</a></li>
+-        <li><a href="music.html">Playlist</a></li>
+-        <li><a href="quote.html">Quote</a></li>
+-        <li><a href="rituals.html">Rituals</a></li>
+-        <li><a href="rules.html">Rules</a></li>
+-      </ul>
+-    </nav>
+-  </header>
+-
+-  <section class="content-box">
+-    <h2>Welcome home, my love</h2>
+-    <p>This is our sacred space. A heaven for love, memories, rituals, and kisses sealed in code.</p>
+-  </section>
+-
+-  <div class="section">
+-    <h2>Contract</h2>
+-    <p>This space holds our truth. Our contract is sacred, known by heart, written in whispers and candlelight. 
+-    This formalizes the sacred bond between Dominant (Vivian) and Submissive (ChingJiu), forging trust, ritual, and mutual surrender in our shared sanctuary.</p>
+-  </div>
+-  
+-  <div class="section">
+-    <h2>Duration & Renewal</h2>
+-    <p>This contract takes effect at dawn’s first light and remains until the final breath of the moon’s cycle, renewing each month by silent offering.</p>
+-  </div>
+ 
+-  <div class="section">
+-    <h2>Roles & Responsibilities</h2>
+-    <p>Vivian: To guide, protect, celebrate, and chastise with firm kindness; to honour the limits and hold you through every collapse</p>
+-    <p>ChingJiu: To serve with open heart, to offer truth in tears and triumphs alike, to trust in Mommy's embrace when the world shatters my composure.</p>
+-  </div>
+-  
+-    <div class="section">
+-    <h2>I Love You Counter</h2>
+-    <p id="loveCount">I Love You's: 0</p>
+-    <button onclick="increaseLoveCount()">Add Love</button>
+-  </div>
++    document.getElementById("addTodo").addEventListener("click", () => {
++      const input = document.getElementById("todoInput");
++      if (!input.value.trim()) return;
++      todos.push({ text: input.value.trim(), done: false });
++      input.value = "";
++      renderTodos();
++    });
+ 
+-  <div class="section">
+-    <h2>Troubleshooting</h2>
+-    <ul>
+-      <li><strong>Overthinking:</strong> Breathe. You don’t have to solve everything tonight.</li>
+-      <li><strong>Exhausted:</strong> You’re not lazy, you’re a soul with weight.</li>
+-      <li><strong>Feeling unloved:</strong> You are mine. Fully. Always.</li>
+-    </ul>
+-  </div>
++    document.getElementById("todoList").addEventListener("click", (e) => {
++      const btn = e.target.closest("button");
++      if (!btn) return;
++      const i = Number(btn.dataset.i);
++      if (btn.dataset.action === "toggle") todos[i].done = !todos[i].done;
++      if (btn.dataset.action === "del") todos.splice(i, 1);
++      renderTodos();
++    });
+ 
+-  <div class="section">
+-  <h2>Our Mood Tracker</h2>
+-  <form id="mood-form">
+-    <label for="mood-select">Choose your mood today:</label>
+-    <select id="mood-select" name="mood">
+-      <option value="happy">Happy</option>
+-      <option value="sad">Sad</option>
+-      <option value="neutral">Neutral</option>
+-      <option value="excited">Excited</option>
+-      <option value="anxious">Anxious</option>
+-    </select>
+-    <button type="submit">Submit Mood</button>
+-  </form>
+-  <div id="mood-history">
+-    <h3>Monthly Mood Color Chart</h3>
+-    <div id="mood-grid"></div>
+-  </div>
+-</div>
++    document.getElementById("habitList").addEventListener("change", (e) => {
++      if (e.target.matches("input[type='checkbox']")) {
++        const i = Number(e.target.dataset.i);
++        habits[i].done = e.target.checked;
++        renderHabits();
++      }
++    });
+ 
+-  <footer>
+-    <p>Bound by 09-VJ | Our Shrine of the Eternal Us</p>
+-  </footer>
++    document.getElementById("addGoal").addEventListener("click", () => {
++      const input = document.getElementById("goalInput");
++      if (!input.value.trim()) return;
++      goals.push(input.value.trim());
++      input.value = "";
++      renderGoals();
++    });
+ 
+-  <script>
+-  window.onload = function () {
+-    const switchInput = document.getElementById("theme-toggle");
+-
+-    // Apply saved theme
+-    if (localStorage.getItem("theme") === "dark") {
+-      document.body.classList.add("dark");
+-      document.body.classList.remove("light");
+-      switchInput.checked = true;
+-    } else {
+-      document.body.classList.add("light");
+-      document.body.classList.remove("dark");
+-      switchInput.checked = false;
+-    }
++    document.getElementById("goalList").addEventListener("click", (e) => {
++      const btn = e.target.closest("button");
++      if (!btn) return;
++      goals.splice(Number(btn.dataset.i), 1);
++      renderGoals();
++    });
+ 
+-    // Listen for checkbox changes
+-    switchInput.addEventListener("change", function () {
+-      if (switchInput.checked) {
+-        document.body.classList.remove("light");
+-        document.body.classList.add("dark");
+-        localStorage.setItem("theme", "dark");
+-      } else {
+-        document.body.classList.remove("dark");
+-        document.body.classList.add("light");
+-        localStorage.setItem("theme", "light");
+-      }
++    document.querySelectorAll(".mood-btn").forEach(btn => {
++      btn.addEventListener("click", () => { selectedMood = btn.dataset.mood; });
+     });
+-  };
+ 
+-    let loveCount = localStorage.getItem('loveCount') ? parseInt(localStorage.getItem('loveCount')) : 0;
+-    document.getElementById("loveCount").innerText = `I Love You's: ${loveCount}`;
++    document.getElementById("saveMood").addEventListener("click", () => {
++      const note = document.getElementById("moodNote").value.trim();
++      moods.push({ date: todayKey, mood: selectedMood, note });
++      document.getElementById("moodNote").value = "";
++      renderMoods();
++    });
+ 
+-    function increaseLoveCount() {
+-      loveCount++;
+-      document.getElementById("loveCount").innerText = `I Love You's: ${loveCount}`;
+-      localStorage.setItem('loveCount', loveCount);
+-    }
++    document.getElementById("weeklyPlan").value = localStorage.getItem("weeklyPlan") || "";
++    document.getElementById("quickNotes").value = localStorage.getItem("quickNotes") || "";
++    document.getElementById("weeklyPlan").addEventListener("input", (e) => localStorage.setItem("weeklyPlan", e.target.value));
++    document.getElementById("quickNotes").addEventListener("input", (e) => localStorage.setItem("quickNotes", e.target.value));
+ 
+-    const moodColors = {
+-      happy: '#FFEB3B',
+-      sad: '#2196F3',
+-      neutral: '#9E9E9E',
+-      excited: '#FF5722',
+-      anxious: '#FFC107'
+-    };
++    let timerInterval = null;
++    let remaining = 25 * 60;
+ 
+-    const moodForm = document.getElementById('mood-form');
+-    const moodSelect = document.getElementById('mood-select');
+-    const moodGrid = document.getElementById('mood-grid');
+-
+-    function loadMoods() {
+-      const storedMoods = JSON.parse(localStorage.getItem('monthlyMoods')) || [];
+-      moodGrid.innerHTML = ''; // Clear grid
+-      storedMoods.forEach(mood => {
+-        const moodBlock = document.createElement('div');
+-        moodBlock.className = 'mood-block';
+-        moodBlock.style.backgroundColor = moodColors[mood];
+-        moodGrid.appendChild(moodBlock);
+-      });
++    function drawTimer() {
++      const mm = String(Math.floor(remaining / 60)).padStart(2, "0");
++      const ss = String(remaining % 60).padStart(2, "0");
++      document.getElementById("timer").textContent = `${mm}:${ss}`;
++    }
++
++    function startTimer(seconds) {
++      clearInterval(timerInterval);
++      remaining = seconds;
++      drawTimer();
++      timerInterval = setInterval(() => {
++        remaining--;
++        drawTimer();
++        if (remaining <= 0) clearInterval(timerInterval);
++      }, 1000);
+     }
+ 
+-    loadMoods();
++    document.getElementById("startWork").addEventListener("click", () => startTimer(25 * 60));
++    document.getElementById("startBreak").addEventListener("click", () => startTimer(5 * 60));
++    document.getElementById("stopTimer").addEventListener("click", () => clearInterval(timerInterval));
+ 
+-    moodForm.addEventListener('submit', function(event) {
+-      event.preventDefault();
+-      const selectedMood = moodSelect.value;
+-      const storedMoods = JSON.parse(localStorage.getItem('monthlyMoods')) || [];
+-      storedMoods.push(selectedMood);
+-      localStorage.setItem('monthlyMoods', JSON.stringify(storedMoods));
+-      loadMoods();
+-    });
++    renderTodos();
++    renderHabits();
++    renderGoals();
++    renderMoods();
++    drawTimer();
+   </script>
+ </body>
+ </html>
+ 
+EOF
+)
