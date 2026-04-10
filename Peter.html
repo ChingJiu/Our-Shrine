@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Pet — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --panel: #12121a;
+    --border: #2a2a3e;
+    --accent: #7c6af7;
+    --accent2: #f76a8a;
+    --accent3: #6af7c8;
+    --text: #e8e6ff;
+    --muted: #6b6890;
+    --pixel: 4px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; image-rendering: pixelated; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Star background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, #fff 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 60%, #fff 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 10%, #fff 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 80%, #fff 0%, transparent 100%),
+      radial-gradient(1px 1px at 85% 35%, #fff 0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 55%, #fff 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 85%, #fff 0%, transparent 100%),
+      radial-gradient(1px 1px at 40% 45%, #fff 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 70%, #fff 0%, transparent 100%),
+      radial-gradient(1px 1px at 78% 15%, #fff 0%, transparent 100%);
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  nav a {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 6px 10px;
+    border: 2px solid var(--border);
+    background: var(--panel);
+    transition: color 0.15s, border-color 0.15s;
+  }
+  nav a:hover { color: var(--accent); border-color: var(--accent); }
+  nav a.active { color: var(--accent); border-color: var(--accent); }
+
+  /* TITLE */
+  h1 {
+    font-size: 14px;
+    color: var(--accent);
+    text-shadow: 4px 4px 0 #3d2e9e;
+    margin-bottom: 4px;
+    letter-spacing: 2px;
+  }
+  .subtitle {
+    font-size: 7px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  /* DEVICE SHELL */
+  .device {
+    background: #1a1828;
+    border: 4px solid #3a3660;
+    border-radius: 0;
+    padding: 0;
+    box-shadow:
+      8px 8px 0 #0d0c18,
+      inset 0 0 0 2px #2a2848;
+    position: relative;
+  }
+
+  .device-top {
+    background: #221f38;
+    border-bottom: 4px solid #3a3660;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .device-light {
+    width: 10px; height: 10px;
+    border-radius: 0;
+    animation: blink 2s infinite;
+  }
+  .device-light.green { background: var(--accent3); box-shadow: 0 0 8px var(--accent3); }
+  .device-light.red   { background: var(--accent2); animation-delay: 0.5s; }
+  .device-name {
+    font-size: 9px;
+    color: var(--text);
+    margin-left: auto;
+    letter-spacing: 3px;
+  }
+
+  /* SCREEN */
+  .screen-wrap {
+    padding: 12px;
+  }
+  .screen {
+    background: #0d1f1a;
+    border: 4px solid #1a4a3a;
+    box-shadow: inset 0 0 20px rgba(0,255,150,0.05);
+    padding: 20px 12px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,255,150,0.02) 3px, rgba(0,255,150,0.02) 4px);
+    pointer-events: none;
+  }
+
+  /* PET SPRITE (CSS pixel art) */
+  .pet-container {
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .pet {
+    width: 64px;
+    height: 64px;
+    position: relative;
+    animation: idle 1.2s steps(1) infinite;
+  }
+
+  /* Pixel art pet using box-shadow trick */
+  .pet-sprite {
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    left: 0; top: 0;
+  }
+
+  /* Pet states rendered via SVG pixel art */
+  .pet-svg {
+    image-rendering: pixelated;
+    width: 64px;
+    height: 64px;
+  }
+
+  .pet-message {
+    font-size: 7px;
+    color: var(--accent3);
+    text-align: center;
+    min-height: 20px;
+    animation: fadeIn 0.3s ease;
+    text-shadow: 0 0 8px var(--accent3);
+  }
+
+  /* STATS */
+  .stats-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .stat {
+    background: rgba(0,0,0,0.4);
+    border: 2px solid #1a3030;
+    padding: 6px 8px;
+  }
+  .stat-label {
+    font-size: 6px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .stat-bar {
+    height: 8px;
+    background: #0a1a14;
+    border: 1px solid #1a3030;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-fill {
+    height: 100%;
+    transition: width 0.6s steps(6);
+    position: relative;
+  }
+  .stat-fill::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 4px; height: 100%;
+    background: rgba(255,255,255,0.4);
+    animation: shimmer 2s steps(1) infinite;
+  }
+
+  .stat-fill.happiness { background: var(--accent2); }
+  .stat-fill.hunger    { background: var(--accent); }
+  .stat-fill.energy    { background: var(--accent3); }
+  .stat-fill.health    { background: #f7d46a; }
+
+  /* LEVEL */
+  .level-badge {
+    font-size: 7px;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    padding: 4px 8px;
+    margin-bottom: 12px;
+    text-shadow: 2px 2px 0 #3d2e9e;
+    display: inline-block;
+  }
+
+  /* BUTTONS */
+  .device-buttons {
+    padding: 10px 12px 14px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    border-top: 4px solid #3a3660;
+    background: #1a1828;
+  }
+
+  .btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--text);
+    background: var(--panel);
+    border: 3px solid var(--border);
+    padding: 8px 4px;
+    cursor: pointer;
+    transition: transform 0.1s, background 0.1s;
+    text-align: center;
+    box-shadow: 3px 3px 0 #0a0a12;
+    line-height: 1.6;
+  }
+  .btn:hover { background: #1e1c30; border-color: var(--accent); }
+  .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #0a0a12; }
+  .btn.feed   { border-color: var(--accent); }
+  .btn.play   { border-color: var(--accent2); }
+  .btn.sleep  { border-color: var(--accent3); }
+  .btn.clean  { border-color: #f7d46a; }
+  .btn.study  { border-color: var(--accent2); }
+  .btn.evolve { border-color: var(--accent3); font-size: 6px; }
+
+  .btn .btn-icon { font-size: 14px; display: block; margin-bottom: 4px; }
+
+  /* INFO PANEL */
+  .info-panel {
+    margin-top: 20px;
+    background: var(--panel);
+    border: 2px solid var(--border);
+    padding: 16px;
+  }
+  .info-panel h2 {
+    font-size: 8px;
+    color: var(--accent3);
+    margin-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 7px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    line-height: 1.8;
+  }
+  .info-row span:last-child { color: var(--text); }
+
+  /* INTEGRATION PANEL */
+  .link-panel {
+    margin-top: 16px;
+    background: var(--panel);
+    border: 2px solid #3d2e9e;
+    padding: 16px;
+  }
+  .link-panel h2 {
+    font-size: 8px;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .link-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 7px;
+    color: var(--muted);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .link-item:last-child { border-bottom: none; }
+  .link-item .badge {
+    background: #1e1c30;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 6px;
+    padding: 3px 6px;
+  }
+  .link-item .badge.green { border-color: var(--accent3); color: var(--accent3); }
+  .link-item .badge.pink  { border-color: var(--accent2); color: var(--accent2); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    background: #221f38;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    padding: 10px 16px;
+    z-index: 999;
+    transition: transform 0.3s steps(4);
+    white-space: nowrap;
+    box-shadow: 4px 4px 0 #0a0a12;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ANIMATIONS */
+  @keyframes idle {
+    0%   { transform: translateY(0px); }
+    50%  { transform: translateY(-4px); }
+    100% { transform: translateY(0px); }
+  }
+  @keyframes blink {
+    0%, 90%, 100% { opacity: 1; }
+    95%            { opacity: 0; }
+  }
+  @keyframes shimmer {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-4px); }
+    40%     { transform: translateX(4px); }
+    60%     { transform: translateX(-4px); }
+    80%     { transform: translateX(4px); }
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-12px); }
+  }
+
+  .pet.happy   { animation: bounce 0.6s steps(3) 3; }
+  .pet.sad     { animation: shake 0.5s steps(3) 2; }
+  .pet.default { animation: idle 1.2s steps(2) infinite; }
+
+  /* XP bar */
+  .xp-wrap { width: 100%; margin-bottom: 8px; }
+  .xp-label { font-size: 6px; color: var(--muted); display: flex; justify-content: space-between; margin-bottom: 3px; }
+  .xp-bar { height: 6px; background: #0a1210; border: 1px solid #1a3030; }
+  .xp-fill { height: 100%; background: var(--accent); transition: width 0.5s steps(5); }
+
+  /* Pixel name input */
+  .name-input {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--accent);
+    color: var(--accent);
+    text-align: center;
+    width: 120px;
+    outline: none;
+    padding: 2px 4px;
+    margin-bottom: 12px;
+  }
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<div class="wrapper">
+
+  <nav>
+    <a href="index.html">HOME</a>
+    <a href="todo.html">TASKS</a>
+    <a href="planner.html">WEEK</a>
+    <a href="habits.html">HABITS</a>
+    <a href="focus.html">FOCUS</a>
+    <a href="pet.html" class="active">PET</a>
+  </nav>
+
+  <h1>MY PET</h1>
+  <p class="subtitle">// VIRTUAL COMPANION v1.0</p>
+
+  <!-- DEVICE -->
+  <div class="device">
+    <div class="device-top">
+      <div class="device-light green"></div>
+      <div class="device-light red"></div>
+      <div class="device-name" id="petNameDisplay">BUDDY</div>
+    </div>
+
+    <div class="screen-wrap">
+      <div class="screen">
+
+        <div class="level-badge" id="levelBadge">LVL 1 — EGG</div>
+
+        <div class="pet-container">
+          <div class="pet default" id="petSprite">
+            <!-- SVG pixel art pet, swapped by JS -->
+            <svg class="pet-svg" id="petSvg" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"></svg>
+          </div>
+        </div>
+
+        <input class="name-input" id="petNameInput" type="text" maxlength="8" placeholder="NAME..." value="BUDDY" />
+
+        <div class="xp-wrap">
+          <div class="xp-label"><span>XP</span><span id="xpText">0 / 100</span></div>
+          <div class="xp-bar"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat">
+            <div class="stat-label"><span>HAPPY</span><span id="happyVal">80</span></div>
+            <div class="stat-bar"><div class="stat-fill happiness" id="happyBar" style="width:80%"></div></div>
+          </div>
+          <div class="stat">
+            <div class="stat-label"><span>HUNGER</span><span id="hungerVal">70</span></div>
+            <div class="stat-bar"><div class="stat-fill hunger" id="hungerBar" style="width:70%"></div></div>
+          </div>
+          <div class="stat">
+            <div class="stat-label"><span>ENERGY</span><span id="energyVal">60</span></div>
+            <div class="stat-bar"><div class="stat-fill energy" id="energyBar" style="width:60%"></div></div>
+          </div>
+          <div class="stat">
+            <div class="stat-label"><span>HEALTH</span><span id="healthVal">90</span></div>
+            <div class="stat-bar"><div class="stat-fill health" id="healthBar" style="width:90%"></div></div>
+          </div>
+        </div>
+
+        <div class="pet-message" id="petMsg">* HELLO WORLD! *</div>
+
+      </div>
+    </div>
+
+    <div class="device-buttons">
+      <button class="btn feed"  onclick="action('feed')">  <span class="btn-icon">🍖</span>FEED</button>
+      <button class="btn play"  onclick="action('play')">  <span class="btn-icon">🎮</span>PLAY</button>
+      <button class="btn sleep" onclick="action('sleep')"> <span class="btn-icon">💤</span>SLEEP</button>
+      <button class="btn clean" onclick="action('clean')"> <span class="btn-icon">🛁</span>CLEAN</button>
+      <button class="btn study" onclick="action('study')"> <span class="btn-icon">📚</span>STUDY</button>
+      <button class="btn evolve" onclick="syncFromDashboard()"><span class="btn-icon">🔄</span>SYNC</button>
+    </div>
+  </div>
+
+  <!-- INFO -->
+  <div class="info-panel">
+    <h2>// PET STATUS</h2>
+    <div class="info-row"><span>AGE</span><span id="infoAge">0 days</span></div>
+    <div class="info-row"><span>STAGE</span><span id="infoStage">EGG</span></div>
+    <div class="info-row"><span>MOOD</span><span id="infoMood">CURIOUS</span></div>
+    <div class="info-row"><span>LAST FED</span><span id="infoLastFed">NEVER</span></div>
+    <div class="info-row"><span>TASKS DONE TODAY</span><span id="infoTasks">0</span></div>
+    <div class="info-row"><span>HABITS DONE TODAY</span><span id="infoHabits">0</span></div>
+    <div class="info-row"><span>FOCUS SESSIONS</span><span id="infoFocus">0</span></div>
+  </div>
+
+  <!-- INTEGRATION GUIDE -->
+  <div class="link-panel">
+    <h2>// HOW OTHER PAGES FEED YOUR PET</h2>
+    <div class="link-item">
+      <span>todo.html — complete a task</span>
+      <span class="badge">+8 HAPPY +5 XP</span>
+    </div>
+    <div class="link-item">
+      <span>habits.html — tick a habit</span>
+      <span class="badge green">+6 HEALTH +4 XP</span>
+    </div>
+    <div class="link-item">
+      <span>focus.html — finish a pomodoro</span>
+      <span class="badge pink">+10 ENERGY +8 XP</span>
+    </div>
+    <div class="link-item">
+      <span>planner.html — plan the week</span>
+      <span class="badge">+5 HAPPY +3 XP</span>
+    </div>
+    <div class="link-item">
+      <span>Pet starves if neglected 24h+</span>
+      <span class="badge pink">-15 HEALTH</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// PET DATA SCHEMA (stored in localStorage as "petData")
+// ============================================================
+// {
+//   name: string,
+//   happiness: 0–100,
+//   hunger: 0–100,
+//   energy: 0–100,
+//   health: 0–100,
+//   xp: number,
+//   level: number,
+//   stage: "egg" | "baby" | "child" | "teen" | "adult" | "master",
+//   age: number (days),
+//   born: ISO string,
+//   lastFed: ISO string,
+//   lastTick: ISO string,  // last time passive decay ran
+//   tasksToday: number,
+//   habitsToday: number,
+//   focusToday: number,
+//   lastResetDate: "YYYY-MM-DD"
+// }
+// ============================================================
+// PUBLIC INTEGRATION API
+// Any page can call: PetAPI.reward(type)
+// Types: "task", "habit", "focus", "plan"
+// ============================================================
+
+const STAGES = [
+  { name: "EGG",    minLvl: 1,  maxLvl: 2  },
+  { name: "BABY",   minLvl: 3,  maxLvl: 5  },
+  { name: "CHILD",  minLvl: 6,  maxLvl: 9  },
+  { name: "TEEN",   minLvl: 10, maxLvl: 14 },
+  { name: "ADULT",  minLvl: 15, maxLvl: 19 },
+  { name: "MASTER", minLvl: 20, maxLvl: 99 },
+];
+
+const XP_PER_LEVEL = 100;
+
+const REWARDS = {
+  task:   { happiness: 8,  hunger: 0, energy: 0,  health: 2,  xp: 5 },
+  habit:  { happiness: 4,  hunger: 0, energy: 3,  health: 6,  xp: 4 },
+  focus:  { happiness: 5,  hunger: -4, energy: -5, health: 2,  xp: 8 },
+  plan:   { happiness: 5,  hunger: 0, energy: 0,  health: 2,  xp: 3 },
+  feed:   { happiness: 5,  hunger: 25, energy: 5,  health: 3,  xp: 1 },
+  play:   { happiness: 20, hunger: -8, energy: -10, health: 2, xp: 3 },
+  sleep:  { happiness: 5,  hunger: -5, energy: 40,  health: 5,  xp: 2 },
+  clean:  { happiness: 8,  hunger: 0, energy: 0,  health: 15, xp: 2 },
+  study:  { happiness: 3,  hunger: -5, energy: -8, health: 0,  xp: 10 },
+};
+
+const MESSAGES = {
+  feed:  ["YUMMY!", "NOM NOM!", "THANKS!", "SO GOOD!"],
+  play:  ["WHEEE!", "FUN FUN!", "AGAIN!", "YIPPEE!"],
+  sleep: ["ZZZ...", "GOOD NIGHT", "SO COMFY", "*YAWN*"],
+  clean: ["SO FRESH!", "SPARKLY!", "CLEAN!"],
+  study: ["BRAIN++", "LEARNING!", "SMART!", "WOW MUCH INFO"],
+  hungry: ["FEED ME...", "HUNGRY...", "STOMACH GROWL"],
+  sad: ["LONELY...", "PLAY WITH ME", "*SIGH*"],
+  tired: ["SO SLEEPY...", "NEED REST...", "YAWN..."],
+  sick: ["NOT WELL...", "HELP ME...", "OW..."],
+  happy: ["HAPPY!", ":D", "LIFE IS GOOD", "LOVE YOU!"],
+  idle: ["HELLO!", "WHAT'S UP?", "I EXIST!", "BORED...", "HI THERE!"],
+};
+
+function defaultPet() {
+  return {
+    name: "BUDDY",
+    happiness: 80, hunger: 70, energy: 60, health: 90,
+    xp: 0, level: 1, stage: "EGG",
+    age: 0,
+    born: new Date().toISOString(),
+    lastFed: null,
+    lastTick: new Date().toISOString(),
+    tasksToday: 0, habitsToday: 0, focusToday: 0,
+    lastResetDate: todayStr()
+  };
+}
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function loadPet() {
+  try {
+    const raw = localStorage.getItem("petData");
+    if (raw) return Object.assign(defaultPet(), JSON.parse(raw));
+  } catch(e) {}
+  return defaultPet();
+}
+
+function savePet(p) {
+  localStorage.setItem("petData", JSON.stringify(p));
+}
+
+// ============================================================
+// PASSIVE DECAY — called on page load
+// ============================================================
+function applyDecay(p) {
+  const now = new Date();
+  const last = new Date(p.lastTick || now);
+  const hoursElapsed = Math.min((now - last) / 3600000, 24);
+  if (hoursElapsed < 0.1) return p;
+
+  const decay = hoursElapsed * 2;
+  p.happiness = Math.max(0, p.happiness - decay * 0.8);
+  p.hunger    = Math.max(0, p.hunger    - decay * 1.2);
+  p.energy    = Math.max(0, p.energy    - decay * 0.5);
+  if (p.hunger < 20) p.health = Math.max(0, p.health - decay * 1.5);
+
+  // Age
+  const daysBorn = (now - new Date(p.born)) / 86400000;
+  p.age = Math.floor(daysBorn);
+
+  p.lastTick = now.toISOString();
+
+  // Daily counter reset
+  if (p.lastResetDate !== todayStr()) {
+    p.tasksToday = 0;
+    p.habitsToday = 0;
+    p.focusToday = 0;
+    p.lastResetDate = todayStr();
+  }
+
+  return p;
+}
+
+// ============================================================
+// XP + LEVELLING
+// ============================================================
+function addXP(p, amount) {
+  p.xp += amount;
+  while (p.xp >= XP_PER_LEVEL) {
+    p.xp -= XP_PER_LEVEL;
+    p.level += 1;
+    showToast("LEVEL UP! NOW LVL " + p.level);
+  }
+  // Update stage
+  for (const s of STAGES) {
+    if (p.level >= s.minLvl && p.level <= s.maxLvl) {
+      p.stage = s.name; break;
+    }
+  }
+  return p;
+}
+
+function clamp(v) { return Math.max(0, Math.min(100, Math.round(v))); }
+
+function applyReward(p, type) {
+  const r = REWARDS[type];
+  if (!r) return p;
+  p.happiness = clamp(p.happiness + r.happiness);
+  p.hunger    = clamp(p.hunger    + r.hunger);
+  p.energy    = clamp(p.energy    + r.energy);
+  p.health    = clamp(p.health    + r.health);
+  p = addXP(p, r.xp);
+  return p;
+}
+
+// ============================================================
+// PET SVG SPRITES (pixel art, 16x16 grid, each pixel = 1 unit)
+// ============================================================
+function getStageSprite(stage, mood) {
+  // mood: "happy" | "sad" | "tired" | "normal"
+  const sprites = {
+    EGG: `
+      <rect x="5" y="2" width="6" height="1" fill="#c8b4f0"/>
+      <rect x="3" y="3" width="10" height="1" fill="#c8b4f0"/>
+      <rect x="2" y="4" width="12" height="6" fill="#d4c4f8"/>
+      <rect x="3" y="10" width="10" height="2" fill="#c8b4f0"/>
+      <rect x="5" y="12" width="6" height="1" fill="#c8b4f0"/>
+      <rect x="6" y="6" width="2" height="2" fill="#7c6af7"/>
+      <rect x="9" y="6" width="2" height="2" fill="#7c6af7"/>
+      <rect x="6" y="9" width="5" height="1" fill="#7c6af7"/>
+    `,
+    BABY: `
+      <rect x="4" y="1" width="8" height="2" fill="#f7c4d4"/>
+      <rect x="3" y="3" width="10" height="7" fill="#f7d4e4"/>
+      <rect x="2" y="4" width="1" height="4" fill="#f7c4d4"/>
+      <rect x="13" y="4" width="1" height="4" fill="#f7c4d4"/>
+      <rect x="4" y="10" width="3" height="2" fill="#f7c4d4"/>
+      <rect x="9" y="10" width="3" height="2" fill="#f7c4d4"/>
+      <rect x="5" y="5" width="2" height="2" fill="#333"/>
+      <rect x="9" y="5" width="2" height="2" fill="#333"/>
+      <rect x="5" y="4" width="2" height="1" fill="#f76a8a"/>
+      <rect x="9" y="4" width="2" height="1" fill="#f76a8a"/>
+      <rect x="${mood==='happy'?'5':'6'}" y="8" width="${mood==='happy'?'6':'4'}" height="1" fill="#f76a8a"/>
+      ${mood==='happy'?'<rect x="5" y="7" width="1" height="1" fill="#f76a8a"/><rect x="10" y="7" width="1" height="1" fill="#f76a8a"/>':''}
+    `,
+    CHILD: `
+      <rect x="4" y="1" width="8" height="1" fill="#6af7c8"/>
+      <rect x="3" y="2" width="10" height="8" fill="#7af8d4"/>
+      <rect x="2" y="3" width="1" height="5" fill="#6af7c8"/>
+      <rect x="13" y="3" width="1" height="5" fill="#6af7c8"/>
+      <rect x="4" y="10" width="3" height="3" fill="#6af7c8"/>
+      <rect x="9" y="10" width="3" height="3" fill="#6af7c8"/>
+      <rect x="5" y="4" width="2" height="2" fill="#0a2a20"/>
+      <rect x="9" y="4" width="2" height="2" fill="#0a2a20"/>
+      <rect x="5" y="3" width="2" height="1" fill="#6af7c8"/>
+      <rect x="9" y="3" width="2" height="1" fill="#6af7c8"/>
+      <rect x="6" y="7" width="4" height="1" fill="#0a2a20"/>
+      ${mood==='happy'?'<rect x="5" y="7" width="1" height="1" fill="#0a2a20"/><rect x="10" y="7" width="1" height="1" fill="#0a2a20"/>':''}
+      <rect x="5" y="1" width="6" height="1" fill="#6af7c8"/>
+    `,
+    TEEN: `
+      <rect x="3" y="0" width="10" height="2" fill="#7c6af7"/>
+      <rect x="2" y="2" width="12" height="8" fill="#8c7cf7"/>
+      <rect x="1" y="3" width="1" height="6" fill="#7c6af7"/>
+      <rect x="14" y="3" width="1" height="6" fill="#7c6af7"/>
+      <rect x="3" y="10" width="3" height="4" fill="#7c6af7"/>
+      <rect x="10" y="10" width="3" height="4" fill="#7c6af7"/>
+      <rect x="5" y="4" width="2" height="2" fill="#1a0a4a"/>
+      <rect x="9" y="4" width="2" height="2" fill="#1a0a4a"/>
+      <rect x="5" y="3" width="2" height="1" fill="#534ab7"/>
+      <rect x="9" y="3" width="2" height="1" fill="#534ab7"/>
+      <rect x="6" y="7" width="4" height="1" fill="#1a0a4a"/>
+      <rect x="5" y="0" width="6" height="1" fill="#f76a8a"/>
+    `,
+    ADULT: `
+      <rect x="3" y="0" width="10" height="3" fill="#f7d46a"/>
+      <rect x="2" y="3" width="12" height="9" fill="#f7e4a4"/>
+      <rect x="1" y="4" width="1" height="6" fill="#f7d46a"/>
+      <rect x="14" y="4" width="1" height="6" fill="#f7d46a"/>
+      <rect x="3" y="12" width="4" height="3" fill="#f7d46a"/>
+      <rect x="9" y="12" width="4" height="3" fill="#f7d46a"/>
+      <rect x="5" y="5" width="2" height="2" fill="#2a1a00"/>
+      <rect x="9" y="5" width="2" height="2" fill="#2a1a00"/>
+      <rect x="6" y="8" width="4" height="1" fill="#2a1a00"/>
+      <rect x="5" y="7" width="1" height="1" fill="#2a1a00"/>
+      <rect x="10" y="7" width="1" height="1" fill="#2a1a00"/>
+      <rect x="4" y="1" width="2" height="2" fill="#f76a8a"/>
+      <rect x="10" y="1" width="2" height="2" fill="#f76a8a"/>
+    `,
+    MASTER: `
+      <rect x="3" y="0" width="10" height="3" fill="#6af7c8"/>
+      <rect x="2" y="3" width="12" height="10" fill="#a4f8e4"/>
+      <rect x="1" y="4" width="1" height="7" fill="#6af7c8"/>
+      <rect x="14" y="4" width="1" height="7" fill="#6af7c8"/>
+      <rect x="3" y="13" width="4" height="3" fill="#6af7c8"/>
+      <rect x="9" y="13" width="4" height="3" fill="#6af7c8"/>
+      <rect x="5" y="5" width="2" height="2" fill="#042c1a"/>
+      <rect x="9" y="5" width="2" height="2" fill="#042c1a"/>
+      <rect x="5" y="4" width="2" height="1" fill="#7c6af7"/>
+      <rect x="9" y="4" width="2" height="1" fill="#7c6af7"/>
+      <rect x="6" y="8" width="4" height="1" fill="#042c1a"/>
+      <rect x="5" y="7" width="1" height="1" fill="#042c1a"/>
+      <rect x="10" y="7" width="1" height="1" fill="#042c1a"/>
+      <rect x="0" y="5" width="1" height="2" fill="#f7d46a"/>
+      <rect x="15" y="5" width="1" height="2" fill="#f7d46a"/>
+      <rect x="6" y="0" width="1" height="1" fill="#f7d46a"/>
+      <rect x="9" y="0" width="1" height="1" fill="#f7d46a"/>
+    `
+  };
+  return sprites[stage] || sprites.EGG;
+}
+
+// ============================================================
+// MOOD DETECTION
+// ============================================================
+function getMood(p) {
+  if (p.health < 25) return "sick";
+  if (p.hunger < 20) return "hungry";
+  if (p.energy < 15) return "tired";
+  if (p.happiness < 30) return "sad";
+  if (p.happiness > 75 && p.health > 70) return "happy";
+  return "normal";
+}
+
+function getMoodStr(p) {
+  const m = getMood(p);
+  const map = { sick:"ILL", hungry:"HUNGRY", tired:"SLEEPY", sad:"SAD", happy:"HAPPY", normal:"OKAY" };
+  return map[m] || "OKAY";
+}
+
+function getIdleMsg(p) {
+  const mood = getMood(p);
+  const pool = MESSAGES[mood] || MESSAGES.idle;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function render(p) {
+  const mood = getMood(p);
+
+  // Sprite
+  document.getElementById("petSvg").innerHTML = getStageSprite(p.stage, mood==="happy"?"happy":"normal");
+
+  // Stats
+  const set = (id, val) => {
+    document.getElementById(id+"Bar").style.width = val + "%";
+    document.getElementById(id+"Val").textContent = val;
+  };
+  set("happy",  clamp(p.happiness));
+  set("hunger", clamp(p.hunger));
+  set("energy", clamp(p.energy));
+  set("health", clamp(p.health));
+
+  // XP / Level
+  const xpPct = Math.round((p.xp / XP_PER_LEVEL) * 100);
+  document.getElementById("xpFill").style.width = xpPct + "%";
+  document.getElementById("xpText").textContent = p.xp + " / " + XP_PER_LEVEL;
+  document.getElementById("levelBadge").textContent = "LVL " + p.level + " — " + p.stage;
+
+  // Name
+  document.getElementById("petNameDisplay").textContent = p.name;
+  document.getElementById("petNameInput").value = p.name;
+
+  // Info panel
+  document.getElementById("infoAge").textContent    = p.age + " days";
+  document.getElementById("infoStage").textContent  = p.stage;
+  document.getElementById("infoMood").textContent   = getMoodStr(p);
+  document.getElementById("infoLastFed").textContent = p.lastFed ? timeAgo(p.lastFed) : "NEVER";
+  document.getElementById("infoTasks").textContent  = p.tasksToday || 0;
+  document.getElementById("infoHabits").textContent = p.habitsToday || 0;
+  document.getElementById("infoFocus").textContent  = p.focusToday || 0;
+
+  // Idle message
+  document.getElementById("petMsg").textContent = getIdleMsg(p);
+}
+
+function timeAgo(iso) {
+  const diff = (Date.now() - new Date(iso)) / 60000;
+  if (diff < 1)   return "JUST NOW";
+  if (diff < 60)  return Math.round(diff) + " MIN AGO";
+  if (diff < 1440) return Math.round(diff/60) + " HR AGO";
+  return Math.round(diff/1440) + " DAYS AGO";
+}
+
+// ============================================================
+// USER ACTIONS (buttons on device)
+// ============================================================
+function action(type) {
+  let p = loadPet();
+  p = applyReward(p, type);
+  if (type === "feed") p.lastFed = new Date().toISOString();
+
+  const msgs = MESSAGES[type];
+  const msg = msgs[Math.floor(Math.random() * msgs.length)];
+  document.getElementById("petMsg").textContent = msg;
+  animatePet(type === "play" ? "happy" : "default");
+  showToast(msg);
+  savePet(p);
+  render(p);
+}
+
+function animatePet(cls) {
+  const el = document.getElementById("petSprite");
+  el.className = "pet";
+  requestAnimationFrame(() => {
+    el.className = "pet " + cls;
+    setTimeout(() => { el.className = "pet default"; }, 1200);
+  });
+}
+
+// ============================================================
+// PUBLIC PET API
+// Include this snippet in todo.html, habits.html, focus.html, planner.html
+// ============================================================
+window.PetAPI = {
+  reward: function(type) {
+    // type: "task" | "habit" | "focus" | "plan"
+    try {
+      const raw = localStorage.getItem("petData");
+      let p = raw ? Object.assign({}, JSON.parse(raw)) : null;
+      if (!p) return;
+
+      const r = {
+        task:  { happiness: 8,  energy: 0,   health: 2,  xp: 5,  hunger: 0  },
+        habit: { happiness: 4,  energy: 3,   health: 6,  xp: 4,  hunger: 0  },
+        focus: { happiness: 5,  energy: -5,  health: 2,  xp: 8,  hunger: -4 },
+        plan:  { happiness: 5,  energy: 0,   health: 2,  xp: 3,  hunger: 0  }
+      }[type];
+      if (!r) return;
+
+      const cl = v => Math.max(0, Math.min(100, Math.round(v)));
+      p.happiness = cl(p.happiness + r.happiness);
+      p.hunger    = cl(p.hunger    + r.hunger);
+      p.energy    = cl(p.energy    + r.energy);
+      p.health    = cl(p.health    + r.health);
+      p.xp = (p.xp || 0) + r.xp;
+      while (p.xp >= 100) { p.xp -= 100; p.level = (p.level || 1) + 1; }
+
+      // Track daily counters
+      const stages = ["EGG","BABY","CHILD","TEEN","ADULT","MASTER"];
+      const stageThresholds = [1,3,6,10,15,20];
+      for (let i = stageThresholds.length - 1; i >= 0; i--) {
+        if (p.level >= stageThresholds[i]) { p.stage = stages[i]; break; }
+      }
+
+      if (type === "task")  p.tasksToday  = (p.tasksToday  || 0) + 1;
+      if (type === "habit") p.habitsToday = (p.habitsToday || 0) + 1;
+      if (type === "focus") p.focusToday  = (p.focusToday  || 0) + 1;
+
+      localStorage.setItem("petData", JSON.stringify(p));
+    } catch(e) {}
+  },
+
+  getStatus: function() {
+    try {
+      const raw = localStorage.getItem("petData");
+      return raw ? JSON.parse(raw) : null;
+    } catch(e) { return null; }
+  }
+};
+
+// ============================================================
+// SYNC BUTTON — pull from other pages' stored counts
+// ============================================================
+function syncFromDashboard() {
+  let p = loadPet();
+  // Read task/habit/focus data written by other pages
+  try {
+    const tasks  = parseInt(localStorage.getItem("todayTasksDone")  || "0");
+    const habits = parseInt(localStorage.getItem("todayHabitsDone") || "0");
+    const focus  = parseInt(localStorage.getItem("todayFocusDone")  || "0");
+
+    const newTasks  = Math.max(0, tasks  - (p.tasksToday  || 0));
+    const newHabits = Math.max(0, habits - (p.habitsToday || 0));
+    const newFocus  = Math.max(0, focus  - (p.focusToday  || 0));
+
+    for (let i = 0; i < newTasks;  i++) p = applyReward(p, "task");
+    for (let i = 0; i < newHabits; i++) p = applyReward(p, "habit");
+    for (let i = 0; i < newFocus;  i++) p = applyReward(p, "focus");
+
+    p.tasksToday  = tasks;
+    p.habitsToday = habits;
+    p.focusToday  = focus;
+
+    savePet(p);
+    render(p);
+    showToast("SYNCED! +" + (newTasks+newHabits+newFocus) + " REWARDS");
+    animatePet("happy");
+  } catch(e) {
+    showToast("NOTHING TO SYNC");
+  }
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2000);
+}
+
+// ============================================================
+// NAME INPUT
+// ============================================================
+document.getElementById("petNameInput").addEventListener("change", function() {
+  let p = loadPet();
+  p.name = this.value.toUpperCase().slice(0, 8) || "BUDDY";
+  savePet(p);
+  render(p);
+});
+
+// ============================================================
+// IDLE MESSAGE TICKER
+// ============================================================
+setInterval(() => {
+  const p = loadPet();
+  document.getElementById("petMsg").textContent = getIdleMsg(p);
+}, 5000);
+
+// ============================================================
+// INIT
+// ============================================================
+let pet = loadPet();
+pet = applyDecay(pet);
+savePet(pet);
+render(pet);
+</script>
+</body>
+</html>
