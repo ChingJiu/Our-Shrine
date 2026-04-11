@@ -15,6 +15,7 @@
 // ─────────────────────────────────────────────────────────────
 // ★  PASTE YOUR FIREBASE CONFIG HERE  ★
 // ─────────────────────────────────────────────────────────────
+
 const firebaseConfig = {
   apiKey: "AIzaSyD4XQMKY2C3ThNPn-RMQEoSyV_-wEwG_30",
     authDomain: "home-68c02.firebaseapp.com",
@@ -332,9 +333,11 @@ window.addEventListener('firebaseDataLoaded', () => {
   const renderFns = [
     'render',           // todo.html, planner.html, focus.html
     'renderHabits',     // habits.html
-    'renderPetCard',    // pet.html, index.html
-    'renderSummary',    // index.html
-    'renderHero',       // index.html
+    'renderAll',        // index.html (calls renderHero + renderPetCard + renderSummary + renderEvents)
+    'renderPetCard',    // pet.html standalone
+    'renderStats',      // focus.html
+    'renderLog',        // focus.html
+    'renderTaskOptions',// focus.html task list
   ];
   renderFns.forEach(fn => {
     if (typeof window[fn] === 'function') {
@@ -347,12 +350,12 @@ window.addEventListener('firebaseKeyUpdated', (e) => {
   const key = e.detail.key;
   // Re-render pages that depend on the updated key
   const keyMap = {
-    tasks:          ['render'],
-    habits:         ['renderHabits'],
-    habitLog:       ['renderHabits'],
-    plannerEvents:  ['render', 'renderEvents'],
-    petData:        ['render', 'renderPetCard', 'renderHabits'],
-    focusStats:     ['renderStats'],
+    tasks:          ['render', 'renderAll', 'renderTaskOptions'],
+    habits:         ['renderHabits', 'renderAll'],
+    habitLog:       ['renderHabits', 'renderAll'],
+    plannerEvents:  ['render', 'renderAll'],
+    petData:        ['render', 'renderAll', 'renderPetCard', 'renderHabits'],
+    focusStats:     ['renderStats', 'renderAll'],
     focusLog:       ['renderLog'],
   };
   (keyMap[key] || []).forEach(fn => {
