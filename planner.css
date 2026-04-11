@@ -1,5 +1,3 @@
-<style>
-
 /* ── WRAPPER OVERRIDE — planner needs wider ── */
 /* wide layout handled by .px-wrapper--wide in theme.css */
 
@@ -256,5 +254,3 @@
   transition: background 0.12s;
 }
 .btn-del:hover { background: rgba(247,106,138,0.08); }
-
-</style>
