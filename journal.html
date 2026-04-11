@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journal — Dashboard</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+
+/* ══════════════════════════════════════
+   HEADER
+══════════════════════════════════════ */
+.journal-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+/* ══════════════════════════════════════
+   MOOD PICKER — the centrepiece
+══════════════════════════════════════ */
+.mood-picker-wrap {
+  background: var(--panel2);
+  border: 2px solid var(--border2);
+  box-shadow: 6px 6px 0 #06060e;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.mood-picker-top {
+  background: #221f38;
+  border-bottom: 2px solid var(--border2);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mp-light {
+  width: 9px; height: 9px;
+  background: var(--accent2);
+  animation: px-blink 2.2s infinite;
+}
+.mp-light2 {
+  width: 9px; height: 9px;
+  background: var(--accent3);
+  animation: px-blink 2.2s 0.7s infinite;
+}
+.mp-title {
+  font-size: 7px;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  margin-left: auto;
+}
+
+.mood-picker-body {
+  padding: 20px 16px 16px;
+}
+.mood-prompt {
+  font-size: 8px;
+  color: var(--text2);
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.mood-prompt span { color: var(--accent2); }
+
+/* Big mood emoji buttons */
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.mood-btn {
+  background: var(--panel);
+  border: 2px solid var(--border);
+  padding: 12px 4px 10px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.12s, background 0.12s, transform 0.1s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.mood-btn:hover { border-color: var(--muted); background: var(--panel2); }
+.mood-btn:active { transform: scale(0.96); }
+.mood-btn.selected {
+  border-color: var(--accent2);
+  background: rgba(247,106,138,0.08);
+  box-shadow: 0 0 0 1px var(--accent2);
+}
+.mood-btn .mb-emoji { font-size: 22px; display: block; line-height: 1; }
+.mood-btn .mb-label {
+  font-size: 5px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+}
+.mood-btn.selected .mb-label { color: var(--accent2); }
+
+/* Energy slider */
+.energy-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.energy-label {
+  font-size: 6px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  min-width: 56px;
+}
+.energy-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 8px;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  outline: none;
+  cursor: pointer;
+}
+.energy-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 20px;
+  background: var(--amber);
+  border: 2px solid #8a6a00;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #06060e;
+  border-radius: 0;
+}
+.energy-slider::-moz-range-thumb {
+  width: 16px; height: 20px;
+  background: var(--amber);
+  border: 2px solid #8a6a00;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #06060e;
+  border-radius: 0;
+}
+.energy-val {
+  font-size: 9px;
+  color: var(--amber);
+  min-width: 20px;
+  text-align: right;
+}
+
+/* Tag chips */
+.tags-row {
+  margin-bottom: 14px;
+}
+.tags-label {
+  font-size: 6px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 7px;
+}
+.tag-chips {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.tag-chip {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 5px;
+  padding: 4px 8px;
+  border: 2px solid var(--border);
+  background: var(--panel);
+  color: var(--muted);
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: all 0.1s;
+}
+.tag-chip:hover { border-color: var(--muted); color: var(--text2); }
+.tag-chip.on { border-color: var(--accent3); color: var(--accent3); background: rgba(106,247,200,0.06); }
+
+/* Journal text area */
+.journal-entry-area {
+  margin-bottom: 14px;
+}
+.entry-label {
+  font-size: 6px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.char-count { color: var(--border2); }
+.journal-textarea {
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  color: var(--text2);
+  padding: 10px 12px;
+  width: 100%;
+  resize: vertical;
+  min-height: 90px;
+  outline: none;
+  line-height: 1.5;
+  transition: border-color 0.12s;
+  letter-spacing: 0.02em;
+}
+.journal-textarea:focus { border-color: var(--accent2); }
+.journal-textarea::placeholder { color: var(--border2); }
+
+/* Save row */
+.save-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.entry-date-label {
+  font-size: 6px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+}
+
+/* ══════════════════════════════════════
+   STATS STRIP
+══════════════════════════════════════ */
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.stat-tile {
+  background: var(--panel);
+  border: 2px solid var(--border);
+  padding: 10px 8px;
+  text-align: center;
+}
+.st-num   { font-size: 16px; color: var(--accent2); display: block; margin-bottom: 4px; }
+.st-label { font-size: 5px; color: var(--muted); letter-spacing: 0.08em; line-height: 1.6; }
+.st-num.teal  { color: var(--accent3); }
+.st-num.amber { color: var(--amber); }
+.st-num.purple{ color: var(--accent); }
+
+/* ══════════════════════════════════════
+   MOOD CHART (7-day bar chart)
+══════════════════════════════════════ */
+.mood-chart-wrap {
+  background: var(--panel);
+  border: 2px solid var(--border);
+  padding: 14px 14px 10px;
+  margin-bottom: 20px;
+}
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 60px;
+  margin-bottom: 6px;
+}
+.chart-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  height: 100%;
+  justify-content: flex-end;
+}
+.chart-bar {
+  width: 100%;
+  min-height: 4px;
+  transition: height 0.4s steps(6);
+  position: relative;
+}
+.chart-bar .bar-emoji {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  line-height: 1;
+}
+.chart-day-label {
+  font-size: 5px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+.chart-empty {
+  font-size: 7px;
+  color: var(--muted);
+  text-align: center;
+  padding: 16px 0;
+  letter-spacing: 0.08em;
+}
+
+/* ══════════════════════════════════════
+   MOOD HEAT STRIP (30 days)
+══════════════════════════════════════ */
+.heat-strip-wrap {
+  background: var(--panel);
+  border: 2px solid var(--border);
+  padding: 14px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+.heat-strip {
+  display: flex;
+  gap: 3px;
+  min-width: max-content;
+}
+.heat-cell {
+  width: 18px; height: 18px;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  cursor: default;
+  position: relative;
+  flex-shrink: 0;
+}
+.heat-cell:hover .heat-tooltip {
+  display: block;
+}
+.heat-tooltip {
+  display: none;
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 5px;
+  padding: 4px 7px;
+  white-space: nowrap;
+  z-index: 10;
+  letter-spacing: 0.04em;
+}
+
+/* ══════════════════════════════════════
+   ENTRY LOG
+══════════════════════════════════════ */
+.entry-filters {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.ef-tab {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  padding: 5px 9px;
+  border: 2px solid var(--border);
+  background: var(--panel);
+  color: var(--muted);
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: all 0.12s;
+}
+.ef-tab:hover  { color: var(--text2); border-color: var(--muted); }
+.ef-tab.active { color: var(--accent2); border-color: var(--accent2); background: rgba(247,106,138,0.06); }
+
+.entry-list { display: flex; flex-direction: column; gap: 8px; }
+
+.entry-card {
+  background: var(--panel);
+  border: 2px solid var(--border);
+  border-left: 4px solid var(--accent2);
+  overflow: hidden;
+  animation: px-slideUp 0.2s ease both;
+  transition: border-color 0.15s;
+}
+.entry-card:hover { border-color: var(--muted); border-left-color: var(--accent2); }
+
+.entry-card-head {
+  padding: 10px 14px 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.ec-mood-emoji { font-size: 18px; flex-shrink: 0; }
+.ec-meta { flex: 1; min-width: 0; }
+.ec-date  { font-size: 6px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 3px; }
+.ec-mood-label {
+  font-size: 7px;
+  color: var(--text);
+  letter-spacing: 0.06em;
+}
+.ec-energy {
+  font-size: 6px;
+  color: var(--amber);
+  border: 1px solid rgba(247,212,106,0.3);
+  padding: 2px 7px;
+  flex-shrink: 0;
+}
+.ec-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.ec-tag {
+  font-size: 5px;
+  color: var(--accent3);
+  border: 1px solid rgba(106,247,200,0.3);
+  padding: 2px 6px;
+  letter-spacing: 0.04em;
+}
+
+.entry-card-body {
+  padding: 10px 14px 12px;
+}
+.ec-text {
+  font-family: 'VT323', monospace;
+  font-size: 17px;
+  color: var(--text2);
+  line-height: 1.55;
+  word-break: break-word;
+}
+.ec-text.collapsed {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.entry-card-foot {
+  padding: 6px 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ec-expand {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 5px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: color 0.12s;
+}
+.ec-expand:hover { color: var(--accent); }
+.ec-del {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 5px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: color 0.12s;
+}
+.ec-del:hover { color: var(--accent2); }
+
+/* ══════════════════════════════════════
+   EMPTY STATE
+══════════════════════════════════════ */
+.empty-state {
+  text-align: center;
+  padding: 36px 20px;
+  font-size: 7px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  line-height: 2.5;
+}
+.empty-state .es-icon { font-size: 32px; display: block; margin-bottom: 12px; }
+
+/* ══════════════════════════════════════
+   PET BANNER
+══════════════════════════════════════ */
+.pet-banner {
+  background: #0d0a1a;
+  border: 2px solid var(--accent);
+  padding: 11px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.pb-icon { font-size: 20px; flex-shrink: 0; animation: px-idle 1.4s steps(2) infinite; }
+.pb-text { font-size: 7px; color: var(--text2); line-height: 1.9; flex: 1; }
+
+/* ══════════════════════════════════════
+   STREAK CALENDAR (7 cells)
+══════════════════════════════════════ */
+.week-cells {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+.wc {
+  flex: 1;
+  height: 10px;
+  background: var(--border);
+  transition: background 0.2s;
+}
+.wc.logged { background: var(--accent2); box-shadow: 0 0 6px rgba(247,106,138,0.3); }
+
+/* ══════════════════════════════════════
+   MOOD COLOURS for border accents
+══════════════════════════════════════ */
+.mood-rad     { border-left-color: #f76a8a !important; }
+.mood-happy   { border-left-color: #f7d46a !important; }
+.mood-neutral { border-left-color: #7c6af7 !important; }
+.mood-meh     { border-left-color: #6b6890 !important; }
+.mood-sad     { border-left-color: #6af7c8 !important; }
+
+</style>
+</head>
+<body>
+
+<div id="toast" class="px-toast"></div>
+
+<div class="px-wrapper">
+
+  <nav class="px-nav">
+    <a href="index.html">HOME</a>
+    <a href="todo.html">TASKS</a>
+    <a href="planner.html">WEEK</a>
+    <a href="habits.html">HABITS</a>
+    <a href="focus.html">FOCUS</a>
+    <a href="pet.html">PET</a>
+    <a href="journal.html" class="active active-pink">JOURNAL</a>
+  </nav>
+
+  <!-- HEADER -->
+  <div class="journal-header">
+    <div>
+      <h1 class="px-title px-title--pink">MOOD JOURNAL</h1>
+      <p class="px-subtitle">// HOW ARE YOU FEELING TODAY?</p>
+    </div>
+    <div id="streakBadge" style="font-size:7px;color:var(--accent2);border:2px solid var(--accent2);padding:6px 12px;letter-spacing:0.06em;">0 DAY STREAK</div>
+  </div>
+
+  <!-- PET BANNER -->
+  <div class="pet-banner">
+    <div class="pb-icon">🐾</div>
+    <div class="pb-text">
+      Log your mood daily → pet gets <strong style="color:var(--accent2)">+6 Happiness · +4 XP</strong><br>
+      Your pet's mood mirrors yours — keep the streak going!
+    </div>
+  </div>
+
+  <!-- MOOD PICKER -->
+  <div class="mood-picker-wrap">
+    <div class="mood-picker-top">
+      <div class="mp-light"></div>
+      <div class="mp-light2"></div>
+      <span class="mp-title">NEW ENTRY</span>
+    </div>
+    <div class="mood-picker-body">
+
+      <div class="mood-prompt">HOW ARE YOU FEELING <span id="promptDate">TODAY</span>?</div>
+
+      <!-- Mood buttons -->
+      <div class="mood-grid">
+        <button class="mood-btn" data-mood="rad"     data-score="5" onclick="selectMood(this)">
+          <span class="mb-emoji">😄</span><span class="mb-label">RAD</span>
+        </button>
+        <button class="mood-btn" data-mood="happy"   data-score="4" onclick="selectMood(this)">
+          <span class="mb-emoji">🙂</span><span class="mb-label">GOOD</span>
+        </button>
+        <button class="mood-btn" data-mood="neutral" data-score="3" onclick="selectMood(this)">
+          <span class="mb-emoji">😐</span><span class="mb-label">MEH</span>
+        </button>
+        <button class="mood-btn" data-mood="meh"     data-score="2" onclick="selectMood(this)">
+          <span class="mb-emoji">😔</span><span class="mb-label">BAD</span>
+        </button>
+        <button class="mood-btn" data-mood="sad"     data-score="1" onclick="selectMood(this)">
+          <span class="mb-emoji">😢</span><span class="mb-label">AWFUL</span>
+        </button>
+      </div>
+
+      <!-- Energy slider -->
+      <div class="energy-row">
+        <span class="energy-label">ENERGY:</span>
+        <input class="energy-slider" id="energySlider" type="range" min="1" max="10" value="5"
+          oninput="document.getElementById('energyVal').textContent=this.value" />
+        <span class="energy-val" id="energyVal">5</span>
+      </div>
+
+      <!-- Tag chips -->
+      <div class="tags-row">
+        <div class="tags-label">WHAT'S GOING ON? (PICK ALL THAT APPLY)</div>
+        <div class="tag-chips" id="tagChips">
+          <div class="tag-chip" onclick="toggleTag(this)">WORK</div>
+          <div class="tag-chip" onclick="toggleTag(this)">SCHOOL</div>
+          <div class="tag-chip" onclick="toggleTag(this)">SOCIAL</div>
+          <div class="tag-chip" onclick="toggleTag(this)">FAMILY</div>
+          <div class="tag-chip" onclick="toggleTag(this)">HEALTH</div>
+          <div class="tag-chip" onclick="toggleTag(this)">SLEEP</div>
+          <div class="tag-chip" onclick="toggleTag(this)">EXERCISE</div>
+          <div class="tag-chip" onclick="toggleTag(this)">FOOD</div>
+          <div class="tag-chip" onclick="toggleTag(this)">WEATHER</div>
+          <div class="tag-chip" onclick="toggleTag(this)">STRESS</div>
+          <div class="tag-chip" onclick="toggleTag(this)">CREATIVE</div>
+          <div class="tag-chip" onclick="toggleTag(this)">GRATEFUL</div>
+          <div class="tag-chip" onclick="toggleTag(this)">LONELY</div>
+          <div class="tag-chip" onclick="toggleTag(this)">MOTIVATED</div>
+          <div class="tag-chip" onclick="toggleTag(this)">TIRED</div>
+        </div>
+      </div>
+
+      <!-- Text entry -->
+      <div class="journal-entry-area">
+        <div class="entry-label">
+          <span>WRITE IT OUT (OPTIONAL)</span>
+          <span class="char-count" id="charCount">0 / 500</span>
+        </div>
+        <textarea class="journal-textarea" id="journalText"
+          placeholder="WHAT'S ON YOUR MIND TODAY?&#10;ANYTHING YOU WANT TO REMEMBER OR LET GO OF..."
+          maxlength="500"
+          oninput="document.getElementById('charCount').textContent=this.value.length+' / 500'"></textarea>
+      </div>
+
+      <div class="save-row">
+        <span class="entry-date-label" id="entryDateLabel">ENTRY FOR TODAY</span>
+        <button class="px-btn px-btn--pink" onclick="saveEntry()">SAVE ENTRY ✓</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STATS STRIP -->
+  <div class="stats-strip">
+    <div class="stat-tile">
+      <span class="st-num" id="statStreak">0</span>
+      <span class="st-label">DAY STREAK</span>
+    </div>
+    <div class="stat-tile teal" style="--sc:var(--accent3)">
+      <span class="st-num teal" id="statTotal">0</span>
+      <span class="st-label">TOTAL ENTRIES</span>
+    </div>
+    <div class="stat-tile amber">
+      <span class="st-num amber" id="statAvgMood">—</span>
+      <span class="st-label">AVG MOOD (7D)</span>
+    </div>
+    <div class="stat-tile purple">
+      <span class="st-num purple" id="statTopTag">—</span>
+      <span class="st-label">TOP TAG</span>
+    </div>
+  </div>
+
+  <!-- 7-DAY STREAK ROW -->
+  <div class="px-panel" style="margin-bottom:20px;">
+    <div class="px-section px-section--pink" style="margin-top:0;">// LAST 7 DAYS</div>
+    <div class="week-cells" id="weekCells"></div>
+  </div>
+
+  <!-- MOOD CHART -->
+  <div class="mood-chart-wrap">
+    <div class="px-section px-section--pink" style="margin-top:0;">// MOOD TREND (14 DAYS)</div>
+    <div class="chart-bars" id="chartBars">
+      <div class="chart-empty">NO DATA YET — START LOGGING!</div>
+    </div>
+    <div style="display:flex;gap:4px;" id="chartLabels"></div>
+  </div>
+
+  <!-- 30-DAY HEAT STRIP -->
+  <div class="heat-strip-wrap">
+    <div class="px-section px-section--amber" style="margin-top:0;">// 30-DAY MOOD HISTORY</div>
+    <div class="heat-strip" id="heatStrip"></div>
+  </div>
+
+  <!-- ENTRY LOG -->
+  <div class="px-section px-section--pink">// PAST ENTRIES</div>
+
+  <div class="entry-filters">
+    <div class="ef-tab active" data-f="all"  onclick="setFilter('all',this)">ALL</div>
+    <div class="ef-tab" data-f="rad"         onclick="setFilter('rad',this)">😄 RAD</div>
+    <div class="ef-tab" data-f="happy"       onclick="setFilter('happy',this)">🙂 GOOD</div>
+    <div class="ef-tab" data-f="neutral"     onclick="setFilter('neutral',this)">😐 MEH</div>
+    <div class="ef-tab" data-f="meh"         onclick="setFilter('meh',this)">😔 BAD</div>
+    <div class="ef-tab" data-f="sad"         onclick="setFilter('sad',this)">😢 AWFUL</div>
+  </div>
+
+  <div class="entry-list" id="entryList"></div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// DATA
+// localStorage key: "journalEntries" → Entry[]
+// ══════════════════════════════════════════════
+
+const MOOD_META = {
+  rad:     { emoji:'😄', label:'RAD',     score:5, color:'#f76a8a' },
+  happy:   { emoji:'🙂', label:'GOOD',    score:4, color:'#f7d46a' },
+  neutral: { emoji:'😐', label:'MEH',     score:3, color:'#7c6af7' },
+  meh:     { emoji:'😔', label:'BAD',     score:2, color:'#6b6890' },
+  sad:     { emoji:'😢', label:'AWFUL',   score:1, color:'#6af7c8' },
+};
+
+const DAYS_SHORT = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+const MONTHS_SHORT = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+let selectedMood  = null;
+let selectedTags  = new Set();
+let currentFilter = 'all';
+
+function uid()      { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function todayKey() { return new Date().toISOString().slice(0,10); }
+
+function loadEntries() {
+  try { return JSON.parse(localStorage.getItem('journalEntries')||'[]'); }
+  catch(e){ return []; }
+}
+function saveEntries(e) { localStorage.setItem('journalEntries', JSON.stringify(e)); }
+
+function formatDate(iso) {
+  const d = new Date(iso+'T00:00:00');
+  return `${DAYS_SHORT[d.getDay()]} ${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
+}
+function formatTime(ts) {
+  const d = new Date(ts);
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+// ══════════════════════════════════════════════
+// MOOD PICKER INTERACTIONS
+// ══════════════════════════════════════════════
+function selectMood(btn) {
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedMood = btn.dataset.mood;
+}
+
+function toggleTag(chip) {
+  const tag = chip.textContent.trim();
+  if (selectedTags.has(tag)) {
+    selectedTags.delete(tag);
+    chip.classList.remove('on');
+  } else {
+    selectedTags.add(tag);
+    chip.classList.add('on');
+  }
+}
+
+// ══════════════════════════════════════════════
+// SAVE ENTRY
+// ══════════════════════════════════════════════
+function saveEntry() {
+  if (!selectedMood) {
+    showToast('PICK A MOOD FIRST!');
+    document.querySelector('.mood-grid').style.animation = 'px-shake 0.4s steps(3)';
+    setTimeout(()=>document.querySelector('.mood-grid').style.animation='',500);
+    return;
+  }
+
+  const entries = loadEntries();
+  const today   = todayKey();
+
+  // Allow one entry per day — overwrite if exists
+  const existingIdx = entries.findIndex(e=>e.date===today);
+  const entry = {
+    id:     existingIdx>=0 ? entries[existingIdx].id : uid(),
+    date:   today,
+    ts:     Date.now(),
+    mood:   selectedMood,
+    score:  MOOD_META[selectedMood].score,
+    energy: parseInt(document.getElementById('energySlider').value),
+    tags:   [...selectedTags],
+    text:   document.getElementById('journalText').value.trim(),
+  };
+
+  const isNew = existingIdx < 0;
+  if (existingIdx >= 0) entries[existingIdx] = entry;
+  else entries.push(entry);
+
+  saveEntries(entries);
+  rewardPet(isNew);
+  showToast(isNew ? 'ENTRY SAVED! PET +6 HAPPY' : 'ENTRY UPDATED!');
+
+  // Reset form
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+  document.querySelectorAll('.tag-chip').forEach(c=>c.classList.remove('on'));
+  document.getElementById('journalText').value = '';
+  document.getElementById('energySlider').value = 5;
+  document.getElementById('energyVal').textContent = '5';
+  document.getElementById('charCount').textContent = '0 / 500';
+  selectedMood = null;
+  selectedTags.clear();
+
+  render();
+}
+
+// ══════════════════════════════════════════════
+// RENDER ALL
+// ══════════════════════════════════════════════
+function render() {
+  const entries = loadEntries().sort((a,b)=>b.ts-a.ts);
+  renderStats(entries);
+  renderWeekCells(entries);
+  renderChart(entries);
+  renderHeatStrip(entries);
+  renderEntryList(entries);
+  renderStreakBadge(entries);
+}
+
+// ── STATS ──
+function renderStats(entries) {
+  document.getElementById('statTotal').textContent = entries.length;
+
+  // Streak
+  const streak = calcStreak(entries);
+  document.getElementById('statStreak').textContent   = streak;
+  document.getElementById('streakBadge').textContent  = `${streak} DAY STREAK`;
+
+  // Avg mood last 7 days
+  const last7 = getLast7Entries(entries);
+  if (last7.length) {
+    const avg = (last7.reduce((s,e)=>s+e.score,0)/last7.length).toFixed(1);
+    const emoji = MOOD_META[moodFromScore(parseFloat(avg))].emoji;
+    document.getElementById('statAvgMood').textContent = emoji;
+  } else {
+    document.getElementById('statAvgMood').textContent = '—';
+  }
+
+  // Top tag
+  const tagCount = {};
+  entries.forEach(e=>(e.tags||[]).forEach(t=>{ tagCount[t]=(tagCount[t]||0)+1; }));
+  const topTag = Object.entries(tagCount).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('statTopTag').textContent = topTag ? topTag[0].slice(0,4) : '—';
+}
+
+// ── WEEK CELLS ──
+function renderWeekCells(entries) {
+  const dateSet = new Set(entries.map(e=>e.date));
+  const wrap    = document.getElementById('weekCells');
+  wrap.innerHTML = '';
+  for (let i=6;i>=0;i--) {
+    const d = new Date(); d.setDate(d.getDate()-i); d.setHours(0,0,0,0);
+    const k = d.toISOString().slice(0,10);
+    const cell = document.createElement('div');
+    cell.className = 'wc'+(dateSet.has(k)?' logged':'');
+    cell.title = DAYS_SHORT[d.getDay()];
+    wrap.appendChild(cell);
+  }
+}
+
+// ── 14-DAY CHART ──
+function renderChart(entries) {
+  const bars   = document.getElementById('chartBars');
+  const labels = document.getElementById('chartLabels');
+  bars.innerHTML = ''; labels.innerHTML = '';
+
+  const days = [];
+  for (let i=13;i>=0;i--) {
+    const d = new Date(); d.setDate(d.getDate()-i); d.setHours(0,0,0,0);
+    days.push({ key: d.toISOString().slice(0,10), day: DAYS_SHORT[d.getDay()].slice(0,1) });
+  }
+
+  const entryMap = {};
+  entries.forEach(e=>{ entryMap[e.date]=e; });
+
+  const hasAny = days.some(d=>entryMap[d.key]);
+  if (!hasAny) {
+    bars.innerHTML = '<div class="chart-empty">LOG SOME ENTRIES TO SEE YOUR TREND!</div>';
+    return;
+  }
+
+  days.forEach(({key,day}) => {
+    const e = entryMap[key];
+    const col = document.createElement('div');
+    col.className = 'chart-col';
+
+    const bar = document.createElement('div');
+    bar.className = 'chart-bar';
+    const score = e ? e.score : 0;
+    bar.style.height     = `${score * 11}px`;
+    bar.style.background = e ? MOOD_META[e.mood].color : 'var(--border)';
+    bar.style.opacity    = e ? '1' : '0.3';
+    if (e) {
+      const em = document.createElement('span');
+      em.className = 'bar-emoji';
+      em.textContent = MOOD_META[e.mood].emoji;
+      bar.appendChild(em);
+    }
+
+    const lbl = document.createElement('div');
+    lbl.className = 'chart-day-label';
+    lbl.textContent = day;
+
+    col.appendChild(bar);
+    col.appendChild(lbl);
+    bars.appendChild(col);
+  });
+}
+
+// ── 30-DAY HEAT STRIP ──
+function renderHeatStrip(entries) {
+  const strip   = document.getElementById('heatStrip');
+  strip.innerHTML = '';
+  const entryMap = {};
+  entries.forEach(e=>{ entryMap[e.date]=e; });
+
+  for (let i=29;i>=0;i--) {
+    const d = new Date(); d.setDate(d.getDate()-i); d.setHours(0,0,0,0);
+    const key = d.toISOString().slice(0,10);
+    const e   = entryMap[key];
+    const cell = document.createElement('div');
+    cell.className = 'heat-cell';
+    cell.textContent = e ? MOOD_META[e.mood].emoji : '';
+    if (!e) cell.style.background = 'var(--border)';
+
+    const tip = document.createElement('div');
+    tip.className = 'heat-tooltip';
+    tip.textContent = e
+      ? `${formatDate(key)}: ${MOOD_META[e.mood].label}`
+      : formatDate(key)+': NO ENTRY';
+    cell.appendChild(tip);
+    strip.appendChild(cell);
+  }
+}
+
+// ── ENTRY LIST ──
+function renderEntryList(entries) {
+  const filtered = currentFilter==='all' ? entries : entries.filter(e=>e.mood===currentFilter);
+  const list     = document.getElementById('entryList');
+
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty-state">
+      <span class="es-icon">${currentFilter==='all'?'📓':MOOD_META[currentFilter]?.emoji||'📓'}</span>
+      ${currentFilter==='all'?'NO ENTRIES YET!<br>LOG YOUR FIRST MOOD ABOVE':'NO '+currentFilter.toUpperCase()+' ENTRIES FOUND'}
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = '';
+  filtered.forEach((e,i) => {
+    const m   = MOOD_META[e.mood]||MOOD_META.neutral;
+    const card = document.createElement('div');
+    card.className = `entry-card mood-${e.mood}`;
+    card.style.animationDelay = (i*0.04)+'s';
+
+    const tagsHtml = (e.tags||[]).length
+      ? `<div class="ec-tags">${e.tags.map(t=>`<span class="ec-tag">${esc(t)}</span>`).join('')}</div>`
+      : '';
+
+    const hasText = e.text && e.text.length > 0;
+    const isLong  = hasText && e.text.length > 160;
+
+    card.innerHTML = `
+      <div class="entry-card-head">
+        <span class="ec-mood-emoji">${m.emoji}</span>
+        <div class="ec-meta">
+          <div class="ec-date">${formatDate(e.date)} · ${formatTime(e.ts)}</div>
+          <div class="ec-mood-label">${m.label}</div>
+        </div>
+        <span class="ec-energy">⚡${e.energy||'?'}</span>
+      </div>
+      ${tagsHtml ? `<div class="entry-card-head" style="padding-top:6px;padding-bottom:8px;border-bottom:none;">${tagsHtml}</div>` : ''}
+      ${hasText ? `
+        <div class="entry-card-body">
+          <div class="ec-text${isLong?' collapsed':''}" id="ect-${e.id}">${esc(e.text)}</div>
+        </div>
+        <div class="entry-card-foot">
+          ${isLong
+            ? `<button class="ec-expand" onclick="expandEntry('${e.id}',this)">READ MORE ↓</button>`
+            : '<span></span>'
+          }
+          <button class="ec-del" onclick="deleteEntry('${e.id}')">× DELETE</button>
+        </div>
+      ` : `
+        <div class="entry-card-foot">
+          <span></span>
+          <button class="ec-del" onclick="deleteEntry('${e.id}')">× DELETE</button>
+        </div>
+      `}
+    `;
+    list.appendChild(card);
+  });
+}
+
+function expandEntry(id, btn) {
+  const el = document.getElementById('ect-'+id);
+  if (!el) return;
+  el.classList.remove('collapsed');
+  btn.textContent = 'COLLAPSE ↑';
+  btn.onclick = () => {
+    el.classList.add('collapsed');
+    btn.textContent = 'READ MORE ↓';
+    btn.onclick = () => expandEntry(id, btn);
+  };
+}
+
+function deleteEntry(id) {
+  saveEntries(loadEntries().filter(e=>e.id!==id));
+  render();
+  showToast('ENTRY DELETED');
+}
+
+// ── FILTER ──
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.ef-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+// ══════════════════════════════════════════════
+// STREAK
+// ══════════════════════════════════════════════
+function calcStreak(entries) {
+  const dateSet = new Set(entries.map(e=>e.date));
+  let streak=0;
+  const d = new Date(); d.setHours(0,0,0,0);
+  // Count today if logged
+  if (dateSet.has(d.toISOString().slice(0,10))) streak++;
+  // Then go backwards
+  for (let i=1;i<365;i++) {
+    d.setDate(d.getDate()-1);
+    if (dateSet.has(d.toISOString().slice(0,10))) streak++;
+    else break;
+  }
+  return streak;
+}
+
+function renderStreakBadge(entries) {
+  const s = calcStreak(entries);
+  document.getElementById('streakBadge').textContent = `${s} DAY STREAK`;
+  if (s >= 7) document.getElementById('streakBadge').style.color = 'var(--amber)';
+}
+
+function getLast7Entries(entries) {
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-7); cutoff.setHours(0,0,0,0);
+  return entries.filter(e=>new Date(e.date+'T00:00:00')>=cutoff);
+}
+
+function moodFromScore(score) {
+  if (score>=4.5) return 'rad';
+  if (score>=3.5) return 'happy';
+  if (score>=2.5) return 'neutral';
+  if (score>=1.5) return 'meh';
+  return 'sad';
+}
+
+// ══════════════════════════════════════════════
+// PET INTEGRATION
+// ══════════════════════════════════════════════
+function rewardPet(isNew) {
+  if (!isNew) return;
+  try {
+    const p = JSON.parse(localStorage.getItem('petData')||'null'); if(!p) return;
+    const cl = v=>Math.max(0,Math.min(100,Math.round(v)));
+    p.happiness = cl((p.happiness||80)+6);
+    p.health    = cl((p.health||90)+3);
+    p.xp        = (p.xp||0)+4;
+    while(p.xp>=100){p.xp-=100;p.level=(p.level||1)+1;}
+
+    // Mirror pet mood to journal mood
+    if (selectedMood==='rad'||selectedMood==='happy') {
+      p.happiness = cl(p.happiness+4);
+    } else if (selectedMood==='sad'||selectedMood==='meh') {
+      p.happiness = cl(p.happiness-5);
+    }
+
+    const stages=['EGG','BABY','CHILD','TEEN','ADULT','MASTER'];
+    const thresh=[1,3,6,10,15,20];
+    for(let i=thresh.length-1;i>=0;i--){if(p.level>=thresh[i]){p.stage=stages[i];break;}}
+    localStorage.setItem('petData',JSON.stringify(p));
+  } catch(e){}
+}
+
+// ══════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._to);
+  t._to=setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+(function init(){
+  // Set today's date label
+  const now = new Date();
+  document.getElementById('promptDate').textContent =
+    `ON ${DAYS_SHORT[now.getDay()]} ${now.getDate()} ${MONTHS_SHORT[now.getMonth()]}`;
+  document.getElementById('entryDateLabel').textContent =
+    `ENTRY FOR ${DAYS_SHORT[now.getDay()]} ${now.getDate()} ${MONTHS_SHORT[now.getMonth()]}`;
+
+  // Pre-fill form if entry already exists today
+  const entries = loadEntries();
+  const todayEntry = entries.find(e=>e.date===todayKey());
+  if (todayEntry) {
+    const btn = document.querySelector(`.mood-btn[data-mood="${todayEntry.mood}"]`);
+    if (btn) btn.classList.add('selected');
+    selectedMood = todayEntry.mood;
+    document.getElementById('energySlider').value = todayEntry.energy||5;
+    document.getElementById('energyVal').textContent = todayEntry.energy||5;
+    document.getElementById('journalText').value = todayEntry.text||'';
+    document.getElementById('charCount').textContent = (todayEntry.text||'').length+' / 500';
+    (todayEntry.tags||[]).forEach(tag=>{
+      const chip = [...document.querySelectorAll('.tag-chip')].find(c=>c.textContent.trim()===tag);
+      if(chip){ chip.classList.add('on'); selectedTags.add(tag); }
+    });
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
