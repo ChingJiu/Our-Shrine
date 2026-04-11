@@ -218,10 +218,6 @@ function quickAdd() {
   showToast('TASK ADDED → TASKS PAGE');
 }
 
-document.getElementById('quickInput').addEventListener('keydown', e=>{
-  if(e.key==='Enter') quickAdd();
-});
-
 // ─────────────────────────────────────────────
 // TOAST
 // ─────────────────────────────────────────────
@@ -238,9 +234,17 @@ function esc(s){ return (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 // ─────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────
-renderHero();
-renderPetCard();
-renderSummary();
-renderEvents();
-renderQuote();
-</script>
+document.addEventListener('DOMContentLoaded', () => {
+  const quickInput = document.getElementById('quickInput');
+  if (quickInput) {
+    quickInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') quickAdd();
+    });
+  }
+
+  renderHero();
+  renderPetCard();
+  renderSummary();
+  renderEvents();
+  renderQuote();
+});
