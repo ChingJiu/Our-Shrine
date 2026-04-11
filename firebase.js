@@ -29,7 +29,7 @@ const firebaseConfig = {
 // ─────────────────────────────────────────────────────────────
 
 /** Set to true to require Google Sign-In before syncing */
-const USE_AUTH = false;
+const USE_AUTH = true;
 
 /**
  * Keys that are synced to Firestore.
