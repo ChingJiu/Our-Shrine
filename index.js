@@ -231,6 +231,13 @@ function showToast(msg) {
 
 function esc(s){ return (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+function renderAll() {
+  renderHero();
+  renderPetCard();
+  renderSummary();
+  renderEvents();
+  renderQuote();
+}
 // ─────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────
@@ -241,10 +248,5 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.key === 'Enter') quickAdd();
     });
   }
-
-  renderHero();
-  renderPetCard();
-  renderSummary();
-  renderEvents();
-  renderQuote();
+  renderAll();
 });
