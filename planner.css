@@ -1,6 +1,7 @@
+<style>
 
 /* ── WRAPPER OVERRIDE — planner needs wider ── */
-.px-wrapper { max-width: 900px; }
+/* wide layout handled by .px-wrapper--wide in theme.css */
 
 /* ── HEADER ── */
 .planner-header {
@@ -255,3 +256,5 @@
   transition: background 0.12s;
 }
 .btn-del:hover { background: rgba(247,106,138,0.08); }
+
+</style>
