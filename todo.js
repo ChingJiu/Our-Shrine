@@ -1,7 +1,7 @@
 
-+const TASKS_KEY = 'tasks';
-+const PET_DONE_KEY = 'todayTasksDone';
-+
+const TASKS_KEY = 'tasks';
+const PET_DONE_KEY = 'todayTasksDone';
+
  let currentFilter = 'all';
  let currentSort   = 'added';
  let currentPrio   = 'low';
@@ -9,20 +9,18 @@
  function uid()      { return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
  function todayKey() { return new Date().toISOString().slice(0,10); }
  
-+function readJson(key, fallback) {
-+  try { return JSON.parse(localStorage.getItem(key) || fallback); } catch(e) { return JSON.parse(fallback); }
-+}
-+
+function readJson(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key) || fallback); } catch(e) { return JSON.parse(fallback); }
+}
+
  function loadTasks() {
--  try { return JSON.parse(localStorage.getItem('tasks')||'[]'); } catch(e) { return []; }
-+  const tasks = readJson(TASKS_KEY, '[]');
-+  return Array.isArray(tasks) ? tasks : [];
-+}
-+
-+function saveTasks(tasks) {
-+  localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+  const tasks = readJson(TASKS_KEY, '[]');
+  return Array.isArray(tasks) ? tasks : [];
+}
+
+function saveTasks(tasks) {
+  localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
  }
--function saveTasks(t) { localStorage.setItem('tasks', JSON.stringify(t)); }
  
  const PRIO_ORDER = { high:0, medium:1, low:2 };
  
@@ -74,14 +72,12 @@
    document.getElementById('progressLabel').textContent = `${todayDone} / ${todayTotal}`;
  
    // Pet reward count
--  const petDone = parseInt(localStorage.getItem('todayTasksDone')||'0');
-+  const petDone = parseInt(localStorage.getItem(PET_DONE_KEY)||'0');
+  const petDone = parseInt(localStorage.getItem(PET_DONE_KEY)||'0');
    document.getElementById('petRewardCount').textContent = `+${petDone} TODAY`;
  
    // Pet mood badge
    try {
--    const p = JSON.parse(localStorage.getItem('petData')||'null');
-+    const p = readJson('petData', 'null');
+    const p = readJson('petData', 'null');
      if (p) {
        const mood = p.health<25?'ILL 😰':p.happiness>75?'HAPPY 😄':p.energy<20?'TIRED 😴':'OKAY 🙂';
        document.getElementById('petMini').textContent = `PET: ${mood}`;
@@ -133,10 +129,8 @@
  
    if (task.done) {
      rewardPet(task);
--    const prev = parseInt(localStorage.getItem('todayTasksDone')||'0');
--    localStorage.setItem('todayTasksDone', prev+1);
-+    const prev = parseInt(localStorage.getItem(PET_DONE_KEY)||'0');
-+    localStorage.setItem(PET_DONE_KEY, prev+1);
+    const prev = parseInt(localStorage.getItem(PET_DONE_KEY)||'0');
+    localStorage.setItem(PET_DONE_KEY, prev+1);
      showToast('TASK COMPLETE! PET +8 HAPPY');
      spawnConfetti();
      // Check all done bonus
@@ -148,10 +142,8 @@
        }, 600);
      }
    } else {
--    const prev = Math.max(0, parseInt(localStorage.getItem('todayTasksDone')||'0')-1);
--    localStorage.setItem('todayTasksDone', prev);
-+    const prev = Math.max(0, parseInt(localStorage.getItem(PET_DONE_KEY)||'0')-1);
-+    localStorage.setItem(PET_DONE_KEY, prev);
+    const prev = Math.max(0, parseInt(localStorage.getItem(PET_DONE_KEY)||'0')-1);
+    localStorage.setItem(PET_DONE_KEY, prev);
    }
    render();
  }
@@ -189,8 +181,7 @@
  // ── PET INTEGRATION ──
  function rewardPet(task) {
    try {
--    const p = JSON.parse(localStorage.getItem('petData')||'null');
-+    const p = readJson('petData', 'null');
+    const p = readJson('petData', 'null');
      if (!p) return;
      const cl = v => Math.max(0,Math.min(100,Math.round(v)));
      p.happiness = cl((p.happiness||80)+8);
@@ -206,8 +197,7 @@
  }
  function rewardPetBonus() {
    try {
--    const p = JSON.parse(localStorage.getItem('petData')||'null');
-+    const p = readJson('petData', 'null');
+    const p = readJson('petData', 'null');
      if (!p) return;
      p.xp = (p.xp||0)+15;
      p.happiness = Math.min(100, Math.round((p.happiness||80)+10));
@@ -242,24 +232,24 @@
    if (e.key==='Enter') addTask();
  });
  
-+// ── FIREBASE + CROSS-TAB LIVE UPDATES ──
-+window.addEventListener('firebaseDataLoaded', () => render());
-+window.addEventListener('firebaseKeyUpdated', (e) => {
-+  const key = e?.detail?.key;
-+  if (key === TASKS_KEY || key === PET_DONE_KEY || key === 'petData') render();
-+});
-+window.addEventListener('storage', (e) => {
-+  if (e.key === TASKS_KEY || e.key === PET_DONE_KEY || e.key === 'petData') render();
-+});
-+
-+// Expose functions explicitly so firebase.js can safely call render hooks.
-+Object.assign(window, {
-+  render,
-+  addTask,
-+  setPrio,
-+  setFilter,
-+  setSort,
-+});
-+
+// ── FIREBASE + CROSS-TAB LIVE UPDATES ──
+window.addEventListener('firebaseDataLoaded', () => render());
+window.addEventListener('firebaseKeyUpdated', (e) => {
+  const key = e?.detail?.key;
+  if (key === TASKS_KEY || key === PET_DONE_KEY || key === 'petData') render();
+});
+window.addEventListener('storage', (e) => {
+  if (e.key === TASKS_KEY || e.key === PET_DONE_KEY || e.key === 'petData') render();
+});
+
+// Expose functions explicitly so firebase.js can safely call render hooks.
+Object.assign(window, {
+  render,
+  addTask,
+  setPrio,
+  setFilter,
+  setSort,
+});
+
  // ── INIT ──
  render();
