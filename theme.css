@@ -7,7 +7,7 @@
  * Then apply classes from this file + page-specific <style> blocks.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap&font-display=swap');
 
 /* ══════════════════════════════════════════
    1. TOKENS
@@ -110,11 +110,18 @@ body::after {
   position: relative;
   z-index: 2;
   max-width: 560px;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 16px 60px;
+  /* Safe-area padding: handles notches & curved phone edges */
+  padding-top: 0;
+  padding-bottom: 60px;
+  padding-left: max(16px, env(safe-area-inset-left, 16px));
+  padding-right: max(16px, env(safe-area-inset-right, 16px));
+  box-sizing: border-box;
 }
 
-/* Wide layout (planner etc.) override with max-width in page CSS */
+/* Wide layout for planner — just change max-width, padding stays safe */
+.px-wrapper--wide { max-width: 900px; }
 
 /* ══════════════════════════════════════════
    4. NAVIGATION
@@ -129,7 +136,10 @@ body::after {
   align-items: center;
   gap: 0;
   padding: 0 0 0 4px;
-  margin: 0 -16px 28px;     /* bleed to edges */
+  /* Use negative margin only up to the wrapper's own padding — no overflow */
+  margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 16px)));
+  margin-right: calc(-1 * max(16px, env(safe-area-inset-right, 16px)));
+  margin-bottom: 28px;
   overflow-x: auto;
   scrollbar-width: none;
 }
