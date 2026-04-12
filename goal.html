@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goals — Dashboard</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="goal.css">
+</head>
+<body>
+<div id="toast" class="px-toast"></div>
+
+<!-- ADD MODAL -->
+<div class="px-modal-bg" id="modalBg">
+  <div class="px-modal" style="width:400px;">
+    <div class="px-modal-head">
+      <h2>NEW GOAL</h2>
+      <button class="px-modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="px-modal-body">
+      <div class="form-group">
+        <span class="px-label" style="font-size:6px;">ICON</span>
+        <div class="icon-picker" id="iconPicker"></div>
+      </div>
+      <div class="form-group">
+        <span class="px-label" style="font-size:6px;">GOAL TITLE</span>
+        <input class="px-input" id="goalTitle" type="text" maxlength="60" placeholder="WHAT DO YOU WANT TO ACHIEVE?"/>
+      </div>
+      <div class="form-group">
+        <span class="px-label" style="font-size:6px;">CATEGORY</span>
+        <div class="cat-select" id="catSelect">
+          <div class="cat-opt selected" data-cat="personal"><span class="co-dot" style="background:var(--accent2)"></span>PERSONAL</div>
+          <div class="cat-opt" data-cat="career"><span class="co-dot" style="background:var(--accent)"></span>CAREER</div>
+          <div class="cat-opt" data-cat="health"><span class="co-dot" style="background:var(--accent3)"></span>HEALTH</div>
+          <div class="cat-opt" data-cat="study"><span class="co-dot" style="background:var(--amber)"></span>STUDY</div>
+          <div class="cat-opt" data-cat="finance"><span class="co-dot" style="background:#4ade80"></span>FINANCE</div>
+          <div class="cat-opt" data-cat="social"><span class="co-dot" style="background:#f472b6"></span>SOCIAL</div>
+        </div>
+      </div>
+      <div class="form-row-2">
+        <div class="form-group">
+          <span class="px-label" style="font-size:6px;">PERIOD</span>
+          <select class="px-input" id="goalPeriod" style="font-size:7px;">
+            <option value="monthly">THIS MONTH</option>
+            <option value="quarterly">THIS QUARTER</option>
+            <option value="yearly">THIS YEAR</option>
+            <option value="custom">CUSTOM</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <span class="px-label" style="font-size:6px;">DEADLINE (OPTIONAL)</span>
+          <input class="px-input" id="goalDeadline" type="date" style="font-size:7px;color:var(--muted);"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <span class="px-label" style="font-size:6px;">MILESTONES (ADD UP TO 5)</span>
+        <div class="milestone-inputs" id="milestoneInputs">
+          <div class="ms-input-row">
+            <input class="px-input" type="text" maxlength="60" placeholder="FIRST STEP..." style="font-size:7px;"/>
+            <button class="ms-del-btn" onclick="removeMsRow(this)">×</button>
+          </div>
+        </div>
+        <button class="px-btn px-btn--sm" onclick="addMsRow()" style="width:100%;text-align:center;margin-top:4px;">+ ADD MILESTONE</button>
+      </div>
+    </div>
+    <div class="px-modal-footer">
+      <button class="px-btn" onclick="closeModal()">CANCEL</button>
+      <button class="px-btn px-btn--purple" onclick="saveGoal()">SAVE GOAL</button>
+    </div>
+  </div>
+</div>
+
+<div class="px-wrapper">
+
+  <nav class="px-nav">
+    <a href="index.html">HOME</a>
+    <a href="todo.html">TASKS</a>
+    <a href="planner.html">WEEK</a>
+    <a href="habits.html">HABITS</a>
+    <a href="focus.html">FOCUS</a>
+    <a href="pet.html">PET</a>
+    <a href="journal.html">JOURNAL</a>
+    <a href="goals.html" class="active active-purple">GOALS</a>
+    <a href="reading.html">READING</a>
+    <a href="gratitude.html">GRATITUDE</a>
+  </nav>
+
+  <div class="goals-header">
+    <div>
+      <h1 class="px-title px-title--purple">GOALS BOARD</h1>
+      <p class="px-subtitle">// YOUR BIG PICTURE</p>
+    </div>
+    <button class="px-btn px-btn--purple" onclick="openModal()">+ NEW GOAL</button>
+  </div>
+
+  <div class="pet-banner">
+    <div class="pb-icon">🐾</div>
+    <div class="pb-text">Complete a milestone → pet gets <strong style="color:var(--accent)">+8 XP · +5 Happiness</strong><br>Finish a whole goal → <strong style="color:var(--accent3)">+20 XP BONUS!</strong></div>
+  </div>
+
+  <div class="stats-strip">
+    <div class="stat-tile"><span class="st-num" id="statActive">0</span><span class="st-label">ACTIVE GOALS</span></div>
+    <div class="stat-tile"><span class="st-num teal" id="statDone">0</span><span class="st-label">COMPLETED</span></div>
+    <div class="stat-tile"><span class="st-num amber" id="statMs">0</span><span class="st-label">MILESTONES HIT</span></div>
+    <div class="stat-tile"><span class="st-num pink" id="statXP">0</span><span class="st-label">XP EARNED</span></div>
+  </div>
+
+  <div class="period-tabs">
+    <div class="ptab active" data-p="all"       onclick="setPeriod('all',this)">ALL</div>
+    <div class="ptab" data-p="monthly"          onclick="setPeriod('monthly',this)">MONTHLY</div>
+    <div class="ptab" data-p="quarterly"        onclick="setPeriod('quarterly',this)">QUARTERLY</div>
+    <div class="ptab" data-p="yearly"           onclick="setPeriod('yearly',this)">YEARLY</div>
+    <div class="ptab" data-p="done"             onclick="setPeriod('done',this)">✓ DONE</div>
+  </div>
+
+  <div class="goals-list" id="goalsList"></div>
+
+</div>
+<script>
+const ICONS=['🎯','🏆','💪','📚','💰','🌱','🎨','🏃','✈️','💻','🎵','❤️','🧘','🤝','⭐'];
+const CAT_COLORS={ personal:'#f76a8a',career:'#7c6af7',health:'#6af7c8',study:'#f7d46a',finance:'#4ade80',social:'#f472b6' };
+let pickedIcon=ICONS[0],currentPeriod='all';
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+function todayKey(){return new Date().toISOString().slice(0,10);}
+function loadGoals(){try{return JSON.parse(localStorage.getItem('goals')||'[]');}catch(e){return[];}}
+function saveGoals(g){localStorage.setItem('goals',JSON.stringify(g));}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ── MODAL ──
+function openModal(){
+  document.getElementById('goalTitle').value='';
+  document.getElementById('goalDeadline').value='';
+  document.getElementById('goalPeriod').value='monthly';
+  document.querySelectorAll('#catSelect .cat-opt').forEach((o,i)=>o.classList.toggle('selected',i===0));
+  pickedIcon=ICONS[0];
+  buildIconPicker();
+  document.getElementById('milestoneInputs').innerHTML=`<div class="ms-input-row"><input class="px-input" type="text" maxlength="60" placeholder="FIRST STEP..." style="font-size:7px;"/><button class="ms-del-btn" onclick="removeMsRow(this)">×</button></div>`;
+  document.getElementById('modalBg').classList.add('open');
+  setTimeout(()=>document.getElementById('goalTitle').focus(),50);
+}
+function closeModal(){document.getElementById('modalBg').classList.remove('open');}
+
+document.getElementById('modalBg').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+function buildIconPicker(){
+  const p=document.getElementById('iconPicker');p.innerHTML='';
+  ICONS.forEach(ic=>{
+    const b=document.createElement('div');b.className='ico-opt'+(ic===pickedIcon?' picked':'');b.textContent=ic;
+    b.onclick=()=>{pickedIcon=ic;document.querySelectorAll('.ico-opt').forEach(x=>x.classList.remove('picked'));b.classList.add('picked');};
+    p.appendChild(b);
+  });
+}
+
+document.querySelectorAll('#catSelect .cat-opt').forEach(opt=>{
+  opt.addEventListener('click',()=>{document.querySelectorAll('#catSelect .cat-opt').forEach(o=>o.classList.remove('selected'));opt.classList.add('selected');});
+});
+
+function addMsRow(){
+  const wrap=document.getElementById('milestoneInputs');
+  if(wrap.children.length>=5){showToast('MAX 5 MILESTONES');return;}
+  const row=document.createElement('div');row.className='ms-input-row';
+  row.innerHTML=`<input class="px-input" type="text" maxlength="60" placeholder="NEXT STEP..." style="font-size:7px;"/><button class="ms-del-btn" onclick="removeMsRow(this)">×</button>`;
+  wrap.appendChild(row);
+}
+function removeMsRow(btn){
+  const wrap=document.getElementById('milestoneInputs');
+  if(wrap.children.length>1) btn.parentElement.remove();
+}
+
+function saveGoal(){
+  const title=document.getElementById('goalTitle').value.trim();
+  if(!title){document.getElementById('goalTitle').focus();return;}
+  const cat=document.querySelector('#catSelect .cat-opt.selected')?.dataset.cat||'personal';
+  const period=document.getElementById('goalPeriod').value;
+  const deadline=document.getElementById('goalDeadline').value||null;
+  const msInputs=[...document.querySelectorAll('#milestoneInputs input')].map(i=>i.value.trim()).filter(Boolean);
+  const milestones=msInputs.map(text=>({id:uid(),text,done:false}));
+  const goals=loadGoals();
+  goals.push({id:uid(),title,cat,period,deadline,icon:pickedIcon,milestones,done:false,created:todayKey(),xpEarned:0});
+  saveGoals(goals);closeModal();render();showToast('GOAL ADDED!');
+}
+
+// ── MILESTONE TOGGLE ──
+function toggleMilestone(goalId,msId){
+  const goals=loadGoals();
+  const g=goals.find(g=>g.id===goalId);if(!g)return;
+  const ms=g.milestones.find(m=>m.id===msId);if(!ms)return;
+  const wasDone=ms.done;
+  ms.done=!wasDone;
+  if(ms.done){
+    rewardPet('milestone');
+    g.xpEarned=(g.xpEarned||0)+8;
+    showToast('MILESTONE DONE! PET +8 XP');
+  }
+  // Auto-complete goal if all milestones done
+  if(g.milestones.length>0&&g.milestones.every(m=>m.done)){
+    g.done=true;
+    rewardPet('goal');
+    g.xpEarned=(g.xpEarned||0)+20;
+    showToast('GOAL COMPLETE! +20 BONUS XP!');
+  } else {
+    g.done=false;
+  }
+  saveGoals(goals);render();
+}
+
+function toggleGoalDone(goalId){
+  const goals=loadGoals();
+  const g=goals.find(g=>g.id===goalId);if(!g)return;
+  g.done=!g.done;
+  if(g.done){rewardPet('goal');showToast('GOAL COMPLETE! PET +20 XP BONUS!');}
+  saveGoals(goals);render();
+}
+
+function deleteGoal(id){saveGoals(loadGoals().filter(g=>g.id!==id));render();showToast('GOAL DELETED');}
+
+// ── PERIOD FILTER ──
+function setPeriod(p,el){
+  currentPeriod=p;
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');render();
+}
+
+// ── RENDER ──
+function render(){
+  const all=loadGoals();
+  const filtered=currentPeriod==='all'?all.filter(g=>!g.done):
+    currentPeriod==='done'?all.filter(g=>g.done):
+    all.filter(g=>!g.done&&g.period===currentPeriod);
+
+  // Stats
+  document.getElementById('statActive').textContent=all.filter(g=>!g.done).length;
+  document.getElementById('statDone').textContent=all.filter(g=>g.done).length;
+  document.getElementById('statMs').textContent=all.reduce((s,g)=>s+(g.milestones||[]).filter(m=>m.done).length,0);
+  document.getElementById('statXP').textContent=all.reduce((s,g)=>s+(g.xpEarned||0),0);
+
+  const list=document.getElementById('goalsList');
+  if(!filtered.length){
+    list.innerHTML=`<div class="empty-state"><span class="es-icon">🎯</span>${currentPeriod==='done'?'NO COMPLETED GOALS YET!<br>KEEP WORKING!':'NO GOALS YET!<br>HIT + NEW GOAL TO START'}</div>`;
+    return;
+  }
+
+  list.innerHTML='';
+  filtered.forEach((g,i)=>{
+    const msTotal=g.milestones.length;
+    const msDone=g.milestones.filter(m=>m.done).length;
+    const pct=msTotal?Math.round(msDone/msTotal*100):g.done?100:0;
+    const isOverdue=g.deadline&&g.deadline<todayKey()&&!g.done;
+    const isSoon=g.deadline&&!isOverdue&&!g.done&&daysBetween(todayKey(),g.deadline)<=7;
+
+    const card=document.createElement('div');
+    card.className=`goal-card cat-${g.cat}${g.done?' done':''}`;
+    card.style.animationDelay=(i*0.05)+'s';
+
+    const msHtml=g.milestones.map(ms=>`
+      <div class="milestone-row${ms.done?' ms-done':''}" onclick="toggleMilestone('${g.id}','${ms.id}')">
+        <div class="ms-check"></div>
+        <span class="ms-text">${esc(ms.text)}</span>
+        <span class="ms-xp">+8 XP</span>
+      </div>`).join('');
+
+    card.innerHTML=`
+      <div class="goal-head">
+        <div class="goal-icon">${g.icon||'🎯'}</div>
+        <div class="goal-body">
+          <div class="goal-title">${esc(g.title)}</div>
+          <div class="goal-meta">
+            <span class="goal-tag cat">${g.cat.toUpperCase()}</span>
+            <span class="goal-tag period">${g.period.toUpperCase()}</span>
+            ${g.done?'<span class="goal-tag done-tag">COMPLETE ✓</span>':''}
+          </div>
+          ${g.deadline?`<div class="goal-deadline${isOverdue?' soon':isSoon?' soon':''}">${isOverdue?'OVERDUE: ':isSoon?'DUE SOON: ':'DEADLINE: '}${g.deadline}</div>`:''}
+        </div>
+      </div>
+      <div class="goal-progress-wrap">
+        <div class="gp-label"><span>${msTotal?`${msDone} / ${msTotal} MILESTONES`:'OVERALL PROGRESS'}</span><span>${pct}%</span></div>
+        <div class="gp-bar"><div class="gp-fill${g.done?' done':''}" style="width:${pct}%"></div></div>
+      </div>
+      ${msTotal?`<div class="goal-milestones"><div class="ms-header">// MILESTONES</div><div class="milestone-list">${msHtml}</div></div>`:''}
+      <div class="goal-foot">
+        <button class="goal-del" onclick="deleteGoal('${g.id}')">× DELETE</button>
+        ${!g.done?`<button class="goal-complete-btn" onclick="toggleGoalDone('${g.id}')">MARK COMPLETE ✓</button>`:'<span style="font-size:5px;color:var(--accent3);">GOAL ACHIEVED!</span>'}
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+function daysBetween(a,b){return Math.round((new Date(b)-new Date(a))/86400000);}
+
+// ── PET ──
+function rewardPet(type){
+  try{
+    const p=JSON.parse(localStorage.getItem('petData')||'null');if(!p)return;
+    const cl=v=>Math.max(0,Math.min(100,Math.round(v)));
+    const r={milestone:{happiness:5,xp:8},goal:{happiness:15,xp:20}}[type];if(!r)return;
+    p.happiness=cl((p.happiness||80)+r.happiness);
+    p.xp=(p.xp||0)+r.xp;
+    while(p.xp>=100){p.xp-=100;p.level=(p.level||1)+1;}
+    const stages=['EGG','BABY','CHILD','TEEN','ADULT','MASTER'],thresh=[1,3,6,10,15,20];
+    for(let i=thresh.length-1;i>=0;i--){if(p.level>=thresh[i]){p.stage=stages[i];break;}}
+    localStorage.setItem('petData',JSON.stringify(p));
+  }catch(e){}
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._to);t._to=setTimeout(()=>t.classList.remove('show'),2400);}
+
+buildIconPicker();
+render();
+window.addEventListener('firebaseDataLoaded',()=>render());
+window.addEventListener('firebaseKeyUpdated',(e)=>{if(e.detail.key==='goals')render();});
+</script>
+<script type="module" src="firebase.js"></script>
+</body>
+</html>
