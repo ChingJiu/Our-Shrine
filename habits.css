@@ -1,4 +1,4 @@
-<style>
+
 /* ── PAGE-SPECIFIC LAYOUT ── */
 .habits-header {
   display: flex;
@@ -264,4 +264,4 @@
 .ring-label { font-size: 10px; fill: var(--accent3); text-anchor: middle; dominant-baseline: middle; }
 .ring-text .rt-big   { font-size: 9px; color: var(--text); display: block; margin-bottom: 4px; }
 .ring-text .rt-small { font-size: 6px; color: var(--muted); line-height: 1.8; }
-</style>
+
