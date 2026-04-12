@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading &amp; Watch List — Dashboard</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="reading.css">
+  
+</head>
+<body>
+<div id="toast" class="px-toast"></div>
+
+<div class="px-wrapper">
+
+  <nav class="px-nav">
+    <a href="index.html">HOME</a>
+    <a href="todo.html">TASKS</a>
+    <a href="planner.html">WEEK</a>
+    <a href="habits.html">HABITS</a>
+    <a href="focus.html">FOCUS</a>
+    <a href="pet.html">PET</a>
+    <a href="journal.html">JOURNAL</a>
+    <a href="goals.html">GOALS</a>
+    <a href="reading.html" class="active active-pink">READING</a>
+    <a href="gratitude.html">GRATITUDE</a>
+  </nav>
+
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+    <div>
+      <h1 class="px-title px-title--pink">READING &amp; WATCH</h1>
+      <p class="px-subtitle">// BOOKS · FILMS · SERIES</p>
+    </div>
+    <button class="px-btn px-btn--pink" onclick="openAdd()">+ ADD ITEM</button>
+  </div>
+
+  <div class="pet-banner">
+    <div class="pb-icon">🐾</div>
+    <div class="pb-text">Finish a book → pet gets <strong style="color:var(--accent)">+12 XP · +8 Happiness</strong><br>Finish a movie → <strong style="color:var(--accent2)">+6 XP · +5 Happiness</strong></div>
+  </div>
+
+  <!-- TYPE TABS -->
+  <div class="type-tabs">
+    <div class="type-tab active-book" data-type="book" onclick="setType('book',this)">📚 BOOKS</div>
+    <div class="type-tab" data-type="movie" onclick="setType('movie',this)">🎬 MOVIES &amp; TV</div>
+    <div class="type-tab" data-type="all" onclick="setType('all',this)">ALL</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-strip" id="statsStrip">
+    <div class="stat-tile"><span class="st-num" id="statWant">0</span><span class="st-label">WANT TO READ</span></div>
+    <div class="stat-tile"><span class="st-num pink" id="statCurrent">0</span><span class="st-label">IN PROGRESS</span></div>
+    <div class="stat-tile"><span class="st-num teal" id="statFinished">0</span><span class="st-label">FINISHED</span></div>
+    <div class="stat-tile"><span class="st-num amber" id="statRating">—</span><span class="st-label">AVG RATING</span></div>
+  </div>
+
+  <!-- STATUS FILTER -->
+  <div class="status-row">
+    <div class="sfilter active" data-s="all"      onclick="setStatus('all',this)">ALL</div>
+    <div class="sfilter" data-s="want"             onclick="setStatus('want',this)">WANT TO</div>
+    <div class="sfilter" data-s="in-progress"      onclick="setStatus('in-progress',this)">IN PROGRESS</div>
+    <div class="sfilter" data-s="done"             onclick="setStatus('done',this)">FINISHED</div>
+    <div class="sfilter" data-s="dropped"          onclick="setStatus('dropped',this)">DROPPED</div>
+  </div>
+
+  <div class="items-list" id="itemsList"></div>
+
+  <!-- ADD FORM (inline, toggled) -->
+  <div class="add-form" id="addForm" style="display:none;">
+    <div class="add-form-title" id="addFormTitle">// ADD BOOK</div>
+    <div style="margin-bottom:10px;">
+      <span class="px-label" style="font-size:6px;display:block;margin-bottom:5px;">TYPE</span>
+      <div style="display:flex;gap:6px;">
+        <button class="px-btn px-btn--sm px-btn--purple" id="typeBookBtn" onclick="setAddType('book')">📚 BOOK</button>
+        <button class="px-btn px-btn--sm" id="typeMovieBtn"              onclick="setAddType('movie')">🎬 MOVIE/TV</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div>
+        <span class="px-label" style="font-size:6px;display:block;margin-bottom:5px;">TITLE</span>
+        <input class="px-input" id="addTitle" type="text" maxlength="80" placeholder="TITLE..."/>
+      </div>
+      <div>
+        <span class="px-label" style="font-size:6px;display:block;margin-bottom:5px;" id="authorLabel">AUTHOR</span>
+        <input class="px-input" id="addAuthor" type="text" maxlength="60" placeholder="AUTHOR..."/>
+      </div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <span class="px-label" style="font-size:6px;display:block;margin-bottom:5px;">GENRES / TAGS</span>
+      <div class="genre-chips" id="genreChipsBook">
+        <div class="genre-chip" onclick="toggleGenre(this)">FICTION</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">NON-FICTION</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">FANTASY</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">SCI-FI</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">THRILLER</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">ROMANCE</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">HISTORY</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">SELF-HELP</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">BIOGRAPHY</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">MYSTERY</div>
+      </div>
+      <div class="genre-chips" id="genreChipsMovie" style="display:none;">
+        <div class="genre-chip" onclick="toggleGenre(this)">ACTION</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">COMEDY</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">DRAMA</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">HORROR</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">ANIMATION</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">DOCUMENTARY</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">ANIME</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">K-DRAMA</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">SCI-FI</div>
+        <div class="genre-chip" onclick="toggleGenre(this)">ROMANCE</div>
+      </div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <span class="px-label" style="font-size:6px;display:block;margin-bottom:5px;">STATUS</span>
+      <select class="px-input" id="addStatus" style="font-size:7px;">
+        <option value="want">WANT TO READ/WATCH</option>
+        <option value="in-progress">IN PROGRESS</option>
+        <option value="done">FINISHED</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="px-btn" onclick="closeAdd()">CANCEL</button>
+      <button class="px-btn px-btn--pink" onclick="addItem()">ADD ✓</button>
+    </div>
+  </div>
+
+</div>
+<script>
+let currentType='book', currentStatus='all', addingType='book';
+let selectedGenres=new Set();
+
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+function loadItems(){try{return JSON.parse(localStorage.getItem('readingList')||'[]');}catch(e){return[];}}
+function saveItems(i){localStorage.setItem('readingList',JSON.stringify(i));}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ── TYPE / STATUS FILTERS ──
+function setType(t,el){
+  currentType=t;
+  document.querySelectorAll('.type-tab').forEach(x=>x.className='type-tab');
+  el.classList.add(t==='movie'?'active-movie':t==='book'?'active-book':'active-book');
+  updateStatLabels();render();
+}
+function setStatus(s,el){
+  currentStatus=s;
+  document.querySelectorAll('.sfilter').forEach(x=>x.classList.remove('active','active-movie'));
+  el.classList.add(currentType==='movie'?'active-movie':'active');
+  render();
+}
+function updateStatLabels(){
+  const isMovie=currentType==='movie';
+  document.getElementById('statWant').parentElement.querySelector('.st-label').textContent=isMovie?'WANT TO WATCH':'WANT TO READ';
+  document.getElementById('statCurrent').parentElement.querySelector('.st-label').textContent=isMovie?'WATCHING':'READING';
+}
+
+// ── ADD FORM ──
+function openAdd(){
+  document.getElementById('addForm').style.display='block';
+  document.getElementById('addForm').scrollIntoView({behavior:'smooth'});
+  setAddType(currentType==='movie'?'movie':'book');
+  document.getElementById('addTitle').focus();
+}
+function closeAdd(){
+  document.getElementById('addForm').style.display='none';
+  document.getElementById('addTitle').value='';
+  document.getElementById('addAuthor').value='';
+  document.getElementById('addStatus').value='want';
+  document.querySelectorAll('.genre-chip').forEach(c=>c.classList.remove('on'));
+  selectedGenres.clear();
+}
+function setAddType(t){
+  addingType=t;
+  const isMovie=t==='movie';
+  document.getElementById('addFormTitle').textContent=isMovie?'// ADD MOVIE / TV SHOW':'// ADD BOOK';
+  document.getElementById('authorLabel').textContent=isMovie?'DIRECTOR / STUDIO':'AUTHOR';
+  document.getElementById('addAuthor').placeholder=isMovie?'DIRECTOR...':'AUTHOR...';
+  document.getElementById('genreChipsBook').style.display=isMovie?'none':'flex';
+  document.getElementById('genreChipsMovie').style.display=isMovie?'flex':'none';
+  document.getElementById('typeBookBtn').className='px-btn px-btn--sm'+(isMovie?'':' px-btn--purple');
+  document.getElementById('typeMovieBtn').className='px-btn px-btn--sm'+(isMovie?' px-btn--pink':'');
+  selectedGenres.clear();
+  document.querySelectorAll('.genre-chip').forEach(c=>c.classList.remove('on'));
+}
+function toggleGenre(chip){
+  const g=chip.textContent.trim();
+  if(selectedGenres.has(g)){selectedGenres.delete(g);chip.classList.remove('on');}
+  else{selectedGenres.add(g);chip.classList.add('on');}
+}
+
+function addItem(){
+  const title=document.getElementById('addTitle').value.trim();
+  if(!title){document.getElementById('addTitle').focus();return;}
+  const items=loadItems();
+  const status=document.getElementById('addStatus').value;
+  items.push({
+    id:uid(),type:addingType,title,
+    author:document.getElementById('addAuthor').value.trim(),
+    genres:[...selectedGenres],status,
+    rating:0,notes:'',added:Date.now(),
+    completedDate:status==='done'?new Date().toISOString().slice(0,10):null
+  });
+  saveItems(items);
+  if(status==='done') rewardPet(addingType);
+  closeAdd();render();showToast('ITEM ADDED!');
+}
+
+// ── UPDATE STATUS ──
+function updateStatus(id,newStatus){
+  const items=loadItems();
+  const item=items.find(i=>i.id===id);if(!item)return;
+  const wasDone=item.status==='done';
+  item.status=newStatus;
+  if(newStatus==='done'&&!wasDone){
+    item.completedDate=new Date().toISOString().slice(0,10);
+    rewardPet(item.type);
+    showToast(item.type==='book'?'BOOK FINISHED! PET +12 XP':'FILM DONE! PET +6 XP');
+  }
+  if(newStatus!=='done') item.completedDate=null;
+  saveItems(items);render();
+}
+
+// ── RATING ──
+function setRating(id,stars){
+  const items=loadItems();
+  const item=items.find(i=>i.id===id);if(!item)return;
+  item.rating=stars;saveItems(items);render();
+}
+
+// ── NOTES ──
+function saveNotes(id,text){
+  const items=loadItems();
+  const item=items.find(i=>i.id===id);if(!item)return;
+  item.notes=text;saveItems(items);
+}
+
+function deleteItem(id){saveItems(loadItems().filter(i=>i.id!==id));render();showToast('ITEM DELETED');}
+
+// ── RENDER ──
+function render(){
+  const all=loadItems();
+  let filtered=all;
+  if(currentType!=='all') filtered=filtered.filter(i=>i.type===currentType);
+  if(currentStatus!=='all') filtered=filtered.filter(i=>i.status===currentStatus);
+  filtered.sort((a,b)=>{
+    const order={want:0,'in-progress':1,done:2,dropped:3};
+    return (order[a.status]??0)-(order[b.status]??0)||b.added-a.added;
+  });
+
+  // Stats (respect type filter)
+  const typeItems=currentType==='all'?all:all.filter(i=>i.type===currentType);
+  document.getElementById('statWant').textContent=typeItems.filter(i=>i.status==='want').length;
+  document.getElementById('statCurrent').textContent=typeItems.filter(i=>i.status==='in-progress').length;
+  document.getElementById('statFinished').textContent=typeItems.filter(i=>i.status==='done').length;
+  const rated=typeItems.filter(i=>i.rating>0);
+  document.getElementById('statRating').textContent=rated.length?(rated.reduce((s,i)=>s+i.rating,0)/rated.length).toFixed(1)+'★':'—';
+
+  const list=document.getElementById('itemsList');
+  if(!filtered.length){
+    list.innerHTML=`<div class="empty-state"><span class="es-icon">${currentType==='movie'?'🎬':'📚'}</span>NOTHING HERE YET!<br>${currentStatus==='all'?'HIT + ADD ITEM TO START':'TRY A DIFFERENT FILTER'}</div>`;
+    return;
+  }
+
+  list.innerHTML='';
+  filtered.forEach((item,i)=>{
+    const isMovie=item.type==='movie';
+    const card=document.createElement('div');
+    card.className=`item-card${isMovie?' movie':''} status-${item.status}`;
+    card.style.animationDelay=(i*0.04)+'s';
+
+    const starsHtml=[1,2,3,4,5].map(n=>`<span class="star${item.rating>=n?' filled':''}" onclick="setRating('${item.id}',${n})">★</span>`).join('');
+    const statusOpts=['want','in-progress','done','dropped'].map(s=>`<option value="${s}"${item.status===s?' selected':''}>${s==='want'?'WANT':'in-progress'===s?'IN PROGRESS':s==='done'?'DONE':'DROPPED'}</option>`).join('');
+    const genresHtml=(item.genres||[]).map(g=>`<span class="item-badge">${esc(g)}</span>`).join('');
+
+    card.innerHTML=`
+      <div class="item-head">
+        <div class="item-cover${isMovie?' movie-thumb':''}">${item.type==='book'?'📖':'🎬'}</div>
+        <div class="item-info">
+          <div class="item-title">${esc(item.title)}</div>
+          ${item.author?`<div class="item-author">${esc(item.author)}</div>`:''}
+          <div class="item-meta">
+            <span class="item-badge ${item.status==='in-progress'?isMovie?'watching':'reading':item.status}">${item.status==='want'?'WANT TO'+(isMovie?' WATCH':' READ'):item.status==='in-progress'?isMovie?'WATCHING':'READING':item.status==='done'?'FINISHED':'DROPPED'}</span>
+            ${genresHtml}
+          </div>
+          <div class="star-row">${starsHtml}</div>
+        </div>
+        <div class="item-actions">
+          <select class="status-select" onchange="updateStatus('${item.id}',this.value)">${statusOpts}</select>
+        </div>
+      </div>
+      ${item.notes?`<div class="item-notes"><div class="notes-text" id="nt-${item.id}">${esc(item.notes)}</div><textarea class="notes-input" id="ni-${item.id}" maxlength="300" onblur="saveNotes('${item.id}',this.value)">${esc(item.notes)}</textarea></div>`:'<div class="item-notes"><div class="notes-text" id="nt-${item.id}" style="display:none;"></div><textarea class="notes-input" id="ni-${item.id}" maxlength="300" onblur="saveNotes(\'${item.id}\',this.value)"></textarea></div>'}
+      <div class="item-foot">
+        <button class="item-del" onclick="deleteItem('${item.id}')">× DELETE</button>
+        <button class="item-note-btn" onclick="toggleNotes('${item.id}')">${item.notes?'EDIT NOTES':'+ NOTES'}</button>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+function toggleNotes(id){
+  const ni=document.getElementById('ni-'+id);const nt=document.getElementById('nt-'+id);
+  if(!ni) return;
+  const isOpen=ni.style.display==='block';
+  if(isOpen){
+    ni.style.display='none';nt.style.display=ni.value?'block':'none';
+  } else {
+    ni.value=ni.value||(nt?nt.textContent:'');
+    ni.style.display='block';nt.style.display='none';ni.focus();
+  }
+}
+
+// ── PET ──
+function rewardPet(type){
+  try{
+    const p=JSON.parse(localStorage.getItem('petData')||'null');if(!p)return;
+    const cl=v=>Math.max(0,Math.min(100,Math.round(v)));
+    const r=type==='book'?{happiness:8,xp:12}:{happiness:5,xp:6};
+    p.happiness=cl((p.happiness||80)+r.happiness);
+    p.xp=(p.xp||0)+r.xp;
+    while(p.xp>=100){p.xp-=100;p.level=(p.level||1)+1;}
+    const stages=['EGG','BABY','CHILD','TEEN','ADULT','MASTER'],thresh=[1,3,6,10,15,20];
+    for(let i=thresh.length-1;i>=0;i--){if(p.level>=thresh[i]){p.stage=stages[i];break;}}
+    localStorage.setItem('petData',JSON.stringify(p));
+  }catch(e){}
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._to);t._to=setTimeout(()=>t.classList.remove('show'),2400);}
+
+render();
+window.addEventListener('firebaseDataLoaded',()=>render());
+window.addEventListener('firebaseKeyUpdated',(e)=>{if(e.detail.key==='readingList')render();});
+</script>
+<script type="module" src="firebase.js"></script>
+</body>
+</html>
