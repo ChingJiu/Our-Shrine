@@ -40,7 +40,6 @@ const SYNC_KEYS = [
   'tasks',
   'habits',
   'habitLog',
-  'journalEntries',
   'plannerEvents',
   'petData',
   'focusStats',
@@ -49,6 +48,10 @@ const SYNC_KEYS = [
   'todayTasksDone',
   'todayHabitsDone',
   'todayFocusDone',
+  'journalEntries',
+  'goals',
+  'readingList',
+  'gratitudeEntries',
 ];
 
 /**
@@ -354,7 +357,6 @@ window.addEventListener('firebaseKeyUpdated', (e) => {
     tasks:          ['render', 'renderAll', 'renderTaskOptions'],
     habits:         ['renderHabits', 'renderAll'],
     habitLog:       ['renderHabits', 'renderAll'],
-    journalEntries: ['render'],
     plannerEvents:  ['render', 'renderAll'],
     petData:        ['render', 'renderAll', 'renderPetCard', 'renderHabits'],
     focusStats:     ['renderStats', 'renderAll'],
