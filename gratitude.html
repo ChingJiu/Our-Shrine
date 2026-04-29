@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gratitude — Dashboard</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+/* ── ENTRY DEVICE ── */
+.grat-device { background:var(--panel2);border:2px solid var(--border2);box-shadow:6px 6px 0 #06060e;margin-bottom:20px;overflow:hidden; }
+.grat-device-top { background:#0a1a10;border-bottom:2px solid #1a4a2a;padding:10px 16px;display:flex;align-items:center;gap:10px; }
+.gd-light  { width:9px;height:9px;background:var(--accent3);animation:px-blink 2s infinite; }
+.gd-light2 { width:9px;height:9px;background:var(--accent3);animation:px-blink 2s 0.8s infinite; }
+.gd-title  { font-size:7px;color:var(--muted);letter-spacing:0.12em;margin-left:auto; }
+.grat-device-body { padding:20px 16px 16px; }
+
+.grat-prompt { font-size:8px;color:var(--accent3);text-align:center;letter-spacing:0.06em;margin-bottom:4px;text-shadow:0 0 12px rgba(106,247,200,0.3); }
+.grat-date   { font-size:6px;color:var(--muted);text-align:center;letter-spacing:0.08em;margin-bottom:18px; }
+
+/* Three gratitude inputs */
+.grat-inputs { display:flex;flex-direction:column;gap:10px;margin-bottom:16px; }
+.grat-field { }
+.gf-label { font-size:6px;color:var(--accent3);letter-spacing:0.08em;margin-bottom:5px;display:flex;align-items:center;gap:6px; }
+.gf-num { font-size:9px;color:var(--accent3);border:1px solid rgba(106,247,200,0.3);width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+.grat-input {
+  font-family:'VT323',monospace;font-size:19px;background:var(--bg);
+  border:2px solid var(--border);color:var(--text2);padding:8px 12px;
+  width:100%;outline:none;resize:none;height:56px;
+  transition:border-color 0.15s;letter-spacing:0.02em;line-height:1.4;
+}
+.grat-input:focus { border-color:var(--accent3);box-shadow:0 0 0 1px rgba(106,247,200,0.2); }
+.grat-input::placeholder { color:var(--border2); }
+
+/* Optional note */
+.grat-note-wrap { margin-bottom:14px; }
+.gn-toggle { font-family:'Press Start 2P',monospace;font-size:6px;color:var(--muted);background:none;border:1px solid var(--border);padding:4px 10px;cursor:pointer;letter-spacing:0.04em;width:100%;text-align:left;transition:color 0.12s,border-color 0.12s;margin-bottom:6px; }
+.gn-toggle:hover { color:var(--accent3);border-color:var(--accent3); }
+.grat-note-input {
+  font-family:'VT323',monospace;font-size:17px;background:var(--bg);border:2px solid var(--border);
+  color:var(--text2);padding:8px 10px;width:100%;outline:none;resize:none;height:50px;
+  transition:border-color 0.12s;display:none;
+}
+.grat-note-input:focus { border-color:var(--accent3); }
+
+.grat-save-row { display:flex;justify-content:space-between;align-items:center; }
+.today-done-badge { font-size:6px;color:var(--accent3);border:1px solid rgba(106,247,200,0.3);padding:4px 10px;letter-spacing:0.06em;display:none; }
+.today-done-badge.show { display:inline-block; }
+
+/* ── STATS ── */
+.stats-strip { display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:20px; }
+.stat-tile { background:var(--panel);border:2px solid var(--border);padding:10px 8px;text-align:center; }
+.st-num   { font-size:16px;color:var(--accent3);display:block;margin-bottom:4px; }
+.st-label { font-size:5px;color:var(--muted);letter-spacing:0.08em;line-height:1.6; }
+.st-num.amber  { color:var(--amber); }
+.st-num.purple { color:var(--accent); }
+.st-num.pink   { color:var(--accent2); }
+
+/* ── WEEK CELLS ── */
+.week-cells { display:flex;gap:4px;margin-top:6px; }
+.wc { flex:1;height:10px;background:var(--border);transition:background 0.2s; }
+.wc.logged { background:var(--accent3);box-shadow:0 0 6px rgba(106,247,200,0.3); }
+
+/* ── GRATITUDE WALL (30-day grid) ── */
+.grat-wall { display:flex;flex-direction:column;gap:6px;margin-bottom:20px; }
+.gw-day {
+  background:var(--panel);border:2px solid var(--border);border-left:4px solid var(--accent3);
+  padding:10px 14px;animation:px-slideUp 0.2s ease both;transition:border-color 0.15s;
+}
+.gw-day:hover { border-color:var(--muted); }
+.gw-date { font-size:6px;color:var(--muted);letter-spacing:0.08em;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between; }
+.gw-today-badge { font-size:5px;color:var(--accent3);border:1px solid rgba(106,247,200,0.3);padding:2px 6px; }
+.gw-items { display:flex;flex-direction:column;gap:4px; }
+.gw-item { display:flex;gap:8px;align-items:flex-start; }
+.gw-num  { font-size:7px;color:var(--accent3);flex-shrink:0;min-width:12px; }
+.gw-text { font-family:'VT323',monospace;font-size:17px;color:var(--text2);line-height:1.4;flex:1; }
+.gw-note { font-family:'VT323',monospace;font-size:15px;color:var(--muted);margin-top:4px;padding-top:4px;border-top:1px dashed var(--border);line-height:1.4;font-style:italic; }
+.gw-del  { font-family:'Press Start 2P',monospace;font-size:5px;color:var(--border2);background:none;border:none;cursor:pointer;padding:0;margin-left:auto;transition:color 0.12s; }
+.gw-del:hover { color:var(--accent2); }
+
+/* ── PET ── */
+.pet-banner { background:#0a1a10;border:2px solid var(--accent3);padding:11px 16px;display:flex;align-items:center;gap:14px;margin-bottom:20px; }
+.pb-icon { font-size:20px;flex-shrink:0;animation:px-idle 1.4s steps(2) infinite; }
+.pb-text { font-size:7px;color:var(--text2);line-height:1.9;flex:1; }
+
+/* ── EMPTY ── */
+.empty-state { text-align:center;padding:36px 20px;font-size:7px;color:var(--muted);letter-spacing:0.08em;line-height:2.5; }
+.empty-state .es-icon { font-size:32px;display:block;margin-bottom:12px; }
+
+/* Streak milestone flash */
+@keyframes glow-flash { 0%,100%{text-shadow:0 0 0 transparent}50%{text-shadow:0 0 16px var(--accent3)} }
+.milestone-glow { animation:glow-flash 0.8s ease 3; }
+</style>
+</head>
+<body>
+<div id="toast" class="px-toast"></div>
+
+<div class="px-wrapper">
+
+  <nav class="px-nav">
+    <a href="index.html">HOME</a>
+    <a href="todo.html">TASKS</a>
+    <a href="planner.html">WEEK</a>
+    <a href="habits.html">HABITS</a>
+    <a href="focus.html">FOCUS</a>
+    <a href="pet.html">PET</a>
+    <a href="journal.html">JOURNAL</a>
+    <a href="goals.html">GOALS</a>
+    <a href="reading.html">READING</a>
+    <a href="gratitude.html" class="active active-teal">GRATITUDE</a>
+  </nav>
+
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+    <div>
+      <h1 class="px-title px-title--teal">GRATITUDE LOG</h1>
+      <p class="px-subtitle">// 3 THINGS, EVERY DAY</p>
+    </div>
+    <div id="streakBadge" style="font-size:7px;color:var(--accent3);border:2px solid var(--accent3);padding:6px 12px;letter-spacing:0.06em;">0 DAY STREAK</div>
+  </div>
+
+  <div class="pet-banner">
+    <div class="pb-icon">🐾</div>
+    <div class="pb-text">Log today's 3 gratitudes → pet gets <strong style="color:var(--accent3)">+8 Happiness · +5 XP</strong><br>7-day streak → <strong style="color:var(--amber)">+15 BONUS XP!</strong></div>
+  </div>
+
+  <!-- ENTRY DEVICE -->
+  <div class="grat-device">
+    <div class="grat-device-top">
+      <div class="gd-light"></div>
+      <div class="gd-light2"></div>
+      <span class="gd-title">TODAY'S GRATITUDE</span>
+    </div>
+    <div class="grat-device-body">
+
+      <div class="grat-prompt">WHAT ARE YOU GRATEFUL FOR</div>
+      <div class="grat-date" id="gratDate">TODAY?</div>
+
+      <div class="grat-inputs">
+        <div class="grat-field">
+          <div class="gf-label"><span class="gf-num">1</span>I AM GRATEFUL FOR...</div>
+          <textarea class="grat-input" id="g1" placeholder="SOMETHING GOOD IN YOUR LIFE..." maxlength="200"></textarea>
+        </div>
+        <div class="grat-field">
+          <div class="gf-label"><span class="gf-num">2</span>I APPRECIATE...</div>
+          <textarea class="grat-input" id="g2" placeholder="A PERSON, MOMENT, OR THING..." maxlength="200"></textarea>
+        </div>
+        <div class="grat-field">
+          <div class="gf-label"><span class="gf-num">3</span>TODAY I NOTICED...</div>
+          <textarea class="grat-input" id="g3" placeholder="SOMETHING SMALL BUT MEANINGFUL..." maxlength="200"></textarea>
+        </div>
+      </div>
+
+      <div class="grat-note-wrap">
+        <button class="gn-toggle" onclick="toggleNote()">+ ADD A NOTE (OPTIONAL)</button>
+        <textarea class="grat-note-input" id="gratNote" maxlength="300" placeholder="ANYTHING ELSE ON YOUR MIND..."></textarea>
+      </div>
+
+      <div class="grat-save-row">
+        <span class="today-done-badge" id="todayDoneBadge">✓ LOGGED TODAY</span>
+        <button class="px-btn px-btn--teal" onclick="saveEntry()">SAVE ✓</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="stat-tile"><span class="st-num" id="statStreak">0</span><span class="st-label">DAY STREAK</span></div>
+    <div class="stat-tile"><span class="st-num amber" id="statBest">0</span><span class="st-label">BEST STREAK</span></div>
+    <div class="stat-tile"><span class="st-num purple" id="statTotal">0</span><span class="st-label">TOTAL ENTRIES</span></div>
+    <div class="stat-tile"><span class="st-num pink" id="statItems">0</span><span class="st-label">THINGS NOTED</span></div>
+  </div>
+
+  <!-- WEEK CELLS -->
+  <div class="px-panel" style="margin-bottom:20px;">
+    <div class="px-section px-section--teal" style="margin-top:0;">// LAST 7 DAYS</div>
+    <div class="week-cells" id="weekCells"></div>
+  </div>
+
+  <!-- GRATITUDE WALL -->
+  <div class="px-section px-section--teal">// GRATITUDE WALL</div>
+  <div class="grat-wall" id="gratWall"></div>
+
+</div>
+
+<script>
+const DAYS=['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+const DAYS_SHORT=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+const MONTHS=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+let noteOpen=false;
+
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+function todayKey(){return new Date().toISOString().slice(0,10);}
+function loadEntries(){try{return JSON.parse(localStorage.getItem('gratitudeEntries')||'[]');}catch(e){return[];}}
+function saveEntries(e){localStorage.setItem('gratitudeEntries',JSON.stringify(e));}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
+function formatDate(iso){const d=new Date(iso+'T00:00:00');return`${DAYS_SHORT[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;}
+
+function toggleNote(){
+  noteOpen=!noteOpen;
+  const ni=document.getElementById('gratNote');
+  ni.style.display=noteOpen?'block':'none';
+  if(noteOpen) ni.focus();
+}
+
+// ── SAVE ──
+function saveEntry(){
+  const g1=document.getElementById('g1').value.trim();
+  const g2=document.getElementById('g2').value.trim();
+  const g3=document.getElementById('g3').value.trim();
+  if(!g1&&!g2&&!g3){showToast('WRITE AT LEAST ONE GRATITUDE!');document.getElementById('g1').focus();return;}
+
+  const entries=loadEntries();
+  const today=todayKey();
+  const existingIdx=entries.findIndex(e=>e.date===today);
+  const note=document.getElementById('gratNote').value.trim();
+
+  const entry={
+    id:existingIdx>=0?entries[existingIdx].id:uid(),
+    date:today,ts:Date.now(),
+    items:[g1,g2,g3].filter(Boolean),
+    note:note||null,
+  };
+
+  const isNew=existingIdx<0;
+  if(existingIdx>=0) entries[existingIdx]=entry; else entries.push(entry);
+  saveEntries(entries);
+
+  const streak=calcStreak(entries);
+  rewardPet(isNew,streak);
+  showToast(isNew?`SAVED! PET +8 HAPPY${streak>0&&streak%7===0?' · STREAK BONUS!':''}` : 'UPDATED!');
+  document.getElementById('todayDoneBadge').classList.add('show');
+  render();
+}
+
+// ── RENDER ──
+function render(){
+  const entries=loadEntries().slice().sort((a,b)=>b.date.localeCompare(a.date));
+  renderStats(entries);renderWeekCells(entries);renderWall(entries);
+  const todayEntry=entries.find(e=>e.date===todayKey());
+  if(todayEntry){
+    document.getElementById('g1').value=todayEntry.items[0]||'';
+    document.getElementById('g2').value=todayEntry.items[1]||'';
+    document.getElementById('g3').value=todayEntry.items[2]||'';
+    document.getElementById('gratNote').value=todayEntry.note||'';
+    document.getElementById('todayDoneBadge').classList.add('show');
+  }
+}
+
+function renderStats(entries){
+  const streak=calcStreak(entries);
+  document.getElementById('statStreak').textContent=streak;
+  document.getElementById('streakBadge').textContent=`${streak} DAY STREAK`;
+  if(streak>=7) document.getElementById('streakBadge').style.color='var(--amber)';
+  document.getElementById('statBest').textContent=calcBestStreak(entries);
+  document.getElementById('statTotal').textContent=entries.length;
+  document.getElementById('statItems').textContent=entries.reduce((s,e)=>s+(e.items||[]).length,0);
+}
+
+function renderWeekCells(entries){
+  const dateSet=new Set(entries.map(e=>e.date));
+  const wrap=document.getElementById('weekCells');wrap.innerHTML='';
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);d.setHours(0,0,0,0);const k=d.toISOString().slice(0,10);const cell=document.createElement('div');cell.className='wc'+(dateSet.has(k)?' logged':'');cell.title=DAYS_SHORT[d.getDay()];wrap.appendChild(cell);}
+}
+
+function renderWall(entries){
+  const wall=document.getElementById('gratWall');
+  if(!entries.length){
+    wall.innerHTML='<div class="empty-state"><span class="es-icon">✨</span>NO ENTRIES YET!<br>START WITH 3 THINGS YOU\'RE GRATEFUL FOR</div>';
+    return;
+  }
+  wall.innerHTML='';
+  entries.slice(0,30).forEach((e,i)=>{
+    const isToday=e.date===todayKey();
+    const div=document.createElement('div');div.className='gw-day';div.style.animationDelay=(i*0.03)+'s';
+    div.innerHTML=`
+      <div class="gw-date">
+        <span>${formatDate(e.date)}</span>
+        ${isToday?'<span class="gw-today-badge">TODAY</span>':''}
+        <button class="gw-del" onclick="deleteEntry('${e.id}')">× DEL</button>
+      </div>
+      <div class="gw-items">
+        ${(e.items||[]).map((item,j)=>`<div class="gw-item"><span class="gw-num">${j+1}</span><span class="gw-text">${esc(item)}</span></div>`).join('')}
+        ${e.note?`<div class="gw-note">${esc(e.note)}</div>`:''}
+      </div>`;
+    wall.appendChild(div);
+  });
+}
+
+function deleteEntry(id){saveEntries(loadEntries().filter(e=>e.id!==id));render();showToast('ENTRY DELETED');}
+
+// ── STREAKS ──
+function calcStreak(entries){
+  const dateSet=new Set(entries.map(e=>e.date));
+  let streak=0;const d=new Date();d.setHours(0,0,0,0);
+  if(dateSet.has(d.toISOString().slice(0,10)))streak++;
+  for(let i=1;i<365;i++){d.setDate(d.getDate()-1);if(dateSet.has(d.toISOString().slice(0,10)))streak++;else break;}
+  return streak;
+}
+function calcBestStreak(entries){
+  if(!entries.length) return 0;
+  const dates=entries.map(e=>e.date).sort();
+  let best=1,cur=1;
+  for(let i=1;i<dates.length;i++){
+    const diff=(new Date(dates[i])-new Date(dates[i-1]))/86400000;
+    if(diff===1){cur++;best=Math.max(best,cur);}else cur=1;
+  }
+  return best;
+}
+
+// ── PET ──
+function rewardPet(isNew,streak){
+  if(!isNew) return;
+  try{
+    const p=JSON.parse(localStorage.getItem('petData')||'null');if(!p)return;
+    const cl=v=>Math.max(0,Math.min(100,Math.round(v)));
+    p.happiness=cl((p.happiness||80)+8);
+    p.xp=(p.xp||0)+5+(streak>0&&streak%7===0?15:0);
+    while(p.xp>=100){p.xp-=100;p.level=(p.level||1)+1;}
+    const stages=['EGG','BABY','CHILD','TEEN','ADULT','MASTER'],thresh=[1,3,6,10,15,20];
+    for(let i=thresh.length-1;i>=0;i--){if(p.level>=thresh[i]){p.stage=stages[i];break;}}
+    localStorage.setItem('petData',JSON.stringify(p));
+  }catch(e){}
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._to);t._to=setTimeout(()=>t.classList.remove('show'),2400);}
+
+// ── INIT ──
+(function(){
+  const now=new Date();
+  document.getElementById('gratDate').textContent=`${DAYS[now.getDay()]} ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+  render();
+})();
+
+window.addEventListener('firebaseDataLoaded',()=>render());
+window.addEventListener('firebaseKeyUpdated',(e)=>{if(e.detail.key==='gratitudeEntries')render();});
+</script>
+<script type="module" src="firebase.js"></script>
+</body>
+</html>
