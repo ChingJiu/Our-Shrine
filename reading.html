@@ -325,51 +325,6 @@ function toggleJournal(id){
   body.classList.toggle('open',!isOpen);
   if(toggle) toggle.classList.toggle('open',!isOpen);
 }
-+// ── EDIT ──
-+function editItem(id){
-+  const items=loadItems();const item=items.find(i=>i.id===id);if(!item)return;
-+
-+  const title=prompt('EDIT TITLE',item.title||''); if(title===null) return;
-+  const cleanTitle=title.trim(); if(!cleanTitle){showToast('TITLE REQUIRED');return;}
-+
-+  const author=prompt(item.type==='movie'?'EDIT DIRECTOR / STUDIO':'EDIT AUTHOR',item.author||'');
-+  if(author===null) return;
-+
-+  const genresStr=prompt('EDIT GENRES (COMMA SEPARATED)',(item.genres||[]).join(', '));
-+  if(genresStr===null) return;
-+
-+  const statusStr=prompt('EDIT STATUS: want, in-progress, done, dropped',item.status||'want');
-+  if(statusStr===null) return;
-+  const nextStatus=(statusStr||'').trim().toLowerCase();
-+  if(!['want','in-progress','done','dropped'].includes(nextStatus)){showToast('INVALID STATUS');return;}
-+
-+  item.title=cleanTitle;
-+  item.author=(author||'').trim();
-+  item.genres=genresStr.split(',').map(g=>g.trim()).filter(Boolean);
-+
-+  if(item.type==='book'){
-+    const totalStr=prompt('EDIT TOTAL PAGES (NUMBER)',String(item.totalPages||0)); if(totalStr===null) return;
-+    const currentStr=prompt('EDIT CURRENT PAGE (NUMBER)',String(item.currentPage||0)); if(currentStr===null) return;
-+    item.totalPages=Math.max(0,parseInt(totalStr,10)||0);
-+    item.currentPage=Math.max(0,parseInt(currentStr,10)||0);
-+    if(item.totalPages>0&&item.currentPage>item.totalPages) item.currentPage=item.totalPages;
-+  }
-+
-+  const wasDone=item.status==='done';
-+  item.status=nextStatus;
-+  if(nextStatus==='done'&&!wasDone){
-+    item.completedDate=new Date().toISOString().slice(0,10);
-+    if(item.type==='book'&&item.totalPages>0) item.currentPage=item.totalPages;
-+    rewardPet(item.type);
-+  }else if(nextStatus!=='done'){
-+    item.completedDate=null;
-+  }else if(!item.completedDate){
-+    item.completedDate=new Date().toISOString().slice(0,10);
-+  }
-+
-+  saveItems(items);render();showToast('ITEM UPDATED');
-+}
-+
 
 // ── DELETE ──
 function deleteItem(id){saveItems(loadItems().filter(i=>i.id!==id));render();showToast('ITEM DELETED');}
