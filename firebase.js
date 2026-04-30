@@ -16,13 +16,14 @@
 // ★  PASTE YOUR FIREBASE CONFIG HERE  ★
 // ─────────────────────────────────────────────────────────────
 const firebaseConfig = {
-  apiKey:            "PASTE_YOUR_API_KEY_HERE",
-  authDomain:        "PASTE_YOUR_PROJECT_ID.firebaseapp.com",
-  projectId:         "PASTE_YOUR_PROJECT_ID",
-  storageBucket:     "PASTE_YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "PASTE_YOUR_SENDER_ID",
-  appId:             "PASTE_YOUR_APP_ID"
+  apiKey: "AIzaSyD4XQMKY2C3ThNPn-RMQEoSyV_-wEwG_30",
+    authDomain: "home-68c02.firebaseapp.com",
+    projectId: "home-68c02",
+    storageBucket: "home-68c02.firebasestorage.app",
+    messagingSenderId: "1006697217871",
+    appId: "1:1006697217871:web:83841d31eff4d001fd4f3a"
 };
+
 
 // ─────────────────────────────────────────────────────────────
 // ★  OPTIONS  ★
