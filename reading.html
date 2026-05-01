@@ -7,10 +7,257 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reading &amp; Watch List — Dashboard</title>
 <link rel="stylesheet" href="theme.css">
-<link rel="stylesheet" href="reading.css">
+<style>
+/* ── TYPE TABS ── */
+.type-tabs { display:flex;gap:0;margin-bottom:20px;border:2px solid var(--border); }
+.type-tab { font-family:'Press Start 2P',monospace;font-size:7px;padding:10px 16px;background:var(--panel);color:var(--muted);cursor:pointer;letter-spacing:0.06em;flex:1;text-align:center;border-right:2px solid var(--border);transition:all 0.12s; }
+.type-tab:last-child { border-right:none; }
+.type-tab:hover { color:var(--text2); }
+.type-tab.active-book  { color:var(--accent);background:rgba(124,106,247,0.08); }
+.type-tab.active-movie { color:var(--accent2);background:rgba(247,106,138,0.08); }
+
+/* ── STATS ── */
+.stats-strip { display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:20px; }
+.stat-tile { background:var(--panel);border:2px solid var(--border);padding:10px 8px;text-align:center; }
+.st-num   { font-size:16px;color:var(--accent);display:block;margin-bottom:4px; }
+.st-label { font-size:5px;color:var(--muted);letter-spacing:0.08em;line-height:1.6; }
+.st-num.pink  { color:var(--accent2); }
+.st-num.teal  { color:var(--accent3); }
+.st-num.amber { color:var(--amber); }
+
+/* ── STATUS FILTERS ── */
+.status-row { display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap; }
+.sfilter { font-family:'Press Start 2P',monospace;font-size:6px;padding:5px 9px;border:2px solid var(--border);background:var(--panel);color:var(--muted);cursor:pointer;letter-spacing:0.06em;transition:all 0.12s; }
+.sfilter:hover { color:var(--text2);border-color:var(--muted); }
+.sfilter.active       { color:var(--accent);border-color:var(--accent);background:rgba(124,106,247,0.08); }
+.sfilter.active-movie { color:var(--accent2);border-color:var(--accent2);background:rgba(247,106,138,0.08); }
+
+/* ── ITEM CARD ── */
+.items-list { display:flex;flex-direction:column;gap:10px;margin-bottom:20px; }
+.item-card { background:var(--panel);border:2px solid var(--border);border-left:4px solid var(--accent);animation:px-slideUp 0.2s ease both;transition:border-color 0.15s; }
+.item-card.movie          { border-left-color:var(--accent2); }
+.item-card.status-done    { border-left-color:var(--accent3); }
+.item-card.status-dropped { border-left-color:var(--muted);opacity:0.6; }
+.item-card:hover { border-color:var(--muted); }
+
+.item-head { padding:12px 14px 10px;display:flex;align-items:flex-start;gap:10px; }
+.item-cover { width:40px;height:56px;background:var(--panel2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px; }
+.item-cover.movie-cover { height:40px; }
+.item-info { flex:1;min-width:0; }
+.item-title  { font-size:8px;color:var(--text);letter-spacing:0.04em;margin-bottom:4px; }
+.item-author { font-size:6px;color:var(--muted);letter-spacing:0.04em;margin-bottom:6px; }
+.item-meta   { display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:4px; }
+.item-badge  { font-size:5px;padding:2px 7px;border:1px solid var(--border);color:var(--muted);letter-spacing:0.05em; }
+.item-badge.reading  { border-color:var(--accent);color:var(--accent); }
+.item-badge.watching { border-color:var(--accent2);color:var(--accent2); }
+.item-badge.done     { border-color:var(--accent3);color:var(--accent3); }
+.item-badge.want     { border-color:var(--amber);color:var(--amber); }
+.item-badge.dropped  { border-color:var(--muted);color:var(--muted); }
+
+.star-row { display:flex;gap:3px;margin-top:4px; }
+.star { font-size:12px;cursor:pointer;color:var(--border2);transition:color 0.1s;line-height:1; }
+.star.filled { color:var(--amber); }
+.star:hover  { color:var(--amber); }
+
+.item-actions { display:flex;flex-direction:column;gap:6px;flex-shrink:0;align-items:flex-end; }
+.status-select { font-family:'Press Start 2P',monospace;font-size:5px;background:var(--bg);border:2px solid var(--border);color:var(--text);padding:4px 5px;outline:none;cursor:pointer;max-width:84px; }
+
+/* ── PAGE PROGRESS (books only) ── */
+.page-progress {
+  padding: 0 14px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.pp-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 7px;
+}
+.pp-label { font-size:6px;color:var(--muted);letter-spacing:0.08em; }
+.pp-pct   { font-size:7px;color:var(--accent);letter-spacing:0.04em; }
+.pp-bar   { height:8px;background:var(--bg);border:1px solid var(--border);overflow:hidden;margin-bottom:8px;position:relative; }
+.pp-fill  { height:100%;background:var(--accent);transition:width 0.4s steps(6); }
+.pp-fill.complete { background:var(--accent3); }
+.pp-inputs {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.pp-inputs .pp-lbl { font-size:6px;color:var(--muted);white-space:nowrap; }
+.pp-num-input {
+  font-family:'Press Start 2P',monospace;font-size:8px;
+  background:var(--bg);border:2px solid var(--border);color:var(--accent);
+  text-align:center;width:58px;padding:4px 6px;outline:none;
+  transition:border-color 0.12s;
+}
+.pp-num-input:focus { border-color:var(--accent); }
+.pp-sep { font-size:8px;color:var(--muted); }
+.pp-total-input {
+  font-family:'Press Start 2P',monospace;font-size:8px;
+  background:var(--bg);border:2px solid var(--border);color:var(--muted);
+  text-align:center;width:58px;padding:4px 6px;outline:none;
+  transition:border-color 0.12s;
+}
+.pp-total-input:focus { border-color:var(--muted); }
+
+/* ── READING JOURNAL (books only) ── */
+.reading-journal {
+  border-top: 1px solid var(--border);
+}
+.rj-header {
+  padding: 10px 14px 8px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none;
+  transition: background 0.1s;
+}
+.rj-header:hover { background: rgba(255,255,255,0.02); }
+.rj-title { font-size:6px;color:var(--accent);letter-spacing:0.1em; }
+.rj-count { font-size:6px;color:var(--muted); }
+.rj-toggle { font-size:8px;color:var(--muted);transition:transform 0.2s; }
+.rj-toggle.open { transform:rotate(180deg); }
+
+.rj-body { padding:0 14px 12px; display:none; }
+.rj-body.open { display:block; }
+
+/* New entry input */
+.rj-new {
+  display:flex;flex-direction:column;gap:6px;margin-bottom:12px;
+  background:var(--bg);border:2px solid var(--border);padding:10px;
+}
+.rj-new-meta {
+  display:flex;align-items:center;gap:8px;margin-bottom:4px;
+}
+.rj-page-tag {
+  font-size:6px;color:var(--accent3);border:1px solid rgba(106,247,200,0.3);
+  padding:2px 7px;letter-spacing:0.06em;white-space:nowrap;
+}
+.rj-textarea {
+  font-family:'VT323',monospace;font-size:18px;background:transparent;
+  border:none;color:var(--text2);padding:0;width:100%;outline:none;
+  resize:none;min-height:60px;line-height:1.5;letter-spacing:0.02em;
+  border-bottom:2px solid var(--border);transition:border-color 0.12s;
+}
+.rj-textarea:focus { border-bottom-color:var(--accent3); }
+.rj-textarea::placeholder { color:var(--border2); }
+.rj-new-foot { display:flex;justify-content:flex-end;margin-top:4px; }
+
+/* Journal entry cards */
+.rj-entries { display:flex;flex-direction:column;gap:6px; }
+.rj-entry {
+  background:var(--bg);border:1px solid var(--border);
+  border-left:3px solid var(--accent3);padding:8px 10px;
+  animation:px-slideUp 0.15s ease both;
+}
+.rj-entry-meta {
+  display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap;
+}
+.rj-entry-date { font-size:5px;color:var(--muted);letter-spacing:0.06em; }
+.rj-entry-page { font-size:5px;color:var(--accent3);border:1px solid rgba(106,247,200,0.2);padding:1px 5px;letter-spacing:0.04em; }
+.rj-entry-text { font-family:'VT323',monospace;font-size:17px;color:var(--text2);line-height:1.5;word-break:break-word; }
+.rj-entry-del  { font-family:'Press Start 2P',monospace;font-size:5px;color:var(--border2);background:none;border:none;cursor:pointer;margin-left:auto;transition:color 0.12s;padding:0; }
+.rj-entry-del:hover { color:var(--accent2); }
+
+.rj-empty { font-size:7px;color:var(--muted);text-align:center;padding:14px 0;letter-spacing:0.06em; }
+
+/* ── ITEM FOOTER ── */
+.item-foot { padding:6px 14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px; }
+.item-del  { font-family:'Press Start 2P',monospace;font-size:5px;color:var(--muted);background:none;border:none;cursor:pointer;transition:color 0.12s; }
+.item-del:hover { color:var(--accent2); }
+
+/* ── ADD FORM ── */
+.add-form { background:var(--panel);border:2px solid var(--border);padding:16px;margin-bottom:20px; }
+.add-form-title { font-size:7px;color:var(--accent);letter-spacing:0.1em;margin-bottom:14px; }
+
+.genre-chips { display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px; }
+.genre-chip  { font-family:'Press Start 2P',monospace;font-size:5px;padding:3px 7px;border:2px solid var(--border);background:var(--panel);color:var(--muted);cursor:pointer;transition:all 0.1s; }
+.genre-chip:hover { border-color:var(--muted);color:var(--text2); }
+.genre-chip.on { border-color:var(--accent2);color:var(--accent2);background:rgba(247,106,138,0.06); }
+
+/* ── EDIT MODAL ── */
+.edit-genre-chips { display:flex;gap:4px;flex-wrap:wrap;margin-top:6px; }
+.edit-genre-chip {
+  font-family:'Press Start 2P',monospace;font-size:5px;padding:4px 8px;
+  border:2px solid var(--border);background:var(--panel);color:var(--muted);
+  cursor:pointer;letter-spacing:0.06em;transition:all 0.1s;
+}
+.edit-genre-chip:hover { border-color:var(--muted);color:var(--text2); }
+.edit-genre-chip.on { border-color:var(--accent2);color:var(--accent2);background:rgba(247,106,138,0.06); }
+
+/* Edit button on card footer */
+.item-edit {
+  font-family:'Press Start 2P',monospace;font-size:5px;color:var(--muted);
+  background:none;border:1px solid var(--border);padding:3px 8px;
+  cursor:pointer;letter-spacing:0.06em;transition:all 0.12s;
+}
+.item-edit:hover { color:var(--accent);border-color:var(--accent); }
+</style>
 </head>
 <body>
 <div id="toast" class="px-toast"></div>
+
+<!-- EDIT MODAL -->
+<div class="px-modal-bg" id="editModalBg">
+  <div class="px-modal" style="width:400px;max-height:90vh;overflow-y:auto;">
+    <div class="px-modal-head">
+      <h2 style="font-size:8px;color:var(--accent);">EDIT ITEM</h2>
+      <button class="px-modal-close" onclick="closeEditModal()">✕</button>
+    </div>
+    <div class="px-modal-body">
+
+      <div style="margin-bottom:12px;">
+        <span class="px-label" style="font-size:6px;display:block;margin-bottom:5px;">TITLE</span>
+        <input class="px-input" id="editTitle" type="text" maxlength="80" placeholder="TITLE..."/>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <span class="px-label" style="font-size:6px;display:block;margin-bottom:5px;" id="editAuthorLabel">AUTHOR</span>
+        <input class="px-input" id="editAuthor" type="text" maxlength="60" placeholder="AUTHOR..."/>
+      </div>
+
+      <div id="editPagesWrap" style="margin-bottom:12px;">
+        <span class="px-label" style="font-size:6px;display:block;margin-bottom:5px;">TOTAL PAGES</span>
+        <input class="px-input" id="editTotalPages" type="number" min="1" max="9999"
+          placeholder="E.G. 320" style="max-width:140px;font-size:8px;"/>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <span class="px-label" style="font-size:6px;display:block;margin-bottom:5px;">GENRES / TAGS</span>
+        <div class="edit-genre-chips" id="editGenreChipsBook">
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">FICTION</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">NON-FICTION</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">FANTASY</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">SCI-FI</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">THRILLER</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">ROMANCE</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">HISTORY</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">SELF-HELP</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">BIOGRAPHY</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">MYSTERY</div>
+        </div>
+        <div class="edit-genre-chips" id="editGenreChipsMovie" style="display:none;">
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">ACTION</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">COMEDY</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">DRAMA</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">HORROR</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">ANIMATION</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">DOCUMENTARY</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">ANIME</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">K-DRAMA</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">SCI-FI</div>
+          <div class="edit-genre-chip" onclick="toggleEditGenre(this)">ROMANCE</div>
+        </div>
+        <!-- Custom genre input for anything not in the list -->
+        <div style="display:flex;gap:6px;margin-top:8px;align-items:center;">
+          <input class="px-input" id="editCustomGenre" type="text" maxlength="20"
+            placeholder="CUSTOM TAG..." style="flex:1;font-size:7px;"/>
+          <button class="px-btn px-btn--sm" onclick="addCustomEditGenre()">+ ADD</button>
+        </div>
+        <div class="edit-genre-chips" id="editCustomChips" style="margin-top:6px;"></div>
+      </div>
+
+    </div>
+    <div class="px-modal-footer">
+      <button class="px-btn" onclick="closeEditModal()">CANCEL</button>
+      <button class="px-btn px-btn--purple" onclick="saveEdit()">SAVE CHANGES ✓</button>
+    </div>
+  </div>
+</div>
 
 <div class="px-wrapper">
 
@@ -19,6 +266,12 @@
     <a href="todo.html">TASKS</a>
     <a href="planner.html">WEEK</a>
     <a href="habits.html">HABITS</a>
+    <a href="focus.html">FOCUS</a>
+    <a href="pet.html">PET</a>
+    <a href="journal.html">JOURNAL</a>
+    <a href="goals.html">GOALS</a>
+    <a href="reading.html" class="active active-pink">READING</a>
+    <a href="gratitude.html">GRATITUDE</a>
   </nav>
 
   <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
@@ -98,25 +351,18 @@
         <div class="genre-chip" onclick="toggleGenre(this)">SELF-HELP</div>
         <div class="genre-chip" onclick="toggleGenre(this)">BIOGRAPHY</div>
         <div class="genre-chip" onclick="toggleGenre(this)">MYSTERY</div>
-        <div class="genre-chip" onclick="toggleGenre(this)">PHILOSOPHY</div>
-        <div class="genre-chip" onclick="toggleGenre(this)">POETRY</div>
       </div>
       <div class="genre-chips" id="genreChipsMovie" style="display:none;">
         <div class="genre-chip" onclick="toggleGenre(this)">ACTION</div>
         <div class="genre-chip" onclick="toggleGenre(this)">COMEDY</div>
         <div class="genre-chip" onclick="toggleGenre(this)">DRAMA</div>
-        <div class="genre-chip" onclick="toggleGenre(this)">THRILLER</div>
         <div class="genre-chip" onclick="toggleGenre(this)">HORROR</div>
         <div class="genre-chip" onclick="toggleGenre(this)">ANIMATION</div>
         <div class="genre-chip" onclick="toggleGenre(this)">DOCUMENTARY</div>
         <div class="genre-chip" onclick="toggleGenre(this)">ANIME</div>
-        <div class="genre-chip" onclick="toggleGenre(this)">CRIME</div>
         <div class="genre-chip" onclick="toggleGenre(this)">K-DRAMA</div>
         <div class="genre-chip" onclick="toggleGenre(this)">SCI-FI</div>
         <div class="genre-chip" onclick="toggleGenre(this)">ROMANCE</div>
-        <div class="genre-chip" onclick="toggleGenre(this)">MUSICAL</div>
-        <div class="genre-chip" onclick="toggleGenre(this)">WAR</div>
-
       </div>
     </div>
     <div style="margin-bottom:12px;">
@@ -326,6 +572,118 @@ function toggleJournal(id){
   if(toggle) toggle.classList.toggle('open',!isOpen);
 }
 
+// ── EDIT MODAL ──
+let editingId = null;
+let editGenres = new Set();
+
+function openEditModal(id) {
+  const item = loadItems().find(i => i.id === id);
+  if (!item) return;
+  editingId = id;
+  const isMovie = item.type === 'movie';
+
+  // Fill fields
+  document.getElementById('editTitle').value  = item.title  || '';
+  document.getElementById('editAuthor').value = item.author || '';
+  document.getElementById('editTotalPages').value = item.totalPages || '';
+  document.getElementById('editAuthorLabel').textContent = isMovie ? 'DIRECTOR / STUDIO' : 'AUTHOR';
+  document.getElementById('editPagesWrap').style.display  = isMovie ? 'none' : 'block';
+
+  // Show correct genre set
+  document.getElementById('editGenreChipsBook').style.display  = isMovie ? 'none' : 'flex';
+  document.getElementById('editGenreChipsMovie').style.display = isMovie ? 'flex' : 'none';
+
+  // Pre-select existing genres
+  editGenres = new Set(item.genres || []);
+
+  // Mark standard chips
+  const allChips = [
+    ...document.querySelectorAll('#editGenreChipsBook .edit-genre-chip'),
+    ...document.querySelectorAll('#editGenreChipsMovie .edit-genre-chip'),
+  ];
+  allChips.forEach(c => {
+    c.classList.toggle('on', editGenres.has(c.textContent.trim()));
+  });
+
+  // Render custom chips (genres not in the standard list)
+  const standardGenres = new Set(allChips.map(c => c.textContent.trim()));
+  const customGenres   = [...editGenres].filter(g => !standardGenres.has(g));
+  renderCustomEditChips(customGenres);
+
+  document.getElementById('editCustomGenre').value = '';
+  document.getElementById('editModalBg').classList.add('open');
+  setTimeout(() => document.getElementById('editTitle').focus(), 50);
+}
+
+function closeEditModal() {
+  document.getElementById('editModalBg').classList.remove('open');
+  editingId = null;
+  editGenres.clear();
+}
+
+function toggleEditGenre(chip) {
+  const g = chip.textContent.trim();
+  if (editGenres.has(g)) { editGenres.delete(g); chip.classList.remove('on'); }
+  else                   { editGenres.add(g);    chip.classList.add('on'); }
+}
+
+function addCustomEditGenre() {
+  const input = document.getElementById('editCustomGenre');
+  const val   = input.value.trim().toUpperCase();
+  if (!val) return;
+  editGenres.add(val);
+  input.value = '';
+  // Re-render custom chips
+  const standard = new Set([
+    ...document.querySelectorAll('#editGenreChipsBook .edit-genre-chip'),
+    ...document.querySelectorAll('#editGenreChipsMovie .edit-genre-chip'),
+  ].map(c => c.textContent.trim()));
+  renderCustomEditChips([...editGenres].filter(g => !standard.has(g)));
+}
+
+function renderCustomEditChips(customs) {
+  const wrap = document.getElementById('editCustomChips');
+  wrap.innerHTML = '';
+  customs.forEach(g => {
+    const chip = document.createElement('div');
+    chip.className = 'edit-genre-chip on';
+    chip.textContent = g;
+    chip.onclick = () => {
+      editGenres.delete(g);
+      chip.remove();
+    };
+    wrap.appendChild(chip);
+  });
+}
+
+function saveEdit() {
+  const title = document.getElementById('editTitle').value.trim();
+  if (!title) { document.getElementById('editTitle').focus(); return; }
+
+  const items = loadItems();
+  const idx   = items.findIndex(i => i.id === editingId);
+  if (idx < 0) return;
+
+  items[idx].title      = title;
+  items[idx].author     = document.getElementById('editAuthor').value.trim();
+  items[idx].genres     = [...editGenres];
+  if (items[idx].type === 'book') {
+    const tp = parseInt(document.getElementById('editTotalPages').value) || 0;
+    items[idx].totalPages = tp;
+  }
+
+  saveItems(items);
+  closeEditModal();
+  render();
+  showToast('CHANGES SAVED!');
+}
+
+// Close modal on backdrop click
+document.getElementById('editModalBg').addEventListener('click', function(e) {
+  if (e.target === this) closeEditModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeEditModal(); });
+
 // ── DELETE ──
 function deleteItem(id){saveItems(loadItems().filter(i=>i.id!==id));render();showToast('ITEM DELETED');}
 
@@ -440,7 +798,8 @@ function render(){
       ${pageProgressHtml}
       ${readingJournalHtml}
       <div class="item-foot">
-        <button class="item-del" onclick="deleteItem('${item.id}')">× DELETE</button>
+        <button class="item-del"  onclick="deleteItem('${item.id}')">× DELETE</button>
+        <button class="item-edit" onclick="openEditModal('${item.id}')">✎ EDIT</button>
         ${item.completedDate?`<span style="font-size:5px;color:var(--accent3);letter-spacing:0.06em;">FINISHED ${item.completedDate}</span>`:''}
       </div>`;
 
