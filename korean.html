@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn Korean — Dashboard</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+/* ── TAB BAR ── */
+.tab-bar {
+  display: flex; gap: 0; border: 2px solid var(--border);
+  margin-bottom: 20px; overflow-x: auto; scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  font-family: 'Press Start 2P', monospace; font-size: 7px;
+  padding: 10px 12px; background: var(--panel); color: var(--muted);
+  cursor: pointer; letter-spacing: 0.06em; flex-shrink: 0;
+  border-right: 2px solid var(--border); transition: all 0.12s; white-space: nowrap;
+}
+.tab-btn:last-child { border-right: none; }
+.tab-btn:hover { color: var(--text2); }
+.tab-btn.active { color: var(--accent3); background: rgba(106,247,200,0.07); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── STATS STRIP ── */
+.stats-strip { display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:20px; }
+.stat-tile { background:var(--panel);border:2px solid var(--border);padding:10px 8px;text-align:center; }
+.st-num   { font-size:16px;color:var(--accent3);display:block;margin-bottom:4px; }
+.st-label { font-size:5px;color:var(--muted);letter-spacing:0.08em;line-height:1.6; }
+.st-num.purple { color:var(--accent); }
+.st-num.pink   { color:var(--accent2); }
+.st-num.amber  { color:var(--amber); }
+
+/* ── PET BANNER ── */
+.pet-banner { background:#0a1a10;border:2px solid var(--accent3);padding:11px 16px;display:flex;align-items:center;gap:14px;margin-bottom:20px; }
+.pb-icon { font-size:20px;flex-shrink:0;animation:px-idle 1.4s steps(2) infinite; }
+.pb-text { font-size:7px;color:var(--text2);line-height:1.9;flex:1; }
+
+/* ── HANGUL GRID ── */
+.hangul-section-title {
+  font-size: 7px; color: var(--accent3); letter-spacing: 0.1em;
+  margin-bottom: 10px; padding-bottom: 7px; border-bottom: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.hangul-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+  gap: 6px; margin-bottom: 20px;
+}
+.hangul-cell {
+  background: var(--panel); border: 2px solid var(--border);
+  padding: 8px 4px; text-align: center; cursor: pointer;
+  transition: all 0.12s; position: relative;
+}
+.hangul-cell:hover { border-color: var(--accent3); }
+.hangul-cell.mastered { border-color: var(--accent3); background: rgba(106,247,200,0.07); }
+.hangul-cell.mastered::after {
+  content: '✓'; position: absolute; top: 2px; right: 4px;
+  font-size: 6px; color: var(--accent3); font-family: 'Press Start 2P', monospace;
+}
+.hc-char  { font-size: 22px; display: block; line-height: 1.2; margin-bottom: 4px; color: var(--text); }
+.hc-roman { font-size: 6px; color: var(--muted); letter-spacing: 0.04em; }
+.hc-eng   { font-size: 5px; color: var(--border2); letter-spacing: 0.02em; margin-top: 2px; }
+
+/* Hangul drill mode */
+.drill-card {
+  background: var(--panel2); border: 2px solid var(--border2);
+  box-shadow: 6px 6px 0 #06060e; margin-bottom: 16px; overflow: hidden;
+}
+.drill-screen {
+  background: #0a1410; border-bottom: 2px solid var(--border2);
+  min-height: 160px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 24px;
+  position: relative; cursor: pointer;
+}
+.drill-screen::before {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(106,247,200,0.015) 3px,rgba(106,247,200,0.015) 4px);
+  pointer-events: none;
+}
+.drill-char {
+  font-size: 64px; color: var(--accent3); line-height: 1;
+  text-shadow: 0 0 24px rgba(106,247,200,0.3); margin-bottom: 8px;
+  transition: opacity 0.15s;
+}
+.drill-hint { font-size: 7px; color: var(--muted); letter-spacing: 0.08em; }
+.drill-answer {
+  font-size: 11px; color: var(--text); letter-spacing: 0.06em;
+  margin-top: 12px; opacity: 0; transition: opacity 0.2s;
+}
+.drill-answer.show { opacity: 1; }
+.drill-roman { font-size: 9px; color: var(--accent3); margin-top: 4px; }
+.drill-controls {
+  padding: 10px 12px; display: grid;
+  grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+  background: var(--panel2);
+}
+.drill-progress {
+  padding: 6px 14px; font-size: 6px; color: var(--muted);
+  letter-spacing: 0.08em; text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── FLASHCARD ── */
+.fc-queue-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
+}
+.fc-queue-info { font-size: 7px; color: var(--muted); letter-spacing: 0.06em; }
+.fc-queue-info strong { color: var(--accent3); }
+
+.flashcard-wrap { perspective: 1000px; margin-bottom: 16px; cursor: pointer; }
+.flashcard {
+  background: var(--panel2); border: 2px solid var(--border2);
+  box-shadow: 6px 6px 0 #06060e; min-height: 180px;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 28px 20px; text-align: center;
+  position: relative; transition: transform 0.4s ease;
+  transform-style: preserve-3d;
+}
+.flashcard.flipped { transform: rotateY(180deg); }
+.fc-front, .fc-back {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 20px;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+}
+.fc-back { transform: rotateY(180deg); }
+
+.fc-korean { font-size: 44px; color: var(--accent3); line-height: 1; margin-bottom: 8px; text-shadow: 0 0 16px rgba(106,247,200,0.25); }
+.fc-tap-hint { font-size: 6px; color: var(--muted); letter-spacing: 0.08em; }
+.fc-english  { font-size: 14px; color: var(--text); letter-spacing: 0.04em; margin-bottom: 8px; }
+.fc-roman    { font-size: 8px; color: var(--accent3); letter-spacing: 0.06em; margin-bottom: 6px; }
+.fc-category { font-size: 5px; color: var(--muted); border: 1px solid var(--border); padding: 2px 7px; letter-spacing: 0.06em; }
+
+.fc-grade-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  margin-bottom: 16px;
+}
+.fc-btn-wrong { }
+.fc-btn-right { }
+
+.fc-no-cards {
+  text-align: center; padding: 36px 20px; font-size: 7px;
+  color: var(--muted); letter-spacing: 0.08em; line-height: 2.5;
+}
+.fc-no-cards .es-icon { font-size: 28px; display: block; margin-bottom: 10px; }
+
+/* Session complete */
+.session-complete {
+  text-align: center; padding: 36px 16px;
+  background: var(--panel); border: 2px solid var(--accent3);
+  margin-bottom: 20px;
+}
+.sc-icon   { font-size: 32px; margin-bottom: 12px; display: block; }
+.sc-title  { font-size: 10px; color: var(--accent3); margin-bottom: 8px; letter-spacing: 0.06em; text-shadow: 0 0 12px rgba(106,247,200,0.3); }
+.sc-stats  { font-size: 7px; color: var(--muted); letter-spacing: 0.06em; line-height: 2.2; }
+.sc-stats strong { color: var(--text); }
+
+/* ── PHRASES ── */
+.phrase-category { margin-bottom: 20px; }
+.phrase-cat-title {
+  font-size: 7px; color: var(--accent2); letter-spacing: 0.1em;
+  margin-bottom: 10px; padding-bottom: 7px; border-bottom: 2px solid var(--border);
+}
+.phrase-list { display: flex; flex-direction: column; gap: 4px; }
+.phrase-row {
+  background: var(--panel); border: 2px solid var(--border);
+  padding: 9px 12px; display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  align-items: center; gap: 10px;
+  cursor: pointer; transition: border-color 0.12s;
+}
+.phrase-row:hover { border-color: var(--muted); }
+.phrase-row.playing { border-color: var(--accent3); }
+.pr-korean  { font-size: 14px; color: var(--text); }
+.pr-roman   { font-size: 6px; color: var(--accent3); letter-spacing: 0.04em; margin-top: 2px; }
+.pr-english { font-size: 6px; color: var(--muted); letter-spacing: 0.04em; }
+.pr-add-btn {
+  font-family: 'Press Start 2P', monospace; font-size: 5px;
+  background: none; border: 1px solid var(--border); color: var(--muted);
+  padding: 3px 7px; cursor: pointer; white-space: nowrap;
+  transition: all 0.12s; letter-spacing: 0.04em;
+}
+.pr-add-btn:hover { color: var(--accent3); border-color: var(--accent3); }
+.pr-add-btn.added { color: var(--accent3); border-color: var(--accent3); }
+
+/* ── MY VOCAB ── */
+.vocab-table {
+  width: 100%; border-collapse: collapse; margin-bottom: 20px;
+}
+.vocab-table th {
+  font-family: 'Press Start 2P', monospace; font-size: 5px;
+  color: var(--muted); letter-spacing: 0.1em; padding: 6px 10px;
+  border-bottom: 2px solid var(--border); text-align: left; background: var(--panel);
+}
+.vocab-table td {
+  font-family: 'Press Start 2P', monospace; font-size: 6px;
+  padding: 8px 10px; border-bottom: 1px solid var(--border);
+  color: var(--text2); vertical-align: middle;
+}
+.vocab-table tr:hover td { background: rgba(255,255,255,0.02); }
+.vt-korean  { font-size: 14px !important; color: var(--text) !important; }
+.vt-roman   { color: var(--accent3) !important; }
+.srs-pip {
+  display: inline-block; width: 8px; height: 8px; border-radius: 0;
+  vertical-align: middle;
+}
+.srs-0 { background: var(--border2); }
+.srs-1 { background: var(--accent2); }
+.srs-2 { background: var(--amber); }
+.srs-3 { background: #4ade80; }
+.srs-4 { background: var(--accent); }
+.srs-5 { background: var(--accent3); box-shadow: 0 0 6px var(--accent3); }
+
+.vt-del {
+  background: none; border: none; color: var(--border2);
+  cursor: pointer; font-size: 10px; transition: color 0.12s; padding: 0;
+  font-family: 'Press Start 2P', monospace;
+}
+.vt-del:hover { color: var(--accent2); }
+
+/* Add vocab form */
+.add-vocab-form {
+  background: var(--panel); border: 2px solid var(--border);
+  padding: 14px; margin-bottom: 20px;
+}
+.av-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+@media(max-width:420px) { .av-grid { grid-template-columns: 1fr 1fr; } }
+
+/* ── SRS LEGEND ── */
+.srs-legend {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;
+  padding: 10px 12px; background: var(--panel); border: 1px solid var(--border);
+}
+.srs-item { display: flex; align-items: center; gap: 5px; font-size: 5px; color: var(--muted); letter-spacing: 0.06em; }
+
+/* week cells */
+.week-cells { display:flex;gap:4px;margin-top:6px; }
+.wc { flex:1;height:10px;background:var(--border);transition:background 0.2s; }
+.wc.logged { background:var(--accent3);box-shadow:0 0 6px rgba(106,247,200,0.3); }
+</style>
+</head>
+<body>
+<div id="toast" class="px-toast"></div>
+
+<div class="px-wrapper">
+
+  <nav class="px-nav">
+    <a href="index.html">HOME</a>
+    <a href="todo.html">TASKS</a>
+    <a href="habits.html">HABITS</a>
+    <a href="focus.html">FOCUS</a>
+    <a href="pet.html">PET</a>
+    <a href="journal.html">JOURNAL</a>
+    <a href="goals.html">GOALS</a>
+    <a href="reading.html">READING</a>
+    <a href="gratitude.html">GRATITUDE</a>
+    <a href="korean.html" class="active active-teal">한국어</a>
+  </nav>
+
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+    <div>
+      <h1 class="px-title px-title--teal">한국어 KOREAN</h1>
+      <p class="px-subtitle">// LEARN · DRILL · MASTER</p>
+    </div>
+    <div id="streakBadge" style="font-size:7px;color:var(--accent3);border:2px solid var(--accent3);padding:6px 12px;letter-spacing:0.06em;">0 DAY STREAK</div>
+  </div>
+
+  <div class="pet-banner">
+    <div class="pb-icon">🐾</div>
+    <div class="pb-text">Study session → pet gets <strong style="color:var(--accent3)">+6 Energy · +5 XP</strong> · Master a word → <strong style="color:var(--accent)">+10 XP bonus!</strong></div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="stat-tile"><span class="st-num" id="statWords">0</span><span class="st-label">WORDS LEARNING</span></div>
+    <div class="stat-tile"><span class="st-num purple" id="statMastered">0</span><span class="st-label">MASTERED</span></div>
+    <div class="stat-tile"><span class="st-num amber" id="statDue">0</span><span class="st-label">DUE TODAY</span></div>
+    <div class="stat-tile"><span class="st-num pink" id="statHangul">0</span><span class="st-label">HANGUL DONE</span></div>
+  </div>
+
+  <!-- STREAK -->
+  <div class="px-panel" style="margin-bottom:20px;">
+    <div class="px-section px-section--teal" style="margin-top:0;">// STUDY STREAK (7 DAYS)</div>
+    <div class="week-cells" id="weekCells"></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-bar">
+    <div class="tab-btn active" onclick="switchTab('hangul',this)">🔤 HANGUL</div>
+    <div class="tab-btn"       onclick="switchTab('flash',this)">🃏 FLASHCARDS</div>
+    <div class="tab-btn"       onclick="switchTab('phrases',this)">💬 PHRASES</div>
+    <div class="tab-btn"       onclick="switchTab('vocab',this)">📖 MY VOCAB</div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       TAB 1: HANGUL
+  ══════════════════════════════════ -->
+  <div id="tab-hangul" class="tab-panel active">
+
+    <!-- Drill mode -->
+    <div class="drill-card" id="drillCard">
+      <div class="drill-progress" id="drillProgress">CLICK A CHARACTER BELOW TO DRILL IT</div>
+      <div class="drill-screen" id="drillScreen" onclick="flipDrill()">
+        <div class="drill-char" id="drillChar">한</div>
+        <div class="drill-hint" id="drillHint">TAP TO REVEAL</div>
+        <div class="drill-answer" id="drillAnswer"></div>
+        <div class="drill-roman"  id="drillRoman"></div>
+      </div>
+      <div class="drill-controls">
+        <button class="px-btn px-btn--pink px-btn--sm"  onclick="gradeDrill(false)">✗ HARD</button>
+        <button class="px-btn px-btn--amber px-btn--sm" onclick="startDrillAll()">↺ DRILL ALL</button>
+        <button class="px-btn px-btn--teal px-btn--sm"  onclick="gradeDrill(true)">✓ GOT IT</button>
+      </div>
+    </div>
+
+    <!-- Consonants -->
+    <div class="hangul-section-title">
+      <span>// CONSONANTS (자음)</span>
+      <span style="font-size:6px;color:var(--muted);" id="consCount">0 / 14</span>
+    </div>
+    <div class="hangul-grid" id="gridConsonants"></div>
+
+    <!-- Vowels -->
+    <div class="hangul-section-title">
+      <span>// VOWELS (모음)</span>
+      <span style="font-size:6px;color:var(--muted);" id="vowelCount">0 / 10</span>
+    </div>
+    <div class="hangul-grid" id="gridVowels"></div>
+
+    <!-- Double consonants + compound vowels (reference) -->
+    <div class="hangul-section-title"><span>// DOUBLE CONSONANTS</span></div>
+    <div class="hangul-grid" id="gridDouble"></div>
+
+    <div class="hangul-section-title"><span>// COMPOUND VOWELS</span></div>
+    <div class="hangul-grid" id="gridCompound"></div>
+
+  </div>
+
+  <!-- ══════════════════════════════════
+       TAB 2: FLASHCARDS
+  ══════════════════════════════════ -->
+  <div id="tab-flash" class="tab-panel">
+
+    <div class="srs-legend">
+      <div class="srs-item"><span class="srs-pip srs-0"></span>NEW</div>
+      <div class="srs-item"><span class="srs-pip srs-1"></span>1 DAY</div>
+      <div class="srs-item"><span class="srs-pip srs-2"></span>3 DAYS</div>
+      <div class="srs-item"><span class="srs-pip srs-3"></span>1 WEEK</div>
+      <div class="srs-item"><span class="srs-pip srs-4"></span>2 WEEKS</div>
+      <div class="srs-item"><span class="srs-pip srs-5"></span>MASTERED</div>
+    </div>
+
+    <div id="flashcardArea"></div>
+
+  </div>
+
+  <!-- ══════════════════════════════════
+       TAB 3: PHRASES
+  ══════════════════════════════════ -->
+  <div id="tab-phrases" class="tab-panel">
+    <p style="font-size:6px;color:var(--muted);letter-spacing:0.06em;margin-bottom:16px;line-height:2;">
+      TAP ANY PHRASE TO ADD IT TO YOUR FLASHCARD DECK.
+    </p>
+    <div id="phrasesContainer"></div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       TAB 4: MY VOCAB
+  ══════════════════════════════════ -->
+  <div id="tab-vocab" class="tab-panel">
+
+    <div class="add-vocab-form">
+      <div class="px-section px-section--teal" style="margin-top:0;">// ADD WORD</div>
+      <div class="av-grid">
+        <div>
+          <span class="px-label" style="font-size:6px;display:block;margin-bottom:4px;">KOREAN</span>
+          <input class="px-input" id="avKorean" type="text" placeholder="한국어..." maxlength="30"/>
+        </div>
+        <div>
+          <span class="px-label" style="font-size:6px;display:block;margin-bottom:4px;">ROMANISED</span>
+          <input class="px-input" id="avRoman" type="text" placeholder="hangugeo..." maxlength="40"/>
+        </div>
+        <div>
+          <span class="px-label" style="font-size:6px;display:block;margin-bottom:4px;">ENGLISH</span>
+          <input class="px-input" id="avEnglish" type="text" placeholder="Korean language..." maxlength="60"/>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
+        <div style="flex:1;min-width:120px;">
+          <span class="px-label" style="font-size:6px;display:block;margin-bottom:4px;">CATEGORY</span>
+          <select class="px-input" id="avCat" style="font-size:7px;">
+            <option value="general">GENERAL</option>
+            <option value="greetings">GREETINGS</option>
+            <option value="numbers">NUMBERS</option>
+            <option value="food">FOOD</option>
+            <option value="travel">TRAVEL</option>
+            <option value="family">FAMILY</option>
+            <option value="time">TIME</option>
+            <option value="custom">CUSTOM</option>
+          </select>
+        </div>
+        <button class="px-btn px-btn--teal" onclick="addCustomWord()">+ ADD WORD</button>
+      </div>
+    </div>
+
+    <div id="vocabTableWrap"></div>
+
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════
+
+// HANGUL DATA
+const CONSONANTS = [
+  { char:'ㄱ', roman:'g/k',  eng:'g as in go'   },
+  { char:'ㄴ', roman:'n',    eng:'n as in no'    },
+  { char:'ㄷ', roman:'d/t',  eng:'d as in do'    },
+  { char:'ㄹ', roman:'r/l',  eng:'r/l sound'     },
+  { char:'ㅁ', roman:'m',    eng:'m as in me'    },
+  { char:'ㅂ', roman:'b/p',  eng:'b as in be'    },
+  { char:'ㅅ', roman:'s',    eng:'s as in so'    },
+  { char:'ㅇ', roman:'ng/-', eng:'silent/ng'     },
+  { char:'ㅈ', roman:'j',    eng:'j as in joy'   },
+  { char:'ㅊ', roman:'ch',   eng:'ch as in chin' },
+  { char:'ㅋ', roman:'k',    eng:'k aspirated'   },
+  { char:'ㅌ', roman:'t',    eng:'t aspirated'   },
+  { char:'ㅍ', roman:'p',    eng:'p aspirated'   },
+  { char:'ㅎ', roman:'h',    eng:'h as in hi'    },
+];
+const VOWELS = [
+  { char:'ㅏ', roman:'a',   eng:'ah' },
+  { char:'ㅑ', roman:'ya',  eng:'yah' },
+  { char:'ㅓ', roman:'eo',  eng:'uh' },
+  { char:'ㅕ', roman:'yeo', eng:'yuh' },
+  { char:'ㅗ', roman:'o',   eng:'oh' },
+  { char:'ㅛ', roman:'yo',  eng:'yoh' },
+  { char:'ㅜ', roman:'u',   eng:'oo' },
+  { char:'ㅠ', roman:'yu',  eng:'yoo' },
+  { char:'ㅡ', roman:'eu',  eng:'euh' },
+  { char:'ㅣ', roman:'i',   eng:'ee' },
+];
+const DOUBLE_CONS = [
+  { char:'ㄲ', roman:'kk', eng:'tense k' },
+  { char:'ㄸ', roman:'tt', eng:'tense t' },
+  { char:'ㅃ', roman:'pp', eng:'tense p' },
+  { char:'ㅆ', roman:'ss', eng:'tense s' },
+  { char:'ㅉ', roman:'jj', eng:'tense j' },
+];
+const COMPOUND_VOWELS = [
+  { char:'ㅐ', roman:'ae',  eng:'eh'  },
+  { char:'ㅒ', roman:'yae', eng:'yeh' },
+  { char:'ㅔ', roman:'e',   eng:'eh'  },
+  { char:'ㅖ', roman:'ye',  eng:'yeh' },
+  { char:'ㅘ', roman:'wa',  eng:'wa'  },
+  { char:'ㅙ', roman:'wae', eng:'weh' },
+  { char:'ㅚ', roman:'oe',  eng:'weh' },
+  { char:'ㅝ', roman:'wo',  eng:'wuh' },
+  { char:'ㅞ', roman:'we',  eng:'weh' },
+  { char:'ㅟ', roman:'wi',  eng:'wee' },
+  { char:'ㅢ', roman:'ui',  eng:'eui' },
+];
+
+// BUILT-IN VOCAB (category: key, array of {korean, roman, english})
+const BUILT_IN_VOCAB = {
+  greetings: [
+    { korean:'안녕하세요', roman:'annyeonghaseyo', english:'Hello (formal)' },
+    { korean:'안녕',       roman:'annyeong',       english:'Hi / Bye (informal)' },
+    { korean:'감사합니다', roman:'gamsahamnida',    english:'Thank you (formal)' },
+    { korean:'고마워',     roman:'gomawo',          english:'Thanks (informal)' },
+    { korean:'죄송합니다', roman:'joesonghamnida',  english:'I\'m sorry (formal)' },
+    { korean:'미안해',     roman:'mianhae',         english:'Sorry (informal)' },
+    { korean:'괜찮아요',   roman:'gwaenchanayo',    english:'It\'s okay' },
+    { korean:'네',         roman:'ne',              english:'Yes' },
+    { korean:'아니요',     roman:'aniyo',           english:'No' },
+    { korean:'잘 부탁드립니다', roman:'jal butakdeurimnida', english:'Please take care of me' },
+    { korean:'처음 뵙겠습니다', roman:'cheoeum boepgesseumnida', english:'Nice to meet you' },
+    { korean:'잘 지냈어요?', roman:'jal jinaesseoyo', english:'How have you been?' },
+  ],
+  numbers: [
+    { korean:'일', roman:'il',   english:'1 (sino-Korean)' },
+    { korean:'이', roman:'i',    english:'2' },
+    { korean:'삼', roman:'sam',  english:'3' },
+    { korean:'사', roman:'sa',   english:'4' },
+    { korean:'오', roman:'o',    english:'5' },
+    { korean:'육', roman:'yuk',  english:'6' },
+    { korean:'칠', roman:'chil', english:'7' },
+    { korean:'팔', roman:'pal',  english:'8' },
+    { korean:'구', roman:'gu',   english:'9' },
+    { korean:'십', roman:'sip',  english:'10' },
+    { korean:'백', roman:'baek', english:'100' },
+    { korean:'천', roman:'cheon',english:'1,000' },
+    { korean:'하나', roman:'hana',  english:'1 (native Korean)' },
+    { korean:'둘',  roman:'dul',   english:'2 (native)' },
+    { korean:'셋',  roman:'set',   english:'3 (native)' },
+    { korean:'넷',  roman:'net',   english:'4 (native)' },
+    { korean:'다섯',roman:'daseot', english:'5 (native)' },
+  ],
+  food: [
+    { korean:'밥',     roman:'bap',      english:'Rice / meal' },
+    { korean:'물',     roman:'mul',      english:'Water' },
+    { korean:'커피',   roman:'keopi',    english:'Coffee' },
+    { korean:'김치',   roman:'kimchi',   english:'Kimchi' },
+    { korean:'비빔밥', roman:'bibimbap', english:'Bibimbap' },
+    { korean:'삼겹살', roman:'samgyeopsal', english:'Grilled pork belly' },
+    { korean:'라면',   roman:'ramyeon',  english:'Ramen noodles' },
+    { korean:'치킨',   roman:'chikin',   english:'Fried chicken' },
+    { korean:'맛있다', roman:'masitda',  english:'Delicious!' },
+    { korean:'맵다',   roman:'maepda',   english:'Spicy' },
+    { korean:'달다',   roman:'dalda',    english:'Sweet' },
+    { korean:'주세요', roman:'juseyo',   english:'Please give me…' },
+  ],
+  travel: [
+    { korean:'어디예요?',  roman:'eodiyeyo',    english:'Where is it?' },
+    { korean:'얼마예요?',  roman:'eolmayeyo',   english:'How much is it?' },
+    { korean:'화장실',     roman:'hwajangsil',  english:'Toilet / bathroom' },
+    { korean:'지하철',     roman:'jihacheol',   english:'Subway' },
+    { korean:'버스',       roman:'beoseu',      english:'Bus' },
+    { korean:'택시',       roman:'taeksi',      english:'Taxi' },
+    { korean:'공항',       roman:'gonghang',    english:'Airport' },
+    { korean:'호텔',       roman:'hotel',       english:'Hotel' },
+    { korean:'왼쪽',       roman:'oenjjok',     english:'Left' },
+    { korean:'오른쪽',     roman:'oreunjjok',   english:'Right' },
+    { korean:'직진',       roman:'jikjin',      english:'Straight ahead' },
+    { korean:'도와주세요', roman:'dowajuseyo',  english:'Please help me' },
+  ],
+  family: [
+    { korean:'가족',   roman:'gajok',    english:'Family' },
+    { korean:'엄마',   roman:'eomma',    english:'Mum' },
+    { korean:'아빠',   roman:'appa',     english:'Dad' },
+    { korean:'형',     roman:'hyeong',   english:'Older brother (male speaker)' },
+    { korean:'오빠',   roman:'oppa',     english:'Older brother (female speaker)' },
+    { korean:'누나',   roman:'nuna',     english:'Older sister (male speaker)' },
+    { korean:'언니',   roman:'eonni',    english:'Older sister (female speaker)' },
+    { korean:'동생',   roman:'dongsaeng',english:'Younger sibling' },
+    { korean:'친구',   roman:'chingu',   english:'Friend' },
+  ],
+  time: [
+    { korean:'오늘',   roman:'oneul',   english:'Today' },
+    { korean:'내일',   roman:'naeil',   english:'Tomorrow' },
+    { korean:'어제',   roman:'eoje',    english:'Yesterday' },
+    { korean:'지금',   roman:'jigeum',  english:'Now' },
+    { korean:'나중에', roman:'najunge', english:'Later' },
+    { korean:'아침',   roman:'achim',   english:'Morning' },
+    { korean:'점심',   roman:'jeomsim', english:'Afternoon / lunch' },
+    { korean:'저녁',   roman:'jeonyeok',english:'Evening' },
+    { korean:'밤',     roman:'bam',     english:'Night' },
+    { korean:'년',     roman:'nyeon',   english:'Year' },
+    { korean:'월',     roman:'wol',     english:'Month' },
+    { korean:'주',     roman:'ju',      english:'Week' },
+    { korean:'일',     roman:'il',      english:'Day' },
+  ],
+  general: [
+    { korean:'나',       roman:'na',        english:'I / me (informal)' },
+    { korean:'저',       roman:'jeo',       english:'I / me (formal)' },
+    { korean:'이름',     roman:'ireum',     english:'Name' },
+    { korean:'뭐예요?',  roman:'mwoyeyo',   english:'What is it?' },
+    { korean:'좋아요',   roman:'joayo',     english:'I like it / Good' },
+    { korean:'싫어요',   roman:'sireoyo',   english:'I don\'t like it' },
+    { korean:'알겠어요', roman:'algeseoyo', english:'I understand' },
+    { korean:'모르겠어요', roman:'moreugesseoyo', english:'I don\'t know' },
+    { korean:'잠깐만요', roman:'jamkkanmanyo', english:'Just a moment' },
+    { korean:'천천히',   roman:'cheoncheonhi', english:'Slowly' },
+    { korean:'다시',     roman:'dasi',      english:'Again' },
+    { korean:'사랑해요', roman:'saranghaeyo', english:'I love you' },
+    { korean:'한국어',   roman:'hangugeo',  english:'Korean language' },
+    { korean:'영어',     roman:'yeongeo',   english:'English language' },
+  ],
+};
+
+// ── PROGRESS PERSISTENCE ──
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem('koreanProgress') || 'null') || defaultProgress(); }
+  catch(e) { return defaultProgress(); }
+}
+function saveProgress(p) { localStorage.setItem('koreanProgress', JSON.stringify(p)); }
+function defaultProgress() {
+  return {
+    hangulMastered: [],
+    vocab: [],
+    customVocab: [],
+    streak: 0,
+    lastStudyDate: null,
+    totalXP: 0,
+    studyDates: [],
+    sessionsToday: 0,
+  };
+}
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function todayKey() { return new Date().toISOString().slice(0,10); }
+
+// Mark study today + update streak
+function markStudied() {
+  const p = loadProgress();
+  const today = todayKey();
+  if (p.lastStudyDate === today) return; // already marked
+  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+  const yk = yesterday.toISOString().slice(0,10);
+  p.streak = p.lastStudyDate === yk ? (p.streak || 0) + 1 : 1;
+  p.lastStudyDate = today;
+  if (!p.studyDates) p.studyDates = [];
+  if (!p.studyDates.includes(today)) p.studyDates.push(today);
+  saveProgress(p);
+  rewardPet();
+  renderStats();
+  renderWeekCells();
+}
+
+// ── STATS ──
+function renderStats() {
+  const p = loadProgress();
+  const today = todayKey();
+  const allVocab = [...(p.vocab||[]), ...(p.customVocab||[])];
+  document.getElementById('statWords').textContent    = allVocab.length;
+  document.getElementById('statMastered').textContent = allVocab.filter(v=>v.level>=5).length;
+  document.getElementById('statDue').textContent      = allVocab.filter(v=>(v.nextReview||today)<=today).length;
+  document.getElementById('statHangul').textContent   = (p.hangulMastered||[]).length + '/' + (CONSONANTS.length+VOWELS.length);
+  document.getElementById('streakBadge').textContent  = `${p.streak||0} DAY STREAK`;
+  if ((p.streak||0) >= 7) document.getElementById('streakBadge').style.color = 'var(--amber)';
+}
+
+function renderWeekCells() {
+  const p = loadProgress();
+  const dateSet = new Set(p.studyDates || []);
+  const wrap = document.getElementById('weekCells'); wrap.innerHTML = '';
+  for (let i=6;i>=0;i--) {
+    const d = new Date(); d.setDate(d.getDate()-i); d.setHours(0,0,0,0);
+    const k = d.toISOString().slice(0,10);
+    const cell = document.createElement('div');
+    cell.className = 'wc' + (dateSet.has(k) ? ' logged' : '');
+    wrap.appendChild(cell);
+  }
+}
+
+// ── TABS ──
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'flash')   renderFlashcards();
+  if (name === 'phrases') renderPhrases();
+  if (name === 'vocab')   renderVocabTable();
+}
+
+// ══════════════════════════════════════════════════════
+// HANGUL
+// ══════════════════════════════════════════════════════
+let drillQueue = [], drillIdx = 0, drillFlipped = false;
+
+function buildHangulGrid(containerId, chars, type) {
+  const p = loadProgress();
+  const mastered = new Set(p.hangulMastered || []);
+  const grid = document.getElementById(containerId);
+  grid.innerHTML = '';
+  chars.forEach(item => {
+    const cell = document.createElement('div');
+    cell.className = 'hangul-cell' + (mastered.has(item.char) ? ' mastered' : '');
+    cell.innerHTML = `<span class="hc-char">${item.char}</span><span class="hc-roman">${item.roman}</span><span class="hc-eng">${item.eng}</span>`;
+    cell.onclick = () => startDrillChar(item);
+    grid.appendChild(cell);
+  });
+  if (type === 'consonant') document.getElementById('consCount').textContent  = [...mastered].filter(c=>CONSONANTS.some(x=>x.char===c)).length+' / '+CONSONANTS.length;
+  if (type === 'vowel')     document.getElementById('vowelCount').textContent = [...mastered].filter(c=>VOWELS.some(x=>x.char===c)).length+' / '+VOWELS.length;
+}
+
+function startDrillChar(item) {
+  drillQueue = [item];
+  drillIdx = 0;
+  drillFlipped = false;
+  showDrillCard(item);
+  document.getElementById('drillCard').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+function startDrillAll() {
+  drillQueue = [...CONSONANTS, ...VOWELS].sort(() => Math.random()-0.5);
+  drillIdx = 0;
+  drillFlipped = false;
+  showDrillCard(drillQueue[0]);
+  markStudied();
+}
+
+function showDrillCard(item) {
+  if (!item) return;
+  drillFlipped = false;
+  document.getElementById('drillChar').textContent   = item.char;
+  document.getElementById('drillAnswer').textContent = item.eng;
+  document.getElementById('drillRoman').textContent  = item.roman;
+  document.getElementById('drillAnswer').classList.remove('show');
+  document.getElementById('drillRoman').classList  ? null : null;
+  document.getElementById('drillHint').textContent   = 'TAP TO REVEAL';
+  document.getElementById('drillProgress').textContent = `CARD ${drillIdx+1} OF ${drillQueue.length}`;
+}
+
+function flipDrill() {
+  drillFlipped = true;
+  document.getElementById('drillAnswer').classList.add('show');
+  document.getElementById('drillHint').textContent = 'GOT IT OR HARD?';
+  markStudied();
+}
+
+function gradeDrill(correct) {
+  if (!drillFlipped) { flipDrill(); return; }
+  const item = drillQueue[drillIdx];
+  if (item && correct) {
+    const p = loadProgress();
+    const m = new Set(p.hangulMastered || []);
+    m.add(item.char);
+    p.hangulMastered = [...m];
+    p.totalXP = (p.totalXP||0) + 2;
+    saveProgress(p);
+    buildHangulGrid('gridConsonants', CONSONANTS, 'consonant');
+    buildHangulGrid('gridVowels', VOWELS, 'vowel');
+    renderStats();
+  }
+  drillIdx++;
+  if (drillIdx >= drillQueue.length) {
+    document.getElementById('drillProgress').textContent = 'DRILL COMPLETE! 🎉';
+    document.getElementById('drillChar').textContent = '✓';
+    document.getElementById('drillAnswer').classList.remove('show');
+    document.getElementById('drillHint').textContent = 'HIT DRILL ALL FOR ANOTHER ROUND';
+    return;
+  }
+  showDrillCard(drillQueue[drillIdx]);
+}
+
+// ══════════════════════════════════════════════════════
+// FLASHCARDS (SRS)
+// ══════════════════════════════════════════════════════
+const SRS_INTERVALS = [1, 3, 7, 14, 30]; // days per level
+let fcQueue = [], fcIdx = 0, fcFlipped = false, fcSession = { correct:0, wrong:0 };
+
+function getDueVocab() {
+  const p   = loadProgress();
+  const today = todayKey();
+  const all = [...(p.vocab||[]), ...(p.customVocab||[])];
+  return all.filter(v => !v.nextReview || v.nextReview <= today);
+}
+
+function renderFlashcards() {
+  const area = document.getElementById('flashcardArea');
+  const due  = getDueVocab();
+
+  if (fcIdx > 0 && fcIdx >= fcQueue.length) {
+    // Session complete
+    area.innerHTML = `
+      <div class="session-complete">
+        <span class="sc-icon">🎉</span>
+        <div class="sc-title">SESSION COMPLETE!</div>
+        <div class="sc-stats">
+          <strong>${fcSession.correct}</strong> CORRECT &nbsp;·&nbsp;
+          <strong>${fcSession.wrong}</strong> TO REVIEW<br>
+          XP EARNED: <strong>+${fcSession.correct * 3}</strong>
+        </div>
+      </div>
+      <button class="px-btn px-btn--teal" style="width:100%;text-align:center;margin-top:8px;"
+        onclick="startFcSession()">STUDY MORE CARDS</button>`;
+    return;
+  }
+
+  if (!due.length && fcIdx === 0) {
+    area.innerHTML = `
+      <div class="fc-no-cards">
+        <span class="es-icon">✨</span>
+        ALL CAUGHT UP!<br>NO CARDS DUE TODAY.<br>
+        ADD WORDS FROM THE PHRASES TAB OR MY VOCAB.
+      </div>`;
+    return;
+  }
+
+  if (fcIdx === 0) startFcSession();
+  showFcCard();
+}
+
+function startFcSession() {
+  fcQueue = getDueVocab().sort(() => Math.random()-0.5).slice(0,20);
+  fcIdx = 0;
+  fcFlipped = false;
+  fcSession = { correct:0, wrong:0 };
+  showFcCard();
+}
+
+function showFcCard() {
+  const area = document.getElementById('flashcardArea');
+  if (fcIdx >= fcQueue.length) { renderFlashcards(); return; }
+  const card = fcQueue[fcIdx];
+  fcFlipped   = false;
+
+  area.innerHTML = `
+    <div class="fc-queue-bar">
+      <span class="fc-queue-info">CARD <strong>${fcIdx+1}</strong> OF <strong>${fcQueue.length}</strong></span>
+      <span class="fc-queue-info">✓ <strong>${fcSession.correct}</strong> &nbsp; ✗ <strong>${fcSession.wrong}</strong></span>
+    </div>
+    <div class="flashcard-wrap" id="fcWrap" onclick="flipFc()">
+      <div class="flashcard" id="fcCard">
+        <div class="fc-front">
+          <div class="fc-korean">${card.korean}</div>
+          <div class="fc-tap-hint">TAP TO REVEAL</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-english">${esc(card.english)}</div>
+          <div class="fc-roman">${esc(card.roman)}</div>
+          <div class="fc-korean" style="font-size:28px;margin-top:8px;">${card.korean}</div>
+          <div class="fc-category">${(card.category||'').toUpperCase()}</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-grade-row" id="fcGradeRow" style="display:none;">
+      <button class="px-btn px-btn--pink  fc-btn-wrong" onclick="gradeFc(false)">✗ AGAIN</button>
+      <button class="px-btn px-btn--teal  fc-btn-right" onclick="gradeFc(true)">✓ GOT IT</button>
+    </div>
+    <div style="text-align:center;margin-top:8px;">
+      <span style="font-size:6px;color:var(--muted);">SRS LEVEL: </span>
+      ${[0,1,2,3,4,5].map(l=>`<span class="srs-pip srs-${l}" style="margin:0 2px;${card.level>=l?'':'opacity:0.3'}"></span>`).join('')}
+    </div>`;
+}
+
+function flipFc() {
+  if (fcFlipped) return;
+  fcFlipped = true;
+  document.getElementById('fcCard').classList.add('flipped');
+  document.getElementById('fcGradeRow').style.display = 'grid';
+  markStudied();
+}
+
+function gradeFc(correct) {
+  if (!fcFlipped) { flipFc(); return; }
+  const p    = loadProgress();
+  const card = fcQueue[fcIdx];
+  // Update in both vocab arrays
+  let item = (p.vocab||[]).find(v=>v.id===card.id) || (p.customVocab||[]).find(v=>v.id===card.id);
+  if (item) {
+    if (correct) {
+      item.level = Math.min(5, (item.level||0) + 1);
+      item.timesCorrect = (item.timesCorrect||0) + 1;
+      const days = SRS_INTERVALS[item.level - 1] || 30;
+      const next = new Date(); next.setDate(next.getDate() + days);
+      item.nextReview = next.toISOString().slice(0,10);
+      fcSession.correct++;
+      if (item.level === 5) {
+        p.totalXP = (p.totalXP||0) + 10;
+        showToast('WORD MASTERED! +10 BONUS XP!');
+        rewardPetMastery();
+      } else {
+        p.totalXP = (p.totalXP||0) + 3;
+      }
+    } else {
+      item.level = Math.max(0, (item.level||0) - 1);
+      item.timesWrong = (item.timesWrong||0) + 1;
+      item.nextReview = todayKey();
+      fcSession.wrong++;
+    }
+    saveProgress(p);
+    renderStats();
+  }
+  fcIdx++;
+  showFcCard();
+}
+
+// ══════════════════════════════════════════════════════
+// PHRASES
+// ══════════════════════════════════════════════════════
+const PHRASE_LABELS = {
+  greetings:'😊 GREETINGS', numbers:'🔢 NUMBERS', food:'🍜 FOOD & DRINK',
+  travel:'✈️ TRAVEL', family:'👨‍👩‍👧 FAMILY', time:'⏰ TIME & DATES', general:'💬 GENERAL'
+};
+
+function renderPhrases() {
+  const p = loadProgress();
+  const inDeck = new Set([...(p.vocab||[])].map(v=>v.korean));
+  const container = document.getElementById('phrasesContainer');
+  container.innerHTML = '';
+
+  Object.entries(BUILT_IN_VOCAB).forEach(([cat, phrases]) => {
+    const section = document.createElement('div');
+    section.className = 'phrase-category';
+    section.innerHTML = `<div class="phrase-cat-title">${PHRASE_LABELS[cat]||cat.toUpperCase()}</div><div class="phrase-list" id="pl-${cat}"></div>`;
+    container.appendChild(section);
+    const list = section.querySelector('.phrase-list');
+    phrases.forEach(ph => {
+      const isAdded = inDeck.has(ph.korean);
+      const row = document.createElement('div');
+      row.className = 'phrase-row';
+      row.innerHTML = `
+        <div>
+          <div class="pr-korean">${ph.korean}</div>
+          <div class="pr-roman">${ph.roman}</div>
+        </div>
+        <div class="pr-english">${esc(ph.english)}</div>
+        <button class="pr-add-btn${isAdded?' added':''}" id="prbtn-${ph.korean.replace(/\s/g,'_')}"
+          onclick="addPhraseToVocab(${JSON.stringify(ph)}, '${cat}', this)">
+          ${isAdded?'✓ IN DECK':'+ ADD'}
+        </button>`;
+      list.appendChild(row);
+    });
+  });
+}
+
+function addPhraseToVocab(ph, cat, btn) {
+  const p = loadProgress();
+  if (!p.vocab) p.vocab = [];
+  if (p.vocab.some(v=>v.korean===ph.korean)) { showToast('ALREADY IN DECK!'); return; }
+  p.vocab.push({
+    id: uid(), korean: ph.korean, roman: ph.roman,
+    english: ph.english, category: cat,
+    level: 0, nextReview: todayKey(),
+    timesCorrect: 0, timesWrong: 0,
+  });
+  saveProgress(p);
+  btn.textContent = '✓ IN DECK';
+  btn.classList.add('added');
+  renderStats();
+  showToast('ADDED TO FLASHCARDS!');
+}
+
+// ══════════════════════════════════════════════════════
+// MY VOCAB TABLE
+// ══════════════════════════════════════════════════════
+function renderVocabTable() {
+  const p   = loadProgress();
+  const all = [...(p.vocab||[]), ...(p.customVocab||[])];
+  const wrap = document.getElementById('vocabTableWrap');
+
+  if (!all.length) {
+    wrap.innerHTML = `<div style="text-align:center;padding:28px;font-size:7px;color:var(--muted);letter-spacing:0.08em;line-height:2.5;">NO WORDS YET!<br>ADD FROM PHRASES TAB OR USE THE FORM ABOVE</div>`;
+    return;
+  }
+
+  const today = todayKey();
+  const rows = all.map(v => `
+    <tr>
+      <td class="vt-korean">${v.korean}</td>
+      <td class="vt-roman">${esc(v.roman)}</td>
+      <td>${esc(v.english)}</td>
+      <td><span class="srs-pip srs-${v.level||0}"></span> ${['NEW','1D','3D','7D','14D','★'][v.level||0]}</td>
+      <td style="font-size:5px;color:${(v.nextReview||today)<=today?'var(--accent2)':'var(--muted)'};">${v.nextReview||'TODAY'}</td>
+      <td><button class="vt-del" onclick="deleteVocabWord('${v.id}')">×</button></td>
+    </tr>`).join('');
+
+  wrap.innerHTML = `
+    <table class="vocab-table">
+      <thead><tr>
+        <th>KOREAN</th><th>ROMANISED</th><th>ENGLISH</th><th>LEVEL</th><th>NEXT</th><th></th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function addCustomWord() {
+  const korean  = document.getElementById('avKorean').value.trim();
+  const roman   = document.getElementById('avRoman').value.trim();
+  const english = document.getElementById('avEnglish').value.trim();
+  if (!korean || !english) {
+    showToast('KOREAN + ENGLISH REQUIRED');
+    return;
+  }
+  const p = loadProgress();
+  if (!p.customVocab) p.customVocab = [];
+  if ([...(p.vocab||[]),...p.customVocab].some(v=>v.korean===korean)) {
+    showToast('WORD ALREADY IN DECK!'); return;
+  }
+  p.customVocab.push({
+    id: uid(), korean, roman, english,
+    category: document.getElementById('avCat').value,
+    level: 0, nextReview: todayKey(),
+    timesCorrect: 0, timesWrong: 0,
+  });
+  saveProgress(p);
+  document.getElementById('avKorean').value  = '';
+  document.getElementById('avRoman').value   = '';
+  document.getElementById('avEnglish').value = '';
+  renderVocabTable();
+  renderStats();
+  showToast('WORD ADDED!');
+}
+
+function deleteVocabWord(id) {
+  const p = loadProgress();
+  p.vocab       = (p.vocab||[]).filter(v=>v.id!==id);
+  p.customVocab = (p.customVocab||[]).filter(v=>v.id!==id);
+  saveProgress(p);
+  renderVocabTable();
+  renderStats();
+  showToast('WORD REMOVED');
+}
+
+// ══════════════════════════════════════════════════════
+// PET REWARDS
+// ══════════════════════════════════════════════════════
+function rewardPet() {
+  try {
+    const p = JSON.parse(localStorage.getItem('petData')||'null'); if(!p) return;
+    const cl = v=>Math.max(0,Math.min(100,Math.round(v)));
+    p.energy    = cl((p.energy||60) + 6);
+    p.happiness = cl((p.happiness||80) + 3);
+    p.xp        = (p.xp||0) + 5;
+    while(p.xp>=100){p.xp-=100;p.level=(p.level||1)+1;}
+    const stages=['EGG','BABY','CHILD','TEEN','ADULT','MASTER'],thresh=[1,3,6,10,15,20];
+    for(let i=thresh.length-1;i>=0;i--){if(p.level>=thresh[i]){p.stage=stages[i];break;}}
+    localStorage.setItem('petData', JSON.stringify(p));
+  } catch(e) {}
+}
+function rewardPetMastery() {
+  try {
+    const p = JSON.parse(localStorage.getItem('petData')||'null'); if(!p) return;
+    p.xp = (p.xp||0) + 10;
+    p.happiness = Math.min(100, Math.round((p.happiness||80) + 5));
+    while(p.xp>=100){p.xp-=100;p.level=(p.level||1)+1;}
+    localStorage.setItem('petData', JSON.stringify(p));
+  } catch(e) {}
+}
+
+// ══════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._to); t._to = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+(function init() {
+  buildHangulGrid('gridConsonants', CONSONANTS, 'consonant');
+  buildHangulGrid('gridVowels',     VOWELS,     'vowel');
+  buildHangulGrid('gridDouble',     DOUBLE_CONS,  '');
+  buildHangulGrid('gridCompound',   COMPOUND_VOWELS, '');
+  renderStats();
+  renderWeekCells();
+  showDrillCard(CONSONANTS[0]); // default drill card
+})();
+
+window.addEventListener('firebaseDataLoaded', () => {
+  renderStats(); renderWeekCells();
+  buildHangulGrid('gridConsonants', CONSONANTS, 'consonant');
+  buildHangulGrid('gridVowels', VOWELS, 'vowel');
+});
+window.addEventListener('firebaseKeyUpdated', (e) => {
+  if (e.detail.key === 'koreanProgress') {
+    renderStats(); renderWeekCells();
+    buildHangulGrid('gridConsonants', CONSONANTS, 'consonant');
+    buildHangulGrid('gridVowels', VOWELS, 'vowel');
+  }
+});
+</script>
+<script type="module" src="firebase.js"></script>
+</body>
+</html>
